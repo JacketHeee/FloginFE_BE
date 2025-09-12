@@ -11,7 +11,7 @@
 | 3123560054 | Lưu Phùng Khải Nguyên   | 0353221672    |                               |
 
 ## Assignment 1
-[📊 Xem Assignment 1](https://docs.google.com/spreadsheets/d/1LvLwFPleGRGmZdo6JbxN_Qu8vJJs2Ft41LzFFT1olR0/edit?usp=sharing)
+[Report Assignment 1](https://docs.google.com/spreadsheets/d/1LvLwFPleGRGmZdo6JbxN_Qu8vJJs2Ft41LzFFT1olR0/edit?usp=sharing)
 
 ## Assignment 2
 _(chưa có)_
