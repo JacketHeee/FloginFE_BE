@@ -1,0 +1,210 @@
+.register-form {
+  padding: 48px 64px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  color: #1a1a1a;
+
+  .form-header {
+    text-align: right;
+    // margin-bottom: 4rem;
+
+    .back-button {
+      background: transparent;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 8px 16px;
+      transition: color 0.3s;
+
+      &:hover {
+        color: #1a1a1a;
+      }
+    }
+  }
+
+  .form-content {
+    padding-top: 4rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    // justify-content: center;
+    max-width: 420px;
+
+    h1 {
+      font-size: 42px;
+      font-weight: 600;
+      margin: 0 0 12px 0;
+      color: #1a1a1a;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 32px;
+
+      a {
+        color: #6366f1;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    form {
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .form-group {
+        margin-bottom: 16px;
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+          width: 100%;
+          padding: 16px 20px;
+          background: #f5f7fa;
+          border: 1px solid #e1e4e8;
+          border-radius: 12px;
+          color: #1a1a1a;
+          font-size: 15px;
+          transition: all 0.3s;
+
+          &::placeholder {
+            color: #999;
+          }
+
+          &:focus {
+            outline: none;
+            border-color: #6366f1;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+          }
+        }
+
+        &.password-group {
+          position: relative;
+
+          .toggle-password {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+
+            &:hover {
+              opacity: 1;
+            }
+          }
+        }
+
+        &.checkbox-group {
+          label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+
+            input[type="checkbox"] {
+              width: 20px;
+              height: 20px;
+              cursor: pointer;
+              accent-color: #6366f1;
+            }
+
+            a {
+              color: #6366f1;
+              text-decoration: none;
+
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+      }
+
+      .submit-button {
+        width: 100%;
+        padding: 16px;
+        background: #6366f1;
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 24px;
+
+        &:hover {
+          background: #5558e3;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+
+    .social-login {
+      margin-top: 32px;
+      text-align: center;
+
+      p {
+        color: #999;
+        font-size: 14px;
+        margin-bottom: 16px;
+      }
+
+      .social-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+
+        .social-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 14px;
+          background: #f5f7fa;
+          border: 1px solid #e1e4e8;
+          border-radius: 12px;
+          color: #1a1a1a;
+          font-size: 15px;
+          cursor: pointer;
+          transition: all 0.3s;
+
+          &:hover {
+            background: white;
+            border-color: #6366f1;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+          }
+
+          &.google svg,
+          &.apple svg {
+            width: 18px;
+            height: 18px;
+          }
+        }
+      }
+    }
+  }
+}
