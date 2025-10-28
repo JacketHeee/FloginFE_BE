@@ -6,7 +6,7 @@ import LoginForm from '../../components/LoginForm/LoginForm';
 import './Register.scss';
 
 const Register = () => {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
 
   return (
     <div className="register-page">
