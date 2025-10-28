@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './LoginForm.scss';
 import Logo from '../Logo/Logo';
 
-const LoginForm = ({ onSwitchToRegister }) => {
+const LoginForm = ({ onSwitchToRegister, onLoginSuccess }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -23,6 +23,10 @@ const LoginForm = ({ onSwitchToRegister }) => {
     e.preventDefault();
     console.log('Login submitted:', formData);
     // Handle login logic here
+    // Navigate to dashboard
+    if (onLoginSuccess) {
+      onLoginSuccess();
+    }
   };
 
   return (

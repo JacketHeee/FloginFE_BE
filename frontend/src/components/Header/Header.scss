@@ -1,0 +1,112 @@
+.header {
+  height: 80px;
+  background: white;
+  border-bottom: 1px solid #e1e4e8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    max-width: 600px;
+
+    .search-input {
+      flex: 1;
+      padding: 12px 20px;
+      background: #f5f7fa;
+      border: 1px solid #e1e4e8;
+      border-radius: 12px;
+      font-size: 14px;
+      color: #1a1a1a;
+      transition: all 0.3s;
+
+      &::placeholder {
+        color: #999;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: #10b981;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+      }
+    }
+
+    .search-button {
+      padding: 12px 24px;
+      background: #10b981;
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        background: #059669;
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .icon-button {
+      width: 44px;
+      height: 44px;
+      background: #f5f7fa;
+      border: 1px solid #e1e4e8;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+      transition: all 0.3s;
+      position: relative;
+
+      .notification-badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        background: #ef4444;
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 6px;
+        border-radius: 10px;
+        min-width: 20px;
+      }
+
+      &:hover {
+        background: white;
+        border-color: #10b981;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+      }
+
+      &.theme-button {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border: none;
+
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
+}

@@ -5,7 +5,7 @@ import RegisterForm from '../../components/RegisterForm/RegisterForm';
 import LoginForm from '../../components/LoginForm/LoginForm';
 import './Register.scss';
 
-const Register = () => {
+const Register = ({ onLoginSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
@@ -16,7 +16,10 @@ const Register = () => {
         </div>
         <div className="right-section">
           {isLogin ? (
-            <LoginForm onSwitchToRegister={() => setIsLogin(false)} />
+            <LoginForm 
+              onSwitchToRegister={() => setIsLogin(false)}
+              onLoginSuccess={onLoginSuccess}
+            />
           ) : (
             <RegisterForm onSwitchToLogin={() => setIsLogin(true)} />
           )}
