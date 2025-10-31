@@ -1,191 +1,304 @@
 import { useState } from 'react';
 import './ProductList.scss';
+import CustomTable from '../../components/CustomTable/CustomTable';
+import SearchPanel from '../../components/SearchPanel/SearchPanel';
+import Icon from '../../components/Icon/Icon';
+import Devider from '../../components/Devider/Devider';
+import AddProductPopup from '../../components/AddProductPopup/AddProductPopup';
+import FilterPanel from '../../components/FilterPanel/FilterPanel';
+import Toast from '../../components/Toast/Toast';
+import useProducts from '../../hooks/useProducts';
+import { productToRow } from '../../utils/formatters';
 
 const ProductList = () => {
-  const [products] = useState([
-    {
-      id: 'GR47',
-      name: 'Pure Organic Orange',
-      image: '🍊',
-      price: 48.00,
-      view: 12700,
-      click: '85%',
-      quantity: 8650,
-      revenue: 35750,
-      status: 'Active'
-    },
-    {
-      id: 'GR46',
-      name: 'Fresh Peaches Plus',
-      image: '🍑',
-      price: 34.00,
-      view: 11500,
-      click: '70%',
-      quantity: 6500,
-      revenue: 24800,
-      status: 'Active'
-    },
-    {
-      id: 'GR45',
-      name: 'Organic Bananas',
-      image: '🍌',
-      price: 42.00,
-      view: 9350,
-      click: '65%',
-      quantity: 4100,
-      revenue: 20900,
-      status: 'Active'
-    },
-    {
-      id: 'GR44',
-      name: 'Ripe Mango Delight',
-      image: '🥭',
-      price: 39.00,
-      view: 8500,
-      click: '60%',
-      quantity: 3800,
-      revenue: 14820,
-      status: 'Active'
-    },
-    {
-      id: 'GR43',
-      name: 'Fresh Strawberry Bliss',
-      image: '🍓',
-      price: 36.00,
-      view: 7900,
-      click: '58%',
-      quantity: 3600,
-      revenue: 12960,
-      status: 'Active'
-    },
-    {
-      id: 'GR42',
-      name: 'Sweet Grape Delight',
-      image: '🍇',
-      price: 49.00,
-      view: 10200,
-      click: '62%',
-      quantity: 4000,
-      revenue: 19600,
-      status: 'Active'
-    },
-    {
-      id: 'GR41',
-      name: 'Tropical Pineapple Fresh',
-      image: '🍍',
-      price: 42.00,
-      view: 9300,
-      click: '64%',
-      quantity: 3900,
-      revenue: 16380,
-      status: 'Active'
-    }
-  ]);
+  const [popupState, setPopupState] = useState({
+    isOpen: false,
+    mode: 'add', // 'add', 'edit', 'view'
+    productData: null
+  });
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' });
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
+  // Use custom hook for product management
+  const {
+    products,
+    loading,
+    error,
+    pagination,
+    filters,
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    updateFilters,
+    changePage
+  } = useProducts();
+
+  // Convert products to table format
+  const dataTable = products.map(productToRow);
+
+  // Handle popup submit (Add or Edit)
+  const handlePopupSubmit = async (productIdOrData, productData) => {
+    if (popupState.mode === 'add') {
+      // productIdOrData is actually productData for add mode
+      const result = await addProduct({
+        name: productIdOrData.productName,
+        price: productIdOrData.price,
+        quantity: productIdOrData.quantity,
+        description: productIdOrData.description,
+        category: productIdOrData.category
+      });
+      
+      if (result.success) {
+        setToast({ 
+          isVisible: true, 
+          message: `Đã thêm sản phẩm "${productIdOrData.productName}" thành công!`, 
+          type: 'success' 
+        });
+      } else {
+        setToast({ 
+          isVisible: true, 
+          message: `Lỗi: ${result.error}`, 
+          type: 'error' 
+        });
+      }
+    } else if (popupState.mode === 'edit') {
+      // productIdOrData is productId, productData is the updated data
+      const productId = productIdOrData;
+      const result = await updateProduct(productId, {
+        name: productData.productName,
+        price: productData.price,
+        quantity: productData.quantity,
+        description: productData.description,
+        category: productData.category
+      });
+      
+      if (result.success) {
+        setToast({ 
+          isVisible: true, 
+          message: `Đã cập nhật sản phẩm "${productData.productName}" thành công!`, 
+          type: 'success' 
+        });
+      } else {
+        setToast({ 
+          isVisible: true, 
+          message: `Lỗi: ${result.error}`, 
+          type: 'error' 
+        });
+      }
+    }
+  };
+
+  // Handle delete product
+  const handleDeleteProduct = async (row) => {
+    const productId = row[0];
+    const productName = row[1];
+    
+    if (window.confirm(`Bạn có chắc chắn muốn xóa sản phẩm "${productName}"?`)) {
+      const result = await deleteProduct(productId);
+      
+      if (result.success) {
+        setToast({ 
+          isVisible: true, 
+          message: `Đã xóa sản phẩm "${productName}" thành công!`, 
+          type: 'success' 
+        });
+      } else {
+        setToast({ 
+          isVisible: true, 
+          message: `Lỗi: ${result.error}`, 
+          type: 'error' 
+        });
+      }
+    }
+  };
+
+  // Handle search
+  const handleSearch = (searchValue) => {
+    updateFilters({ search: searchValue });
+  };
+
+  // Handle apply filters from FilterPanel
+  const handleApplyFilters = (newFilters) => {
+    updateFilters(newFilters);
+    setToast({
+      isVisible: true,
+      message: 'Đã áp dụng bộ lọc thành công!',
+      type: 'success'
+    });
+  };
+
+  // Handle refresh - reset all filters and reload
+  const handleRefresh = () => {
+    updateFilters({
+      search: '',
+      category: '',
+      minPrice: undefined,
+      maxPrice: undefined,
+      sortBy: 'id',
+      sortOrder: 'asc'
+    });
+    setToast({
+      isVisible: true,
+      message: 'Đã làm mới dữ liệu!',
+      type: 'success'
+    });
+  };
+
+  const openAddPopup = () => {
+    setPopupState({
+      isOpen: true,
+      mode: 'add',
+      productData: null
+    });
+  };
+
+  const openEditPopup = (row) => {
+    setPopupState({
+      isOpen: true,
+      mode: 'edit',
+      productData: row
+    });
+  };
+
+  const openViewPopup = (row) => {
+    setPopupState({
+      isOpen: true,
+      mode: 'view',
+      productData: row
+    });
+  };
+
+  const closePopup = () => {
+    setPopupState({
+      isOpen: false,
+      mode: 'add',
+      productData: null
+    });
+  };
+
+
+  const columns = [
+    "Id",
+    "Product Name",
+    "Price",
+    "Quantity",
+    "Description",
+    "Category"
+  ];
 
   return (
-    <div className="product-list-page">
-      <div className="page-header">
-        <div className="header-banner">
-          <div className="banner-content">
-            <h2>AI User Reports for Better Control</h2>
-            <p>Get detailed user reports with one click.</p>
-          </div>
-          <button className="generate-button">
-            ✨ Generate Auto Reports
-          </button>
-        </div>
-      </div>
-
+    <>
       <div className="product-list-container">
         <div className="list-header">
-          <h2>Product Lists</h2>
+          <h2>Danh sách sản phẩm</h2>
           <div className="header-actions">
-            <div className="search-box">
-              <input
-                type="text"
-                placeholder="Type product name..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <span className="search-icon">🔍</span>
+            <SearchPanel 
+              isButtonSearch={false}
+              placeholder='Tìm kiếm sản phẩm...'
+              backWhite={true}
+              onChange={(e) => handleSearch(e.target.value)}
+              value={filters.search}
+            />
+
+            <button className="filter-button" onClick={() => setIsFilterOpen(true)}>
+              <Icon>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M12 17.25h8.25" />
+                </svg>
+              </Icon>
+              <span>Filter</span>
+            </button>
+
+            <Devider isVer={true}/>
+
+            <button className="add-button" onClick={openAddPopup}>
+              + Thêm sản phẩm
+            </button>
+          </div>
+        </div> 
+
+        {/* Loading State */}
+        {loading && (
+          <div className="loading-state">
+            <div className="spinner"></div>
+            <p>Đang tải dữ liệu...</p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="error-state">
+            <p>❌ Lỗi: {error}</p>
+          </div>
+        )}
+
+        {/* Data Table */}
+        {!loading && !error && (
+          <div className='custom'>
+            <CustomTable 
+              columns={columns} 
+              data={dataTable}
+              onEdit={openEditPopup}
+              onDelete={handleDeleteProduct}
+              onView={openViewPopup}
+            />
+    
+            <div className="table-footer">
+              <div className="page-info">
+                Hiển thị {((pagination.page - 1) * pagination.limit) + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} trong tổng số {pagination.total} sản phẩm
+              </div>
+              <div className="pagination">
+                <select 
+                  value={pagination.page} 
+                  onChange={(e) => changePage(Number(e.target.value))}
+                >
+                  {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(page => (
+                    <option key={page} value={page}>Page {page}</option>
+                  ))}
+                </select>
+                <button 
+                  className="pagination-button" 
+                  disabled={pagination.page === 1}
+                  onClick={() => changePage(pagination.page - 1)}
+                >
+                  &lt;
+                </button>
+                <button 
+                  className="pagination-button pagination-next"
+                  disabled={pagination.page === pagination.totalPages}
+                  onClick={() => changePage(pagination.page + 1)}
+                >
+                  &gt;
+                </button>
+              </div>
             </div>
-            <button className="filter-button">
-              🔧 Filter
-            </button>
-            <button className="add-button">
-              + Add Products
-            </button>
           </div>
-        </div>
-
-        <div className="table-container">
-          <table className="product-table">
-            <thead>
-              <tr>
-                <th><input type="checkbox" /></th>
-                <th>Product Name ▼</th>
-                <th>Price ▼</th>
-                <th>View ▼</th>
-                <th>Click ▼</th>
-                <th>Quantity ▼</th>
-                <th>Revenue ▼</th>
-                <th>Status ▼</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product) => (
-                <tr key={product.id}>
-                  <td><input type="checkbox" /></td>
-                  <td>
-                    <div className="product-info">
-                      <span className="product-image">{product.image}</span>
-                      <div>
-                        <div className="product-name">{product.name}</div>
-                        <div className="product-id">Txn ID: #{product.id}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>${product.price.toFixed(2)}</td>
-                  <td>{product.view.toLocaleString()}</td>
-                  <td>{product.click}</td>
-                  <td>{product.quantity.toLocaleString()}</td>
-                  <td>${product.revenue.toLocaleString()}</td>
-                  <td>
-                    <span className="status-badge active">
-                      ● {product.status}
-                    </span>
-                  </td>
-                  <td>
-                    <button className="action-button">⋮</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="table-footer">
-          <div className="page-info">100 Pages</div>
-          <div className="pagination">
-            <select value={currentPage} onChange={(e) => setCurrentPage(Number(e.target.value))}>
-              <option value={1}>Page 1</option>
-              <option value={2}>Page 2</option>
-              <option value={3}>Page 3</option>
-            </select>
-            <button className="pagination-button" disabled={currentPage === 1}>
-              &lt;
-            </button>
-            <button className="pagination-button pagination-next">
-              &gt;
-            </button>
-          </div>
-        </div>
+        )}
       </div>
-    </div>
+
+      <AddProductPopup 
+        isOpen={popupState.isOpen}
+        onClose={closePopup}
+        onSubmit={handlePopupSubmit}
+        mode={popupState.mode}
+        productData={popupState.productData}
+      />
+
+      <FilterPanel 
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        onApply={handleApplyFilters}
+        currentFilters={filters}
+      />
+
+      <Toast 
+        isVisible={toast.isVisible}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ ...toast, isVisible: false })}
+        duration={3000}
+      />
+    </>
   );
 };
 

@@ -1,13 +1,38 @@
-:root {
-  /* 🌈 Màu sắc chủ đạo */
-  --color-primary: #0057ab;
-  --color-bg: #F3F3F3;
-  --color-text: #212121;
-  --color-text-revert: #ffffff;
-  --border: #afd3ed;
-  --color-phu: #d1e7f5;
-}
+$color-background: #F2F2F2;
+$color-back-sidebar: #E9EDF2;
+$color-text-header: #1B2629;
+$color-text-legend: #A0A5A7;
+$color-text-main: #85888A;
+$color-primary-1: #01AE84;
+$color-primary-2: #35D64E;
+$color-border: #F4FAFB;
+$color-back-table: #FFFFFF;
+$color-back-table-header: #F2F7FA;
+$color-back-on-sidebar: #EDF4F6;
 
+/* =============================
+   🔠 TYPOGRAPHY & ICON SIZES
+   ============================= */
+$size-text-logo: 22px;
+$size-text-legend: 11px;
+$size-text-main: 14px;
+$size-text-main-title: 15px;
+$size-text-title: 20px;
+$size-icon-main: 20px;
+$size-icon-logo: 50px;
+$size-border: 2px;
+
+/* =============================
+   📏 BORDER & RADIUS TOKENS
+   ============================= */
+$radius-main: 25px;
+$radius-profile: 15px;
+$radius-input: 15px;
+$radius-input-button: 8px;
+$radius-checkbox: 5px;
+
+$padding-input: 8px;
+$padding-main: 20px;
 /* Thiết lập nền cho toàn bộ trang */
 html {
   font-size: 62.5%; /* Dễ dàng thay đổi kích thước chữ toàn bộ trang */
@@ -25,9 +50,9 @@ body *::after {
   padding: 0;
   box-sizing: border-box;
   background-color: transparent;
-  color: var(--color-text);
+  color: $color-text-main;
   font-family: "Inter", sans-serif;
-  font-size: 1.5rem;
+  font-size: $size-text-main;
 }
 
 
@@ -96,7 +121,8 @@ h1 {
 }
 
 h2 {
-  font-size: 2.8rem; /* 28px cho màn hình di động */
+  font-size: $size-text-title; 
+
 }
 
 h3 {

@@ -4,8 +4,8 @@ import Logo from '../Logo/Logo';
 
 const LoginForm = ({ onSwitchToRegister, onLoginSuccess }) => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: 'm@gmail.com',
+    password: '1',
     rememberMe: false
   });
 

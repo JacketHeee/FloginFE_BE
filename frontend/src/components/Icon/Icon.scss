@@ -1,0 +1,14 @@
+.icon {
+    // background-color: #000000;
+    position: relative;
+}
+
+.dot { 
+    width: 4px; 
+    height: 4px;
+    position: absolute;
+    top: 2px; 
+    right: 2px;
+    background-color: red;
+    border-radius: 50%;
+} 

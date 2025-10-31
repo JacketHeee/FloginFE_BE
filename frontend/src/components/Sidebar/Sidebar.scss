@@ -1,18 +1,19 @@
+@use "../../App.scss" as *;
+
 .sidebar {
+  height: 100%;
   width: 280px;
-  height: 100vh;
-  background: #f8f9fa;
+  padding: 20px;
+  gap: 20px;
+
+  border-radius: $radius-main;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #e1e4e8;
-  position: fixed;
-  left: 0;
-  top: 0;
-  overflow-y: auto;
+  // border: $size-border solid $color-border;
+  outline: $size-border solid $color-border;
+  background-color: $color-back-sidebar;
 
   .sidebar-header {
-    padding: 24px 20px;
-    border-bottom: 1px solid #e1e4e8;
 
     .logo {
       display: flex;
@@ -20,9 +21,9 @@
       gap: 12px;
 
       .logo-icon {
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        width: $size-icon-logo;
+        height: $size-icon-logo;
+        background: linear-gradient(90deg, $color-primary-1 0%, $color-primary-2 100%);
         border-radius: 12px;
         display: flex;
         align-items: center;
@@ -31,12 +32,14 @@
       }
 
       .logo-text {
-        font-size: 24px;
-        font-weight: 700;
-        color: #1a1a1a;
+        font-size: $size-text-logo;
+        font-weight: bold;
+        color: $color-text-header;
       }
     }
   }
+
+  
 
   .sidebar-content {
     flex: 1;
@@ -85,26 +88,27 @@
         }
 
         &:hover {
-          background: #f0f1f3;
-
+          background-color: $color-back-on-sidebar;
+          border-radius: $radius-input;
           .menu-text {
-            color: #1a1a1a;
+            // color: #1a1a1a;
           }
         }
 
         &.active {
-          background: #e8f5e9;
-          border-right: 3px solid #10b981;
+          background-color: $color-back-on-sidebar;
+          border-radius: $radius-input;
+          // border-right: 3px solid $color-primary-1;
 
           .menu-text {
-            color: #10b981;
-            font-weight: 600;
+            // color: #10b981;
+            // font-weight: 500;
           }
         }
       }
 
       .submenu {
-        padding-left: 40px;
+        padding-left: 30px;
 
         .submenu-item {
           display: flex;
@@ -112,23 +116,26 @@
           gap: 8px;
           padding: 10px 20px;
           cursor: pointer;
-          font-size: 14px;
-          color: #666;
+          font-size: $size-text-main;
           transition: all 0.2s;
 
           .submenu-dot {
             font-size: 20px;
-            color: #10b981;
+            // color: #10b981;
           }
 
           &:hover {
-            color: #1a1a1a;
-            background: #f0f1f3;
+            
           }
 
           &.active {
-            color: #10b981;
-            font-weight: 600;
+            span {
+              color: $color-primary-1 !important;
+            }
+
+            .submenu-dot {
+              color: $color-primary-1 !important;
+            }
           }
         }
       }
@@ -136,8 +143,7 @@
   }
 
   .sidebar-footer {
-    border-top: 1px solid #e1e4e8;
-    padding: 16px;
+    // padding: 16px;
 
     .dark-mode-toggle {
       display: flex;
@@ -153,8 +159,8 @@
 
       .toggle-text {
         flex: 1;
-        font-size: 14px;
-        color: #666;
+        font-size: $size-text-main;
+        color: $color-text-main;
       }
 
       .switch {
@@ -169,7 +175,7 @@
           height: 0;
 
           &:checked + .slider {
-            background-color: #10b981;
+            background-color: $color-primary-1;
 
             &:before {
               transform: translateX(20px);
@@ -208,35 +214,37 @@
       align-items: center;
       gap: 12px;
       padding: 12px;
-      border-radius: 12px;
-      background: white;
-      border: 1px solid #e1e4e8;
+      border-radius: $radius-profile;
+      background: $color-back-on-sidebar;
+      outline-color: $size-border solid $color-border;
+      border:$size-border solid $color-border;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08) inset;
       cursor: pointer;
       transition: all 0.2s;
 
       &:hover {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       }
 
       .user-avatar {
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        object-fit: cover;
+        // object-fit: cover;
       }
 
       .user-info {
         flex: 1;
 
         .user-name {
-          font-size: 14px;
+          font-size: $size-text-main-title;
           font-weight: 600;
-          color: #1a1a1a;
+          color: $color-text-header;
         }
 
         .user-email {
-          font-size: 12px;
-          color: #999;
+          font-size: $size-text-main;
+          color: $color-text-main;
         }
       }
 

@@ -1,16 +1,52 @@
-.dashboard-layout {
+@use "../../App.scss" as *;
+
+.nen {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("../../assets/background.jpg");
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  padding: 1.3rem;
   display: flex;
-  min-height: 100vh;
-  background: #f5f7fa;
+  border: $size-border solid $color-border;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.4); // lớp phủ trắng
+    backdrop-filter: blur(2rem);
+    z-index: 1;
+  }
+
+  > * {
+    position: relative;
+    z-index: 2; // đảm bảo nội dung hiển thị trên overlay
+  }
+}
+
+
+.dashboard-layout {
+  flex: 1;
+  display: flex;
+  background: $color-background;
+  border-radius: $radius-main;
+  border: $size-border solid $color-border;
+  // gap: 20px;
 
   .dashboard-content {
     flex: 1;
-    margin-left: 280px;
     display: flex;
     flex-direction: column;
+    // background-color: #000000;
+    padding: $padding-main;
+    gap: 20px;
 
     .main-content {
       flex: 1;
+      display: flex;
     }
   }
 }
