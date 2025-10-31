@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import './Sidebar.scss';
+import Devider from '../Devider/Devider';
+import user from "../../assets/user.jpg"
+import Icon from '../Icon/Icon';
 
 const Sidebar = ({ activeMenu, onMenuChange }) => {
   const [expandedMenus, setExpandedMenus] = useState({
@@ -19,66 +22,73 @@ const Sidebar = ({ activeMenu, onMenuChange }) => {
 
   const menuItems = [
     {
-      id: 'dashboard',
-      label: 'Dashboard',
-      icon: '📊',
-      path: '/dashboard'
-    },
-    {
-      id: 'inventory',
-      label: 'Inventory',
-      icon: '📦',
-      expandable: true,
+      id: "main_menu",
+      label: 'MENU',
       subItems: [
-        { id: 'all-products', label: 'All Products', path: '/products' },
-        { id: 'manage-categories', label: 'Manage Categories', path: '/categories' }
+        {
+          id: 'dashboard',
+          label: 'Dashboard',
+          icon: 
+            <Icon> 
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+              </svg>
+            </Icon>,
+          path: '/dashboard'
+        },
+        {
+          id: 'inventory',
+          label: 'Hàng hóa',
+          icon: 
+            <Icon> 
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                <path fillRule="evenodd" d="M1.5 9.832v1.793c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875V9.832a3 3 0 0 0-.722-1.952l-3.285-3.832A3 3 0 0 0 16.215 3h-8.43a3 3 0 0 0-2.278 1.048L2.222 7.88A3 3 0 0 0 1.5 9.832ZM7.785 4.5a1.5 1.5 0 0 0-1.139.524L3.881 8.25h3.165a3 3 0 0 1 2.496 1.336l.164.246a1.5 1.5 0 0 0 1.248.668h2.092a1.5 1.5 0 0 0 1.248-.668l.164-.246a3 3 0 0 1 2.496-1.336h3.165l-2.765-3.226a1.5 1.5 0 0 0-1.139-.524h-8.43Z" clipRule="evenodd" />
+                <path d="M2.813 15c-.725 0-1.313.588-1.313 1.313V18a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3v-1.688c0-.724-.588-1.312-1.313-1.312h-4.233a3 3 0 0 0-2.496 1.336l-.164.246a1.5 1.5 0 0 1-1.248.668h-2.092a1.5 1.5 0 0 1-1.248-.668l-.164-.246A3 3 0 0 0 7.046 15H2.812Z" />
+              </svg>
+            </Icon>,
+          expandable: true,
+          subItems: [
+            { 
+              id: 'products', 
+              label: 'Sản phẩm', 
+              path: '/products' 
+            },
+            { 
+              id: 'categories', 
+              label: 'Thể loại', 
+              path: '/categories' 
+            }
+          ]
+        },
       ]
     },
     {
-      id: 'orders',
-      label: 'Orders',
-      icon: '🛒',
-      path: '/orders'
-    },
-    {
-      id: 'customers',
-      label: 'Customers',
-      icon: '👥',
-      path: '/customers'
-    },
-    {
-      id: 'delivery',
-      label: 'Delivery',
-      icon: '🚚',
-      expandable: true,
-      subItems: []
-    },
-    {
-      id: 'promotions',
-      label: 'Promotions',
-      icon: '🎁',
-      expandable: true,
-      subItems: []
-    },
-    {
-      id: 'analytics',
-      label: 'Analytics',
-      icon: '📈',
-      expandable: true,
-      subItems: []
-    },
-    {
-      id: 'settings',
-      label: 'Settings',
-      icon: '⚙️',
-      expandable: true,
-      subItems: []
-    },
-    {
-      id: 'help',
-      label: 'Help Center',
-      icon: '❓',
-      path: '/help'
+      id: "setting_help",
+      label: 'CÀI ĐẶT & HỖ TRỢ',
+      subItems: [
+        {
+          id: 'settings',
+          label: 'Cài đặt',
+          icon: 
+          <Icon> 
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+            </svg>
+          </Icon>,
+          path: "/setting"
+        },
+        {
+          id: 'help',
+          label: 'Hỗ trợ',
+          icon: 
+          <Icon> 
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+            </svg>
+          </Icon>,
+          path: '/help'
+        }
+      ]
     }
   ];
 
@@ -87,95 +97,94 @@ const Sidebar = ({ activeMenu, onMenuChange }) => {
       <div className="sidebar-header">
         <div className="logo">
           <div className="logo-icon">🛒</div>
-          <span className="logo-text">Grocify</span>
+          <span className="logo-text">LANNM</span>
         </div>
       </div>
 
+     <Devider/>
+
       <div className="sidebar-content">
-        <div className="menu-section">
-          <div className="menu-label">MAIN MENU</div>
-          {menuItems.slice(0, 2).map(item => (
-            <div key={item.id}>
-              <div
-                className={`menu-item ${activeMenu === item.id ? 'active' : ''}`}
-                onClick={() => item.expandable ? toggleMenu(item.id) : onMenuChange(item.id)}
-              >
-                <span className="menu-icon">{item.icon}</span>
-                <span className="menu-text">{item.label}</span>
-                {item.expandable && (
-                  <span className="expand-icon">{expandedMenus[item.id] ? '▼' : '▶'}</span>
-                )}
-              </div>
-              {item.expandable && expandedMenus[item.id] && item.subItems && (
-                <div className="submenu">
-                  {item.subItems.map(subItem => (
-                    <div
-                      key={subItem.id}
-                      className={`submenu-item ${activeMenu === subItem.id ? 'active' : ''}`}
-                      onClick={() => onMenuChange(subItem.id)}
-                    >
-                      <span className="submenu-dot">•</span>
-                      <span>{subItem.label}</span>
+        {
+          menuItems.map(item => (
+            <div className="menu-section">
+              <div className="menu-label">{item.label}</div>
+              {item.subItems.map(item => (
+                <div key={item.id}>
+                  <div className={`menu-item ${activeMenu === item.id ? 'active' : ''}`}
+                    onClick={() => {
+                      onMenuChange(item.id)
+                      if (item.expandable)  
+                        toggleMenu(item.id)
+                    }}
+                  >
+                    <span className="menu-icon">{item.icon}</span>
+                    <span className="menu-text">{item.label}</span>
+                    {item.expandable && (
+                      <Icon>
+                        {expandedMenus[item.id] ? 
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-4">
+                            <path fillRule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                          </svg>
+                          :
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-4">
+                            <path fillRule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                          </svg>
+                        } 
+                      </Icon>
+                    )}
+                  </div>
+                  {item.expandable && expandedMenus[item.id] && item.subItems && (
+                    <div className="submenu">
+                      {item.subItems.map(subItem => (
+                        <div key={subItem.id} className={`submenu-item ${activeMenu === subItem.id ? 'active' : ''}`}
+                          onClick={() => onMenuChange(subItem.id)}
+                        >
+                          <span className="submenu-dot">•</span>
+                          <span>{subItem.label}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
-              )}
+              ))}
             </div>
-          ))}
-        </div>
-
-        <div className="menu-section">
-          <div className="menu-label">OPERATION & PROMOTION</div>
-          {menuItems.slice(2, 7).map(item => (
-            <div
-              key={item.id}
-              className={`menu-item ${activeMenu === item.id ? 'active' : ''}`}
-              onClick={() => item.expandable ? toggleMenu(item.id) : onMenuChange(item.id)}
-            >
-              <span className="menu-icon">{item.icon}</span>
-              <span className="menu-text">{item.label}</span>
-              {item.expandable && (
-                <span className="expand-icon">{expandedMenus[item.id] ? '▼' : '▶'}</span>
-              )}
-            </div>
-          ))}
-        </div>
-
-        <div className="menu-section">
-          <div className="menu-label">SETTING & SUPPORT</div>
-          {menuItems.slice(7).map(item => (
-            <div
-              key={item.id}
-              className={`menu-item ${activeMenu === item.id ? 'active' : ''}`}
-              onClick={() => onMenuChange(item.id)}
-            >
-              <span className="menu-icon">{item.icon}</span>
-              <span className="menu-text">{item.label}</span>
-            </div>
-          ))}
-        </div>
+            )
+          )
+        }
+        
       </div>
 
       <div className="sidebar-footer">
         <div className="dark-mode-toggle">
-          <span className="toggle-icon">🌙</span>
+          <Icon>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+            </svg>
+          </Icon>
+
           <span className="toggle-text">Dark Mode</span>
           <label className="switch">
             <input type="checkbox" />
             <span className="slider"></span>
           </label>
         </div>
+
         <div className="user-profile">
-          <img src="https://via.placeholder.com/40" alt="User" className="user-avatar" />
+          <img src={user} alt="User" className="user-avatar" />
           <div className="user-info">
             <div className="user-name">Joseph Alpha</div>
             <div className="user-email">user@gmail.com</div>
           </div>
-          <span className="dropdown-icon">▼</span>
+          <Icon>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+            </svg>
+          </Icon>
         </div>
       </div>
     </div>
   );
 };
+
 
 export default Sidebar;
