@@ -7,14 +7,16 @@ const Dashboard = ({ children }) => {
   const [activeMenu, setActiveMenu] = useState('all-products');
 
   return (
-    <div className="dashboard-layout">
-      <Sidebar activeMenu={activeMenu} onMenuChange={setActiveMenu} />
-      <div className="dashboard-content">
-        <Header />
-        <main className="main-content">
-          {children}
-        </main>
-      </div>
+    <div className='nen'>
+        <div className="dashboard-layout">
+          <Sidebar activeMenu={activeMenu} onMenuChange={setActiveMenu} />
+          <div className="dashboard-content">
+            <Header />
+            <main className="main-content">
+              {children}
+            </main>
+          </div>
+        </div>
     </div>
   );
 };

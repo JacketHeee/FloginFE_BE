@@ -1,0 +1,29 @@
+@use "../../App.scss" as *;
+
+.panel-search {
+    display: flex;
+    align-items: center;
+    border: $size-border solid $color-border;
+    border-radius: $radius-input;
+    padding: $padding-input 15px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2) inset;
+
+    &.back-white {
+        border: $size-border solid $color-background;
+    }
+
+    div:first-child {
+      cursor: pointer;
+    }
+
+    .search-button {
+      background: transparent;
+      background-color: $color-back-table;
+      border-radius: $radius-input-button;
+      color: $color-primary-1;
+      font-weight: 600;
+    }
+    .search-input {
+      background: transparent;
+    }
+  }
