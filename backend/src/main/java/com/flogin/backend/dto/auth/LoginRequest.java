@@ -1,4 +1,4 @@
-package com.flogin.backend.dto;
+package com.flogin.backend.dto.auth;
 
 
 import jakarta.validation.constraints.Email;

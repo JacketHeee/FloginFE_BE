@@ -1,4 +1,4 @@
-package com.flogin.backend.dto;
+package com.flogin.backend.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthResponse {
-    private String result;
+    private String message;
+    private String token;
 }
