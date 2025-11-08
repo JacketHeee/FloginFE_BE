@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { routes } from './routes'
+import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute'
 
 // Lazy load components to avoid circular imports
 import Register from '../pages/Register/Register'
@@ -42,7 +43,9 @@ const AppRouter = () => {
                 key={route.path}
                 path={route.path}
                 element={
-                  isLoggedIn ? <Component /> : <Navigate to="/login" replace />
+                  <ProtectedRoute>
+                    <Component />
+                  </ProtectedRoute>
                 }
               />
             )
@@ -64,13 +67,11 @@ const AppRouter = () => {
               key={`dashboard-${index}`}
               path={route.path}
               element={
-                isLoggedIn ? (
+                <ProtectedRoute>
                   <Dashboard>
                     <Outlet />
                   </Dashboard>
-                ) : (
-                  <Navigate to="/login" replace />
-                )
+                </ProtectedRoute>
               }
             >
               {route.children.map((child) => {

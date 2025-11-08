@@ -117,10 +117,13 @@ const Sidebar = () => {
     setShowLogoutPopup(true);
   };
 
-  const confirmLogout = () => {
-    logout();
+  const confirmLogout = async () => {
+    const result = await logout();
     setShowLogoutPopup(false);
-    navigate("/login");
+    
+    if (result.success) {
+      navigate("/login");
+    }
   };
 
   const cancelLogout = () => {
