@@ -7,6 +7,7 @@ import AddProductPopup from '../../components/AddProductPopup/AddProductPopup';
 import Toast from '../../components/Toast/Toast';
 import useProducts from '../../hooks/useProducts';
 import { productToRow } from '../../utils/formatters';
+import CustomSelect from '../../components/CustomSelect/CustomSelect';
 
 const Products = () => {
   const [popupState, setPopupState] = useState({
@@ -87,27 +88,26 @@ const Products = () => {
 
   // Handle delete product
   const handleDeleteProduct = async (row) => {
-    const productId = row[0];
-    const productName = row[1];
-    
-    if (window.confirm(`Bạn có chắc chắn muốn xóa sản phẩm "${productName}"?`)) {
-      const result = await deleteProduct(productId);
-      
-      if (result.success) {
-        setToast({ 
-          isVisible: true, 
-          message: `Đã xóa sản phẩm "${productName}" thành công!`, 
-          type: 'success' 
-        });
-      } else {
-        setToast({ 
-          isVisible: true, 
-          message: `Lỗi: ${result.error}`, 
-          type: 'error' 
-        });
-      }
-    }
-  };
+  const productId = row[0];
+  const productName = row[1];
+
+  const result = await deleteProduct(productId);
+  
+  if (result.success) {
+    setToast({ 
+      isVisible: true, 
+      message: `Đã xóa sản phẩm "${productName}" thành công!`, 
+      type: 'success' 
+    });
+  } else {
+    setToast({ 
+      isVisible: true, 
+      message: `Lỗi: ${result.error}`, 
+      type: 'error' 
+    });
+  }
+};
+
 
   // Handle search
   const handleSearch = (searchValue) => {
@@ -245,14 +245,12 @@ const Products = () => {
                 Hiển thị {((pagination.page - 1) * pagination.limit) + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} trong tổng số {pagination.total} sản phẩm
               </div>
               <div className="pagination">
-                <select 
-                  value={pagination.page} 
-                  onChange={(e) => changePage(Number(e.target.value))}
-                >
-                  {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(page => (
-                    <option key={page} value={page}>Page {page}</option>
-                  ))}
-                </select>
+                <CustomSelect
+                  options={Array.from({ length: pagination.totalPages }, (_, i) => `Page ${i + 1}`)}
+                  value={`Page ${pagination.page}`}
+                  onChange={(option) => changePage(Number(option.replace("Page ", "")))}
+                />
+
                 <button 
                   className="pagination-button" 
                   disabled={pagination.page === 1}

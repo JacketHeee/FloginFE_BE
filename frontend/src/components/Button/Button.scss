@@ -2,34 +2,130 @@
 
 .btn {
   padding: 10px 10px;
-  border-radius: 8px;
+  border-radius: $radius-input-button;
   border: none;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.25s ease;
-  font-size: 15px;
+  transition: all 0.2s ease;
+  font-size: $size-text-main;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
 
-  &.primary {
-    // background-color: #04da8d;
-    
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(1, 174, 132, 0.2);
+  }
+
+  // Default variant
+  &--default {
+    background: $color-back-button;
     color: $color-text-header;
+    border: $size-border solid $color-border;
 
-    &:hover {
-        background-color: $color-back-button;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(4, 218, 141, 0.35);
+    &:hover:not(:disabled) {
+      background: $color-back-on-sidebar;
+      transform: translateY(-1px);
     }
 
-    &:active {
+    &:active:not(:disabled) {
       transform: translateY(0);
-      box-shadow: none;
     }
   }
 
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
+  // Primary variant (brand gradient)
+  &--primary {
+    background: linear-gradient(90deg, $color-primary-1 0%, $color-primary-2 100%);
+    color: white;
+    font-weight: 600;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(1, 174, 132, 0.3);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+
+  // Secondary variant
+  &--secondary {
+    background: $color-back-on-sidebar;
+    color: $color-text-header;
+    border: $size-border solid $color-border;
+
+    &:hover:not(:disabled) {
+      background: #d1d5db;
+    }
+  }
+
+  // Success variant (Save button)
+  &--success,
+  &--save {
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+    color: white;
+    font-weight: 600;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+
+  // Danger variant (Delete button)
+  &--danger,
+  &--delete {
+    background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    font-weight: 600;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+
+  // Cancel variant
+  &--cancel {
+    background: $color-back-on-sidebar;
+    color: $color-text-main;
+
+    &:hover:not(:disabled) {
+      background: #e1e4e8;
+    }
+  }
+
+  // Update variant (similar to primary but with different color)
+  &--update {
+    background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    font-weight: 600;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
   }
 }

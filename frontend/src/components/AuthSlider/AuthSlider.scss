@@ -1,80 +1,137 @@
-.auth-slider {
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-  height: 100%;
-  border-radius: 24px;
-  padding: 48px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: relative;
-  overflow: hidden;
+@use "../../App.scss" as *;
 
-  &::before {
-    content: '';
+.auth-slider {
+  position: relative;
+  height: 100%;
+  flex: 1;
+  border-radius: $radius-input;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+
+  .slider-overlay {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60%;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500"><path d="M0,250 Q250,150 500,250 T1000,250 L1000,500 L0,500 Z" fill="rgba(0,0,0,0.2)"/></svg>') no-repeat center bottom;
-    background-size: cover;
+    inset: 0;
+    z-index: 0;
+    mix-blend-mode: overlay;
   }
 
   .slider-content {
     position: relative;
     z-index: 1;
-    height: 100%;
+    width: 80%;
+    max-width: 600px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    gap: 20px;
+    color: #fff;
   }
 
-  .logo {
+  .slider-logo {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 48px;
+
     svg {
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+      width: 100px;
+      height: auto;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+      transition: transform 0.4s ease;
+
+      &:hover {
+        transform: scale(1.05) rotate(-2deg);
+      }
     }
   }
 
   .slider-text {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 60px 0;
+    position: relative;
+    h1,
+    h2 {
+      color: #ffffff;
+      margin: 0;
+      text-shadow: 0 3px 14px rgba(0, 0, 0, 0.25);
+      animation: fadeInUp 0.8s ease both;
+    }
 
     h1 {
-      color: white;
-      font-size: 42px;
-      font-weight: 500;
-      margin: 0;
-      line-height: 1.2;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      font-size: 46px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      line-height: 1.25;
+    }
+
+    h2 {
+      font-size: 26px;
+      font-weight: 400;
+      opacity: 0.95;
+    }
+
+    /* Gạch trang trí nhẹ dưới dòng đầu */
+    &::after {
+      content: "";
+      display: block;
+      width: 80px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 2px;
+      margin-top: 16px;
+      animation: expandBar 1s ease-out;
     }
   }
 
   .slider-dots {
+    margin-top: 60px;
     display: flex;
     gap: 12px;
-    justify-content: center;
-    padding: 20px 0;
+    justify-content: flex-start;
 
     .dot {
-      width: 40px;
+      width: 36px;
       height: 4px;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 2px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.35);
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.35s ease;
 
       &.active {
-        background: white;
-        width: 60px;
+        width: 56px;
+        background: #ffffff;
+        box-shadow: 0 2px 8px rgba(255, 255, 255, 0.4);
       }
 
       &:hover {
-        background: rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.7);
+        transform: scale(1.1);
       }
     }
+  }
+}
+
+
+/* Hiệu ứng chữ trượt lên */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hiệu ứng thanh gạch xuất hiện */
+@keyframes expandBar {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 80px;
+    opacity: 1;
   }
 }

@@ -6,6 +6,7 @@ import user from "../../assets/user.jpg"
 import Icon from '../Icon/Icon';
 import Button from '../Button/Button';
 import { useAuth } from '../../contexts/AuthContext';
+import Logo from '../Logo/Logo';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -129,10 +130,11 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <div className="logo">
+        {/* <div className="logo">
           <div className="logo-icon">🛒</div>
           <span className="logo-text">LANNM</span>
-        </div>
+        </div> */}
+       <Logo/> 
       </div>
 
      <Devider/>
@@ -208,7 +210,7 @@ const Sidebar = () => {
         <div className="user-profile">
           <img src={user} alt="User" className="user-avatar" />
           <div className="user-info">
-            <div className="user-name">Joseph Alpha</div>
+            <div className="user-name">Jacket Hee</div>
             <div className="user-email">user@gmail.com</div>
           </div>
           

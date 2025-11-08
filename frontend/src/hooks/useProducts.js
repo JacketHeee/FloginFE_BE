@@ -83,7 +83,19 @@ const useProducts = (initialFilters = {}) => {
   const deleteProduct = async (id) => {
     try {
       await productService.deleteProduct(id);
-      await fetchProducts(); // Refresh list
+      
+      // Check if we need to go to previous page after deletion
+      // If we're on the last page and it will be empty after deletion
+      const currentPageFirstItem = (pagination.page - 1) * pagination.limit + 1;
+      const willBeEmpty = pagination.total === currentPageFirstItem && pagination.page > 1;
+      
+      if (willBeEmpty) {
+        // Move to previous page before fetching
+        setPagination(prev => ({ ...prev, page: prev.page - 1 }));
+      } else {
+        await fetchProducts(); // Refresh list
+      }
+      
       return { success: true };
     } catch (err) {
       return { success: false, error: err.message };

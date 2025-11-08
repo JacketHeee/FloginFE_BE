@@ -1,26 +1,29 @@
+@use "../../App.scss" as *;
+
 .register-form {
-  padding: 48px 64px;
+  width: 100%;
+  max-width: 420px;
+  padding: 48px 24px;
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: white;
-  color: #1a1a1a;
+  background: transparent;
+  color: $color-text-header;
 
   .form-header {
     text-align: right;
-    // margin-bottom: 4rem;
 
     .back-button {
       background: transparent;
       border: none;
-      color: #666;
+      color: $color-text-main;
       cursor: pointer;
-      font-size: 14px;
+      font-size: $size-text-main;
       padding: 8px 16px;
       transition: color 0.3s;
 
       &:hover {
-        color: #1a1a1a;
+        color: $color-text-header;
       }
     }
   }
@@ -30,23 +33,26 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    // justify-content: center;
+    justify-content: center;
     max-width: 420px;
+    width: 100%;
 
     h1 {
       font-size: 42px;
       font-weight: 600;
       margin: 0 0 12px 0;
-      color: #1a1a1a;
+      color: $color-text-header;
     }
 
     .subtitle {
-      color: #666;
+      color: $color-text-main;
       margin-bottom: 32px;
+      font-size: $size-text-main;
 
       a {
-        color: #6366f1;
+        color: $color-primary-1;
         text-decoration: none;
+        font-weight: 500;
 
         &:hover {
           text-decoration: underline;
@@ -70,22 +76,22 @@
         input[type="password"] {
           width: 100%;
           padding: 16px 20px;
-          background: #f5f7fa;
-          border: 1px solid #e1e4e8;
-          border-radius: 12px;
-          color: #1a1a1a;
-          font-size: 15px;
+          background: $color-back-on-sidebar;
+          border: $size-border solid $color-border;
+          border-radius: $radius-input;
+          color: $color-text-header;
+          font-size: $size-text-main;
           transition: all 0.3s;
 
           &::placeholder {
-            color: #999;
+            color: $color-text-legend;
           }
 
           &:focus {
             outline: none;
-            border-color: #6366f1;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            border-color: $color-primary-1;
+            background: $color-back-table;
+            box-shadow: 0 0 0 3px rgba(1, 174, 132, 0.1);
           }
         }
 
@@ -116,19 +122,20 @@
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            font-size: 14px;
-            color: #666;
+            font-size: $size-text-main;
+            color: $color-text-main;
 
             input[type="checkbox"] {
               width: 20px;
               height: 20px;
               cursor: pointer;
-              accent-color: #6366f1;
+              accent-color: $color-primary-1;
             }
 
             a {
-              color: #6366f1;
+              color: $color-primary-1;
               text-decoration: none;
+              font-weight: 500;
 
               &:hover {
                 text-decoration: underline;
@@ -141,9 +148,9 @@
       .submit-button {
         width: 100%;
         padding: 16px;
-        background: #6366f1;
+        background: linear-gradient(90deg, $color-primary-1 0%, $color-primary-2 100%);
         border: none;
-        border-radius: 12px;
+        border-radius: $radius-input;
         color: white;
         font-size: 16px;
         font-weight: 600;
@@ -152,9 +159,8 @@
         margin-top: 24px;
 
         &:hover {
-          background: #5558e3;
           transform: translateY(-2px);
-          box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
+          box-shadow: 0 8px 20px rgba(1, 174, 132, 0.3);
         }
 
         &:active {
@@ -168,8 +174,8 @@
       text-align: center;
 
       p {
-        color: #999;
-        font-size: 14px;
+        color: $color-text-legend;
+        font-size: $size-text-main;
         margin-bottom: 16px;
       }
 
@@ -184,18 +190,18 @@
           justify-content: center;
           gap: 8px;
           padding: 14px;
-          background: #f5f7fa;
-          border: 1px solid #e1e4e8;
-          border-radius: 12px;
-          color: #1a1a1a;
-          font-size: 15px;
+          background: $color-back-on-sidebar;
+          border: $size-border solid $color-border;
+          border-radius: $radius-input;
+          color: $color-text-header;
+          font-size: $size-text-main;
           cursor: pointer;
           transition: all 0.3s;
 
           &:hover {
-            background: white;
-            border-color: #6366f1;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+            background: $color-back-table;
+            border-color: $color-primary-1;
+            box-shadow: 0 4px 12px rgba(1, 174, 132, 0.15);
           }
 
           &.google svg,

@@ -31,12 +31,9 @@ const LoginForm = ({ onSwitchToRegister, onLoginSuccess }) => {
 
   return (
     <div className="login-form">
-      <div className="form-header">
-        <Logo isFull={true}/>
-      </div>
 
       <div className="form-content">
-        <h1>Chào mừng quay lại</h1>
+        <h1>Xin chào!</h1>
         <p className="subtitle">
           Bạn chưa có tài khoản? <a href="#" onClick={(e) => { e.preventDefault(); onSwitchToRegister(); }}>Đăng ký ngay</a>
         </p>

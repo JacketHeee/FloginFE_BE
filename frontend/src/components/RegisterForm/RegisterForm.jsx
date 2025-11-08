@@ -29,10 +29,6 @@ const RegisterForm = ({ onSwitchToLogin }) => {
 
   return (
     <div className="register-form">
-      <div className="form-header">
-        <Logo isFull={true}/>
-      </div>
-
       <div className="form-content">
         <h1>Tạo tài khoản</h1>
         <p className="subtitle">

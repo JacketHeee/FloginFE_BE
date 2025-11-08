@@ -1,8 +1,87 @@
+@use "../../App.scss" as *;
+
 .logo {
   display: flex;
-  
-  > img {
-    height: 8rem;
+  align-items: center;
+  gap: 12px;
+
+  &__icon {
+    filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.12));
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    justify-content: center;
+
+    h1 {
+      font-weight: 700;
+      margin: 0;
+      line-height: 1;
+      font-family: "Inter", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    p {
+      margin: 0;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0.3px;
+      opacity: 0.9;
+    }
+  }
+
+  /* ✅ Theme sáng (nền trắng hoặc xám nhạt) */
+  &--light {
+    .logo__text {
+      h1 {
+        background: linear-gradient(135deg, #00a074 0%, #1bbf6a 50%, #3ad655 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); // thêm bóng nhẹ cho tương phản
+      }
+
+      p {
+        color: #19965a; // xanh đậm hơn, dễ đọc hơn trên nền sáng
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  /* ✅ Theme tối (nền gradient hoặc tối) */
+  &--dark {
+    .logo__text {
+      h1 {
+        color: #ffffff;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.85);
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+
+  /* Kích thước */
+  &--small {
+    gap: 8px;
+  }
+
+  &--medium {
+    gap: 12px;
+  }
+
+  &--large {
+    gap: 16px;
   }
 }
-

@@ -3,15 +3,20 @@ import "./Button.scss"
 export default function Button({ 
   label, 
   onClick, 
-  type = "primary", 
+  variant = "default", // default, primary, secondary, success, danger, cancel, save, delete, update
   disabled = false,
-  children
+  children,
+  type = "button", // button, submit, reset
+  className = "",
+  ...props
 }) {
   return (
     <button 
-      className={`btn ${type}`} 
+      className={`btn btn--${variant} ${className}`} 
       onClick={onClick} 
       disabled={disabled}
+      type={type}
+      {...props}
     >
       {label}
       {children}
