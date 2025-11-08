@@ -1,42 +1,65 @@
-import { useState } from 'react';
-import './RegisterForm.scss';
-import Logo from '../Logo/Logo';
+import { useState } from "react";
+import "./RegisterForm.scss";
+import Logo from "../Logo/Logo";
+import { register } from "../../services/authService";
 
 const RegisterForm = ({ onSwitchToLogin }) => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    agreeToTerms: false
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    agreeToTerms: false,
   });
 
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    console.log("Form submitted:", formData);
     // Handle registration logic here
+    try {
+      const data = await register(
+        formData.firstName,
+        formData.lastName,
+        formData.email,
+        formData.password
+      );
+
+      console.log("Đăng kí thành công! ", data);
+    } catch (err) {
+      console.error("Đằng kí thất bại", err);
+      alert("Kiểm tra lại các trường dữ liệu");
+    }
   };
 
   return (
     <div className="register-form">
       <div className="form-header">
-        <Logo isFull={true}/>
+        <Logo isFull={true} />
       </div>
 
       <div className="form-content">
         <h1>Tạo tài khoản</h1>
         <p className="subtitle">
-          Bạn đã có tài khoản? <a href="#" onClick={(e) => { e.preventDefault(); onSwitchToLogin(); }}>Đăng nhập ngay</a>
+          Bạn đã có tài khoản?{" "}
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              onSwitchToLogin();
+            }}
+          >
+            Đăng nhập ngay
+          </a>
         </p>
 
         <form onSubmit={handleSubmit}>
@@ -88,7 +111,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
               className="toggle-password"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? '👁️' : '👁️‍🗨️'}
+              {showPassword ? "👁️" : "👁️‍🗨️"}
             </button>
           </div>
 
@@ -101,7 +124,9 @@ const RegisterForm = ({ onSwitchToLogin }) => {
                 onChange={handleChange}
                 required
               />
-              <span>Tôi đồng ý với các <a href="/terms"> Điều khoản & Điều kiện</a></span>
+              <span>
+                Tôi đồng ý với các <a href="/terms"> Điều khoản & Điều kiện</a>
+              </span>
             </label>
           </div>
 

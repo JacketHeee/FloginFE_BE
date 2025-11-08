@@ -32,7 +32,7 @@ public class AuthService {
 
         user = userService.save(user);
 
-        String token = jwtService.generateToken(user.getEmail());
+        String token = jwtService.generateToken(user.getEmail(),user.getRole());
         return new AuthResponse("Đăng kí thành công",token);
     }
 
@@ -44,7 +44,7 @@ public class AuthService {
         if(!passwordEncoder.matches(loginRequest.getPassword(),user.getPasswordHash())) {
             throw new BadCredentialsException("Xác thực ko hợp lệ: sai mật khẩu");
         }
-        String token = jwtService.generateToken(user.getEmail());
+        String token = jwtService.generateToken(user.getEmail(),user.getRole());
         return new AuthResponse("Đăng nhập thành công",token);
     }
 

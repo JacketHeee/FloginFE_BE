@@ -22,44 +22,46 @@
         @Value("${jwt.expiration-minutes}")
         private long expirationMinutes;
 
-        public String generateToken(String email) {
+        public String generateToken(String email,String role) {
             Date now = new Date();
             Date expiryDate = new Date(now.getTime() + expirationMinutes * 60 * 1000);
-            return Jwts.builder().setSubject(email).setIssuedAt(now).setExpiration(expiryDate).signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
+            return Jwts.builder().setSubject(email).claim("role", role).setIssuedAt(now).setExpiration(expiryDate).signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
         }
 
-        //kiem tra token hop le
-        public boolean isValidToken(String token, String email) {
-            final String extractedEmail = getExtractedEmail(token);
-            return (extractedEmail.equals(email)) && !isTokenExpired(token);
+        public String getEmail(String token) {
+            return getClaims(token).getSubject();
         }
 
-        //lay email tu token
-        public String getExtractedEmail(String token) {
-            return getExtractedClaim(token, Claims::getSubject);
-        }
-        //kiem tra token het han
-        public boolean isTokenExpired(String token) {
-            return getExtractExpiration(token).before(new Date());
+        public String getRole(String token) {
+            return getClaims(token).get("role", String.class);
         }
 
-        //get time het han cua token
-        private Date getExtractExpiration(String token) {
-            return getExtractedClaim(token,Claims::getExpiration);
+        public boolean isTokenValid(String token) {
+            try {
+                return !getClaims(token).getExpiration().before(new Date());
+            } catch (Exception e) {
+                return false;
+            }
         }
 
-        public <T> T getExtractedClaim(String token, Function<Claims, T> claimsTFunction) {
-            final Claims claims = getExtractAllClaims(token);
-            return claimsTFunction.apply(claims);
+        public Claims parseToken(String token) {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
         }
 
-        private Claims getExtractAllClaims(String token) {
-            return Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token).getBody();
+        private Claims getClaims(String token) {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
         }
+
 
         private Key getSignInKey() {
             return Keys.hmacShaKeyFor(jwtSecretKey.getBytes());
         }
-
-
     }

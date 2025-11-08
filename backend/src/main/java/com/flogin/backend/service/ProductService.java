@@ -7,12 +7,18 @@ import com.flogin.backend.entity.Category;
 import com.flogin.backend.entity.Product;
 import com.flogin.backend.repository.CategoryRepository;
 import com.flogin.backend.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.flogin.backend.exception.BadRequestException;
 
 
+import java.awt.print.Pageable;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductService {
@@ -87,6 +93,42 @@ public class ProductService {
         productRepository.delete(product);
 
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getQuantity(), product.getDescription(), product.getCategory().getName());
+    }
+
+    //pagination
+    public Map<String,Object> getProducts(int page, int limit, String search, String category, String sortBy, String sortOrder) {
+        PageRequest pageRequest = PageRequest.of(
+                page - 1,
+                limit,
+                sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending()
+        );
+
+        Page<Product> productInPage;
+
+        if(search != null && !search.isEmpty()) {
+            productInPage = productRepository.findByNameContainingIgnoreCase(search,pageRequest);
+        } else {
+            productInPage = productRepository.findAll(pageRequest);
+        }
+
+        List<ProductResponse> productResponses = productInPage.getContent().stream()
+                .map(product -> new ProductResponse(
+                        product.getId(),
+                        product.getName(),
+                        product.getPrice(),
+                        product.getQuantity(),
+                        product.getDescription(),
+                        product.getCategory().getName()
+                )).toList();
+
+        Map<String,Object> res = new HashMap<>();
+        res.put("data", productResponses);
+        res.put("total", productInPage.getTotalElements());
+        res.put("page", page);
+        res.put("limit", limit);
+        res.put("totalPages", productInPage.getTotalPages());
+
+        return res;
     }
 
 }

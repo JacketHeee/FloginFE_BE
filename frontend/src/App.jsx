@@ -6,6 +6,7 @@ import ProductList from './pages/ProductList/ProductList';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('auth'); // 'auth' or 'dashboard'
+  console.log("Current page:", currentPage);
 
   return (
     <div className="app">
