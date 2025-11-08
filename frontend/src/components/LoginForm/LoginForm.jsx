@@ -84,7 +84,7 @@ const LoginForm = ({ onSwitchToRegister, onLoginSuccess }) => {
             <a href="#" className="forgot-password">Quên mật khẩu?</a>
           </div>
 
-          <button type="submit" className="submit-button">
+          <button type="submit" className="submit-button" onClick={handleSubmit}>
             Đăng nhập
           </button>
         </form>

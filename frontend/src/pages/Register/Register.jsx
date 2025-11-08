@@ -1,12 +1,27 @@
 
-import { useState } from 'react';
-import AuthSlider from '../../components/AuthSlider/AuthSlider';
-import RegisterForm from '../../components/RegisterForm/RegisterForm';
-import LoginForm from '../../components/LoginForm/LoginForm';
-import './Register.scss';
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthContext'
+import AuthSlider from '../../components/AuthSlider/AuthSlider'
+import RegisterForm from '../../components/RegisterForm/RegisterForm'
+import LoginForm from '../../components/LoginForm/LoginForm'
+import './Register.scss'
 
-const Register = ({ onLoginSuccess }) => {
-  const [isLogin, setIsLogin] = useState(true);
+const Register = () => {
+  const [isLogin, setIsLogin] = useState(true)
+  const navigate = useNavigate()
+  const { login } = useAuth()
+
+  const handleLoginSuccess = () => {
+    // Sử dụng auth context thay vì localStorage trực tiếp
+    login({ email: 'user@example.com' }) // Mock user data
+    navigate('/products')
+  }
+
+  const handleRegisterSuccess = () => {
+    // Sau khi đăng ký thành công, chuyển sang login
+    setIsLogin(true)
+  }
 
   return (
     <div className="register-page">
@@ -16,17 +31,20 @@ const Register = ({ onLoginSuccess }) => {
         </div>
         <div className="right-section">
           {isLogin ? (
-            <LoginForm 
+            <LoginForm
               onSwitchToRegister={() => setIsLogin(false)}
-              onLoginSuccess={onLoginSuccess}
+              onLoginSuccess={handleLoginSuccess}
             />
           ) : (
-            <RegisterForm onSwitchToLogin={() => setIsLogin(true)} />
+            <RegisterForm
+              onSwitchToLogin={() => setIsLogin(true)}
+              onRegisterSuccess={handleRegisterSuccess}
+            />
           )}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Register;
+export default Register

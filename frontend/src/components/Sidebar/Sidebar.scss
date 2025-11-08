@@ -256,6 +256,118 @@
   }
 }
 
+// Logout Popup Styles
+.logout-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease-in-out;
+
+  .logout-popup {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    animation: slideUp 0.3s ease-in-out;
+
+    .logout-popup-header {
+      display: flex;
+      // align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+
+      svg {
+        width: 24px;
+        height: 24px;
+        color: #f59e0b;
+      }
+
+      h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin: 0;
+      }
+    }
+
+    .logout-popup-body {
+      margin-bottom: 24px;
+
+      p {
+        font-size: 15px;
+        color: #666;
+        line-height: 1.5;
+        margin: 0;
+      }
+    }
+
+    .logout-popup-footer {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+
+      button {
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+
+        &.btn-cancel {
+          background: #f5f7fa;
+          color: #666;
+
+          &:hover {
+            background: #e1e4e8;
+          }
+        }
+
+        &.btn-confirm {
+          background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+          color: white;
+
+          &:hover {
+            background: linear-gradient(90deg, #dc2626 0%, #b91c1c 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 // Scrollbar styles
 .sidebar::-webkit-scrollbar {
   width: 6px;

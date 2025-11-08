@@ -1,6 +1,6 @@
 @use "../../App.scss" as *;
 
-.product-list-container {
+.products-container {
   flex: 1;
     background: $color-back-table;
     border-radius: 20px;
@@ -68,9 +68,6 @@
         .filter-button {
           border: $size-border solid $color-background;
 
-          span {
-            // line-height: ;
-          }
           &:hover {
             border-color: #10b981;
             color: #10b981;

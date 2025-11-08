@@ -7,6 +7,7 @@ $color-primary-1: #01AE84;
 $color-primary-2: #35D64E;
 $color-border: #F4FAFB;
 $color-back-table: #FFFFFF;
+$color-back-button: #FFFFFF;
 $color-back-table-header: #F2F7FA;
 $color-back-on-sidebar: #EDF4F6;
 
@@ -76,7 +77,7 @@ a {
 /* Thiết lập các button */
 button {
   border: 1px solid var(--border);
-  background-color: white;
+  // background-color: white;
   padding: 0.5em 1em;
   cursor: pointer;
   border-radius: 4px;

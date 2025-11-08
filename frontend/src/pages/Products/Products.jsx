@@ -1,22 +1,19 @@
 import { useState } from 'react';
-import './ProductList.scss';
+import './Products.scss';
 import CustomTable from '../../components/CustomTable/CustomTable';
 import SearchPanel from '../../components/SearchPanel/SearchPanel';
-import Icon from '../../components/Icon/Icon';
 import Devider from '../../components/Devider/Devider';
 import AddProductPopup from '../../components/AddProductPopup/AddProductPopup';
-import FilterPanel from '../../components/FilterPanel/FilterPanel';
 import Toast from '../../components/Toast/Toast';
 import useProducts from '../../hooks/useProducts';
 import { productToRow } from '../../utils/formatters';
 
-const ProductList = () => {
+const Products = () => {
   const [popupState, setPopupState] = useState({
     isOpen: false,
-    mode: 'add', // 'add', 'edit', 'view'
+    mode: 'add',
     productData: null
   });
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' });
 
   // Use custom hook for product management
@@ -118,31 +115,31 @@ const ProductList = () => {
   };
 
   // Handle apply filters from FilterPanel
-  const handleApplyFilters = (newFilters) => {
-    updateFilters(newFilters);
-    setToast({
-      isVisible: true,
-      message: 'Đã áp dụng bộ lọc thành công!',
-      type: 'success'
-    });
-  };
+  // const handleApplyFilters = (newFilters) => {
+  //   updateFilters(newFilters);
+  //   setToast({
+  //     isVisible: true,
+  //     message: 'Đã áp dụng bộ lọc thành công!',
+  //     type: 'success'
+  //   });
+  // };
 
   // Handle refresh - reset all filters and reload
-  const handleRefresh = () => {
-    updateFilters({
-      search: '',
-      category: '',
-      minPrice: undefined,
-      maxPrice: undefined,
-      sortBy: 'id',
-      sortOrder: 'asc'
-    });
-    setToast({
-      isVisible: true,
-      message: 'Đã làm mới dữ liệu!',
-      type: 'success'
-    });
-  };
+  // const handleRefresh = () => {
+  //   updateFilters({
+  //     search: '',
+  //     category: '',
+  //     minPrice: undefined,
+  //     maxPrice: undefined,
+  //     sortBy: 'id',
+  //     sortOrder: 'asc'
+  //   });
+  //   setToast({
+  //     isVisible: true,
+  //     message: 'Đã làm mới dữ liệu!',
+  //     type: 'success'
+  //   });
+  // };
 
   const openAddPopup = () => {
     setPopupState({
@@ -188,7 +185,7 @@ const ProductList = () => {
 
   return (
     <>
-      <div className="product-list-container">
+      <div className="products-container">
         <div className="list-header">
           <h2>Danh sách sản phẩm</h2>
           <div className="header-actions">
@@ -200,14 +197,14 @@ const ProductList = () => {
               value={filters.search}
             />
 
-            <button className="filter-button" onClick={() => setIsFilterOpen(true)}>
+            {/* <button className="filter-button" onClick={() => setIsFilterOpen(true)}>
               <Icon>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M12 17.25h8.25" />
                 </svg>
               </Icon>
               <span>Filter</span>
-            </button>
+            </button> */}
 
             <Devider isVer={true}/>
 
@@ -284,13 +281,6 @@ const ProductList = () => {
         productData={popupState.productData}
       />
 
-      <FilterPanel 
-        isOpen={isFilterOpen}
-        onClose={() => setIsFilterOpen(false)}
-        onApply={handleApplyFilters}
-        currentFilters={filters}
-      />
-
       <Toast 
         isVisible={toast.isVisible}
         message={toast.message}
@@ -302,4 +292,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default Products;

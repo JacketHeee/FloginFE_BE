@@ -1,23 +1,24 @@
-import { useState } from 'react';
-import './App.scss';
-import Register from './pages/Register/Register';
-import Dashboard from './pages/Dashboard/Dashboard';
-import ProductList from './pages/ProductList/ProductList';
+import { useAuth } from './contexts/AuthContext'
+import AppRouter from './router/AppRouter'
+import './App.scss'
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('auth'); // 'auth' or 'dashboard'
+  const { loading } = useAuth()
+
+  // Show loading spinner while checking auth status
+  if (loading) {
+    return (
+      <div className="app-loading">
+        <div className="spinner">Loading...</div>
+      </div>
+    )
+  }
 
   return (
-    <div className="app">
-      {currentPage === 'auth' ? (
-        <Register onLoginSuccess={() => setCurrentPage('dashboard')} />
-      ) : (
-        <Dashboard>
-          <ProductList />
-        </Dashboard>
-      )}
+    <div className="App">
+      <AppRouter />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

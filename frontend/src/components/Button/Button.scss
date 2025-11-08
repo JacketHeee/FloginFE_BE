@@ -1,0 +1,35 @@
+@use "../../App.scss" as *;
+
+.btn {
+  padding: 10px 10px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-size: 15px;
+
+  &.primary {
+    // background-color: #04da8d;
+    
+    color: $color-text-header;
+
+    &:hover {
+        background-color: $color-back-button;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(4, 218, 141, 0.35);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+}

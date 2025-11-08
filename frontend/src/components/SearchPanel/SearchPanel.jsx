@@ -3,7 +3,7 @@ import Icon from "../Icon/Icon";
 
 export default function SearchPanel({
   isButtonSearch = true, 
-  placeholder = "search anything ...", 
+  placeholder = "Tìm kiếm mọi thứ ...", 
   backWhite,
   onChange,
   value
@@ -22,7 +22,7 @@ export default function SearchPanel({
               onChange={onChange}
               value={value}
             />
-            {isButtonSearch && <button className="search-button">Search</button>}
+            {isButtonSearch && <button className="search-button">Tìm kiếm</button>}
         </div>
     )
 }
