@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import "./SearchPanel.scss"; 
 import Icon from "../Icon/Icon";
 
@@ -26,3 +27,11 @@ export default function SearchPanel({
         </div>
     )
 }
+
+SearchPanel.propTypes = {
+  isButtonSearch: PropTypes.bool,
+  placeholder: PropTypes.string,
+  backWhite: PropTypes.bool,
+  onChange: PropTypes.func,
+  value: PropTypes.string,
+};

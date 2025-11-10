@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import PropTypes from "prop-types";
 import "./CustomTable.scss";
 import Icon from "../Icon/Icon";
 import Button from "../Button/Button";
@@ -185,6 +186,14 @@ const CustomTable = ({ columns, data, onEdit, onDelete, onView }) => {
       )}
     </div>
   );
+};
+
+CustomTable.propTypes = {
+  columns: PropTypes.arrayOf(PropTypes.string).isRequired,
+  data: PropTypes.arrayOf(PropTypes.array).isRequired,
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
+  onView: PropTypes.func,
 };
 
 export default CustomTable;

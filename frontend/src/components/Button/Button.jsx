@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import "./Button.scss"
 
 export default function Button({ 
@@ -23,3 +24,24 @@ export default function Button({
     </button>
   )
 }
+
+Button.propTypes = {
+  label: PropTypes.string,
+  onClick: PropTypes.func,
+  variant: PropTypes.oneOf([
+    'default',
+    'primary',
+    'secondary',
+    'success',
+    'danger',
+    'cancel',
+    'save',
+    'delete',
+    'update'
+  ]),
+  disabled: PropTypes.bool,
+  children: PropTypes.node,
+  type: PropTypes.oneOf(['button', 'submit', 'reset']),
+  className: PropTypes.string,
+};
+

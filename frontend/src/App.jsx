@@ -1,5 +1,6 @@
 import { useAuth } from './contexts/AuthContext'
 import AppRouter from './router/AppRouter'
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 import './App.scss'
 
 function App() {
@@ -15,9 +16,11 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <AppRouter />
-    </div>
+    <ErrorBoundary>
+      <div className="App">
+        <AppRouter />
+      </div>
+    </ErrorBoundary>
   )
 }
 

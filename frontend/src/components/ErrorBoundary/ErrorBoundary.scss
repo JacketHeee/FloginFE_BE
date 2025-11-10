@@ -1,0 +1,154 @@
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+
+  &__container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 48px 40px;
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+  }
+
+  &__icon {
+    font-size: 64px;
+    margin-bottom: 24px;
+    animation: bounce 1s infinite;
+  }
+
+  &__title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 16px;
+  }
+
+  &__message {
+    font-size: 16px;
+    color: #4a5568;
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  &__details {
+    text-align: left;
+    margin: 24px 0;
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 12px;
+      user-select: none;
+
+      &:hover {
+        color: #667eea;
+      }
+    }
+  }
+
+  &__stack {
+    background: #2d3748;
+    color: #e2e8f0;
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-x: auto;
+    margin-top: 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  &__button {
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    outline: none;
+
+    &--primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+
+    &--secondary {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+
+      &:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+// Responsive
+@media (max-width: 640px) {
+  .error-boundary {
+    &__container {
+      padding: 32px 24px;
+    }
+
+    &__title {
+      font-size: 24px;
+    }
+
+    &__message {
+      font-size: 14px;
+    }
+
+    &__actions {
+      flex-direction: column;
+    }
+
+    &__button {
+      width: 100%;
+    }
+  }
+}

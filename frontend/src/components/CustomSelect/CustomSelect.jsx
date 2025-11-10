@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 import "./CustomSelect.scss";
 
 export default function CustomSelect({ options = [], value, onChange, disabled = false, placeholder = "Chọn mục" }) {
@@ -65,3 +66,12 @@ export default function CustomSelect({ options = [], value, onChange, disabled =
     </div>
   );
 }
+
+CustomSelect.propTypes = {
+  options: PropTypes.arrayOf(PropTypes.string),
+  value: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
+  placeholder: PropTypes.string,
+};
+
