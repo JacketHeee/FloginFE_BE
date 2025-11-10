@@ -27,4 +27,31 @@ export default defineConfig([
       'react-refresh/only-export-components': 'off',
     },
   },
+  // Test files configuration
+  {
+    files: [
+      '**/__tests__/**/*.{js,jsx}',
+      '**/*.{test,spec}.{js,jsx}',
+      '**/tests/**/*.{js,jsx}',
+      '**/mock/**/*.js',
+    ],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        ...globals.jest,
+        jest: 'readonly',
+        describe: 'readonly',
+        it: 'readonly',
+        test: 'readonly',
+        expect: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        global: 'readonly',
+        module: 'readonly',
+      },
+    },
+  },
 ])

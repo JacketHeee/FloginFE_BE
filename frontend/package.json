@@ -9,7 +9,11 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest --watchAll",
-    "test:coverage": "jest --coverage",
+    "test:once": "jest --watchAll=false",
+    "test:coverage": "jest --coverage --watchAll=false",
+    "test:unit": "jest --testPathPattern=__tests__",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:verbose": "jest --watchAll=false --verbose",
     "test:e2e": "cypress run"
   },
   "dependencies": {
