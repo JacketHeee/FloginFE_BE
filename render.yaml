@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: floqin-backend
+    env: docker
+    rootDir: backend
+    plan: free
+    branch: feat/deploy-backend-db-railway
+    envVars:
+      - key: SPRING_DATASOURCE_USERNAME
+        value: postgres
+      - key: SUPABASE_DB_PASSWORD
+        value: lannm123456789
+      - key: JWT_SECRET_KEY_BASE64
+        value: =============NguyenHungManh-HoHoangLong-BuiNguyenTrongNghia-LuuPhungKhaiNguyen-NguyenHoangAnh============
+      - key: JWT_EXPIRATION_MINUTES
+        value: 60
