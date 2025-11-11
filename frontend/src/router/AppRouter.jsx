@@ -4,12 +4,14 @@ import { routes } from './routes'
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute'
 
 // Lazy load components to avoid circular imports
+import Login from '../pages/Login/Login'
 import Register from '../pages/Register/Register'
 import Dashboard from '../pages/Dashboard/Dashboard'
 import Products from '../pages/Products/Products'
 import Categories from '../pages/Categories/Categories'
 
 const componentMap = {
+  Login,
   Register,
   Dashboard,
   Products,
@@ -37,25 +39,17 @@ const AppRouter = () => {
 
         // Route không có children (như login)
         if (!route.children) {
-          if (route.protected) {
-            return (
-              <Route
-                key={route.path}
-                path={route.path}
-                element={
-                  <ProtectedRoute>
-                    <Component />
-                  </ProtectedRoute>
-                }
-              />
-            )
-          }
-
           return (
             <Route
               key={route.path}
               path={route.path}
-              element={<Component />}
+              element={ route.protected ? 
+                <ProtectedRoute>
+                  <Component />
+                </ProtectedRoute>
+                :
+                <Component />
+              }
             />
           )
         }

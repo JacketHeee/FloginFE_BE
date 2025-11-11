@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import './RegisterForm.scss';
 import Logo from '../Logo/Logo';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = ({ onSwitchToLogin }) => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    agreeToTerms: false
+    firstName: 'Nguyễn Hùng',
+    lastName: 'Mạnh',
+    email: 'jackethee@gmail.com',
+    password: 'admin123',
+    agreeToTerms: true
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const nav = useNavigate()
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -21,9 +23,14 @@ const RegisterForm = ({ onSwitchToLogin }) => {
     }));
   };
 
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
+    
+    setTimeout(() => {
+      nav("/login")
+    }, 1000);
     // Handle registration logic here
   };
 

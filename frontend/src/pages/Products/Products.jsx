@@ -88,25 +88,25 @@ const Products = () => {
 
   // Handle delete product
   const handleDeleteProduct = async (row) => {
-  const productId = row[0];
-  const productName = row[1];
+    const productId = row[0];
+    const productName = row[1];
 
-  const result = await deleteProduct(productId);
-  
-  if (result.success) {
-    setToast({ 
-      isVisible: true, 
-      message: `Đã xóa sản phẩm "${productName}" thành công!`, 
-      type: 'success' 
-    });
-  } else {
-    setToast({ 
-      isVisible: true, 
-      message: `Lỗi: ${result.error}`, 
-      type: 'error' 
-    });
-  }
-};
+    const result = await deleteProduct(productId);
+    
+    if (result.success) {
+      setToast({ 
+        isVisible: true, 
+        message: `Đã xóa sản phẩm "${productName}" thành công!`, 
+        type: 'success' 
+      });
+    } else {
+      setToast({ 
+        isVisible: true, 
+        message: `Lỗi: ${result.error}`, 
+        type: 'error' 
+      });
+    }
+  };
 
 
   // Handle search

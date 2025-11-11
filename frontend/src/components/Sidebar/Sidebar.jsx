@@ -5,7 +5,6 @@ import Devider from '../Devider/Devider';
 import user from "../../assets/user.jpg"
 import Icon from '../Icon/Icon';
 import Button from '../Button/Button';
-import { useAuth } from '../../contexts/AuthContext';
 import Logo from '../Logo/Logo';
 
 const Sidebar = () => {
@@ -111,19 +110,13 @@ const Sidebar = () => {
     }
   ];
 
-  const {logout} = useAuth();
 
   const handleLogoutClick = () => {
     setShowLogoutPopup(true);
   };
 
   const confirmLogout = async () => {
-    const result = await logout();
-    setShowLogoutPopup(false);
-    
-    if (result.success) {
-      navigate("/login");
-    }
+    navigate("/login");
   };
 
   const cancelLogout = () => {

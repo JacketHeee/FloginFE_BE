@@ -1,0 +1,73 @@
+@use "../../App.scss" as *;
+
+.login-page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("../../assets/background.jpg");
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  padding: 1.3rem;
+
+  // Glass morphism effect matching Dashboard
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(2rem);
+    z-index: 1;
+  }
+
+  .login-container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1200px;
+    height: 700px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: $color-back-table;
+    border-radius: $radius-main;
+    border: $size-border solid $color-border;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+
+    .left-section {
+      padding: 32px;
+      background: linear-gradient(135deg, $color-primary-1 0%, $color-primary-2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .right-section {
+      background: $color-back-table;
+      padding: $padding-main;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 968px) {
+    padding: 20px;
+
+    .login-container {
+      grid-template-columns: 1fr;
+      height: auto;
+      max-width: 500px;
+
+      .left-section {
+        display: none;
+      }
+
+      .right-section {
+        padding: 40px 20px;
+      }
+    }
+  }
+}

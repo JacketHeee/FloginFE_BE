@@ -7,9 +7,16 @@ export const routes = [
   },
   {
     path: '/login',
+    component: 'Login',
+    protected: false,
+    title: 'Đăng nhập', 
+    default: true
+  },
+  {
+    path: '/register',
     component: 'Register',
     protected: false,
-    title: 'Đăng nhập'
+    title: 'Đăng ký'
   },
   {
     path: '/',

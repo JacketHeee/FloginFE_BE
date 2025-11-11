@@ -1,14 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './LoginForm.scss';
-import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 const LoginForm = ({ onSwitchToRegister }) => {
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    logout()
+    window.history.pushState(null, "", window.location.href);
+    window.onpopstate = () => {
+      window.history.pushState(null, "", window.location.href);
+    };
+  }, [])
   
   const [formData, setFormData] = useState({
-    username: 'admin', // Default for testing
+    username: 'admin@gmail.com', // Default for testing
     password: 'admin123', // Default for testing
     rememberMe: false
   });
@@ -33,17 +41,11 @@ const LoginForm = ({ onSwitchToRegister }) => {
     setLoading(true);
 
     try {
-      const result = await login({
-        username: formData.username,
-        password: formData.password
-      });
+      setTimeout(() => {
+        navigate("/products")
+        login()
+      }, 1000)
 
-      if (result.success) {
-        // Navigate to dashboard
-        navigate('/products');
-      } else {
-        setError(result.message);
-      }
     } catch {
       setError('Đã xảy ra lỗi. Vui lòng thử lại.');
     } finally {
