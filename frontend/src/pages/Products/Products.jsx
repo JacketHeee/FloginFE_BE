@@ -16,6 +16,7 @@ const Products = () => {
     productData: null
   });
   const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' });
+  const [lastAddedProduct, setLastAddedProduct] = useState(null);
 
   // Use custom hook for product management
   const {
@@ -49,6 +50,7 @@ const Products = () => {
       });
       
       if (result.success) {
+        setLastAddedProduct(productIdOrData);
         setToast({ 
           isVisible: true, 
           message: `Đã thêm sản phẩm "${productIdOrData.name}" thành công!`, 
@@ -175,6 +177,23 @@ const Products = () => {
     });
   };
 
+  const handleToastClick = () => {
+  if (lastAddedProduct) {
+    setPopupState({
+      isOpen: true,
+      mode: "view",
+      productData: [
+        0,
+        lastAddedProduct.name,
+        lastAddedProduct.price,
+        lastAddedProduct.quantity,
+        lastAddedProduct.description,
+        lastAddedProduct.categoryName
+      ]
+    });
+  }
+};
+
 
   const columns = [
     "Id",
@@ -287,6 +306,7 @@ const Products = () => {
         type={toast.type}
         onClose={() => setToast({ ...toast, isVisible: false })}
         duration={3000}
+        onClick={handleToastClick}
       />
     </>
   );

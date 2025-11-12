@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import './Toast.scss';
 import Icon from '../Icon/Icon';
 
-const Toast = ({ message, type = 'success', isVisible, onClose, duration = 3000 }) => {
+const Toast = ({ message, type = 'success', isVisible, onClose, duration = 3000, onClick}) => {
   useEffect(() => {
     if (isVisible && duration > 0) {
       const timer = setTimeout(() => {
@@ -38,7 +38,10 @@ const Toast = ({ message, type = 'success', isVisible, onClose, duration = 3000 
   };
 
   return (
-    <div className={`toast toast-${type}`}>
+    <div className={`toast toast-${type}`} onClick={() => {
+      onClick()
+      onClose()
+    }}>
       <div className="toast-icon">
         <Icon>{icons[type]}</Icon>
       </div>

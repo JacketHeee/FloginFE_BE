@@ -62,15 +62,7 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
 
   useEffect(() => {
     if (isOpen) {
-      if (mode === "edit" && productData) {
-        setFormData({
-          name: productData[1] || "",
-          price: productData[2] || "",
-          quantity: productData[3] || "",
-          description: productData[4] || "",
-          categoryName: productData[5] || "",
-        });
-      } else if (mode === "view" && productData) {
+      if ((mode === "edit" || mode === "view") && productData) {
         setFormData({
           name: productData[1] || "",
           price: productData[2] || "",
@@ -92,11 +84,13 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
   }, [isOpen, mode, productData]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === "number" ? (value === "" ? "" : Number(value)) : value,
     }));
+
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -104,12 +98,14 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
       }));
     }
   };
-  
+
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = "Vui lòng nhập tên sản phẩm";
-    if (!formData.price || parseFloat(formData.price) <= 0) newErrors.price = "Giá phải lớn hơn 0";
-    if (!formData.quantity || parseInt(formData.quantity) <= 0) newErrors.quantity = "Số lượng phải lớn hơn 0";
+    if (formData.price === "" || isNaN(formData.price) || formData.price <= 0)
+      newErrors.price = "Giá phải lớn hơn 0";
+    if (formData.quantity === "" || isNaN(formData.quantity) || formData.quantity <= 0)
+      newErrors.quantity = "Số lượng phải lớn hơn 0";
     if (!formData.description.trim()) newErrors.description = "Vui lòng nhập mô tả sản phẩm";
     if (!formData.categoryName) newErrors.categoryName = "Vui lòng chọn danh mục";
     setErrors(newErrors);
@@ -189,7 +185,7 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
                 onChange={handleChange}
                 placeholder="0"
                 min="0"
-                step="1000"
+                step="any"
                 className={errors.price ? "error" : ""}
                 disabled={isViewMode}
               />
@@ -220,15 +216,11 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
             <CustomSelect
               options={categories.map((cat) => cat.name)}
               value={formData.categoryName}
-              onChange={(value) =>
-                setFormData((prev) => ({ ...prev, categoryName: value }))
-              }
+              onChange={(value) => setFormData((prev) => ({ ...prev, categoryName: value }))}
               disabled={isViewMode}
               placeholder="-- Chọn danh mục --"
             />
-            {errors.categoryName && (
-              <span className="error-message">{errors.categoryName}</span>
-            )}
+            {errors.categoryName && <span className="error-message">{errors.categoryName}</span>}
           </div>
 
           <div className="form-group">

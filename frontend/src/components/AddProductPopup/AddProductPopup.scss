@@ -133,6 +133,7 @@
 
       /* Custom dropdown */
       .custom-select {
+        box-sizing: border-box;
         position: relative;
         background: rgba(245, 247, 250, 0.95);
         border: 1px solid #e1e4e8;
@@ -143,6 +144,8 @@
         cursor: pointer;
         transition: all 0.25s ease;
         user-select: none;
+        height: 44px;
+        align-items: center;
 
         &:hover {
           border-color: #d1d5db;

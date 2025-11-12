@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../../services/authService";
 import Message from "../Message/Message";
 import Icon from "../Icon/Icon";
+import { validateEmail, validatePassword } from "../../utils/validate";
 
 const LoginForm = ({ onSwitchToRegister }) => {
   const { logout, setIsLoggedIn} = useAuth();
@@ -68,8 +69,10 @@ const LoginForm = ({ onSwitchToRegister }) => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.email.trim()) newErrors.email = "Vui lòng nhập email";
-    if (!formData.password.trim()) newErrors.password = "Vui lòng nhập mật khẩu";
+    const logEmail = validateEmail(formData.email);
+    const logPassword = validatePassword(formData.password);
+    if (logEmail) newErrors.email = logEmail;
+    if (logPassword) newErrors.password = logPassword;
     setErrors(newErrors);
     console.log(errors);
     return Object.keys(newErrors).length === 0;
