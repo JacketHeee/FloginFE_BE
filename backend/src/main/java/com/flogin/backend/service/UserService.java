@@ -20,11 +20,11 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    // tìm kiếm theo email
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+    // tìm kiếm theo username
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElse(null);
     }
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 }

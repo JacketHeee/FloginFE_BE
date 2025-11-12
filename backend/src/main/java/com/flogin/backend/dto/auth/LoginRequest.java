@@ -11,9 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequest {
-    @Email(message = "Email should be valid")
     @NotBlank(message = "Email is required")
-    private String email;
+    private String username;
     @NotBlank(message = "Password should be valid")
     private String password;
 }

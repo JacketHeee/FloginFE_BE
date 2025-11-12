@@ -22,29 +22,29 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest registerRequest) {
-        if(userService.existsByEmail(registerRequest.getEmail())) {
+        if(userService.existsByUsername(registerRequest.getUsername())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email đã tồn tại!!!!");
         }
         User user = new User();
-        user.setEmail(registerRequest.getEmail());
+        user.setUsername(registerRequest.getUsername());
         user.setPasswordHash(passwordEncoder.encode(registerRequest.getPassword()));
         user.setRole("USER");
 
         user = userService.save(user);
 
-        String token = jwtService.generateToken(user.getEmail(),user.getRole());
+        String token = jwtService.generateToken(user.getUsername(),user.getRole());
         return new AuthResponse("Đăng kí thành công",token);
     }
 
     public AuthResponse login(LoginRequest loginRequest) {
-        User user = userService.findByEmail(loginRequest.getEmail());
+        User user = userService.findByUsername(loginRequest.getUsername());
         if(user == null) {
             throw new BadCredentialsException("Xác thực ko hợp lệ: user ko tồn tại");
         }
         if(!passwordEncoder.matches(loginRequest.getPassword(),user.getPasswordHash())) {
             throw new BadCredentialsException("Xác thực ko hợp lệ: sai mật khẩu");
         }
-        String token = jwtService.generateToken(user.getEmail(),user.getRole());
+        String token = jwtService.generateToken(user.getUsername(),user.getRole());
         return new AuthResponse("Đăng nhập thành công",token);
     }
 
