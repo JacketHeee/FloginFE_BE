@@ -18,7 +18,7 @@ const useProducts = (initialFilters = {}) => {
   });
   const [filters, setFilters] = useState({
     search: '',
-    category: '',
+    categoryName: '',
     minPrice: undefined,
     maxPrice: undefined,
     sortBy: 'id',
@@ -112,7 +112,7 @@ const useProducts = (initialFilters = {}) => {
   const resetFilters = () => {
     setFilters({
       search: '',
-      category: '',
+      categoryName: '',
       minPrice: undefined,
       maxPrice: undefined,
       sortBy: 'id',

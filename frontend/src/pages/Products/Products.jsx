@@ -31,8 +31,10 @@ const Products = () => {
     changePage
   } = useProducts();
 
+  console.log(products)
   // Convert products to table format
   const dataTable = Array.isArray(products) ? products.map(productToRow) : [];
+  console.log(dataTable)
 
   // Handle popup submit (Add or Edit)
   const handlePopupSubmit = async (productIdOrData, productData) => {

@@ -60,6 +60,37 @@
       }
     }
 
+    .error-alert {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      color: #dc2626;
+      font-size: 14px;
+      margin-bottom: 20px;
+      animation: slideDown 0.3s ease-out;
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+      }
+    }
+
     form {
       .form-row {
         display: grid;
@@ -95,7 +126,7 @@
           }
         }
 
-        &.password-group {
+        .password-group {
           position: relative;
 
           .toggle-password {
@@ -165,6 +196,13 @@
 
         &:active {
           transform: translateY(0);
+        }
+
+        
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+          transform: none;
         }
       }
     }

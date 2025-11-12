@@ -1,0 +1,21 @@
+.message {
+  font-size: 12px;
+  margin-top: 6px;
+  display: block;
+}
+
+.message.error {
+  color: #ef4444;
+}
+
+.message.success {
+  color: #10b981;
+}
+
+.message.warning {
+  color: #f59e0b;
+}
+
+.message.info {
+  color: #3b82f6;
+}

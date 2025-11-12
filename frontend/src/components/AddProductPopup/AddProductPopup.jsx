@@ -38,16 +38,15 @@ const CustomSelect = ({ options, value, onChange, disabled, placeholder }) => {
 
 const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData = null }) => {
   const [formData, setFormData] = useState({
-    productName: "",
+    name: "",
     price: "",
     quantity: "",
     description: "",
-    category: "",
+    categoryName: "",
   });
 
   const [errors, setErrors] = useState({});
   const [categories, setCategories] = useState([]);
-
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -64,7 +63,6 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
   useEffect(() => {
     if (isOpen) {
       if (mode === "edit" && productData) {
-        // Populate form with existing product data for edit mode
         setFormData({
           name: productData[1] || "",
           price: productData[2] || "",
@@ -73,7 +71,6 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
           categoryName: productData[5] || "",
         });
       } else if (mode === "view" && productData) {
-        // Populate form with existing product data for view mode
         setFormData({
           name: productData[1] || "",
           price: productData[2] || "",
@@ -100,7 +97,6 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
       ...prev,
       [name]: value,
     }));
-    // Clear error when user types
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -108,37 +104,20 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
       }));
     }
   };
-
+  
   const validateForm = () => {
     const newErrors = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = "Vui lòng nhập tên sản phẩm";
-    }
-
-    if (!formData.price || parseFloat(formData.price) <= 0) {
-      newErrors.price = "Giá phải lớn hơn 0";
-    }
-
-    if (!formData.quantity || parseInt(formData.quantity) <= 0) {
-      newErrors.quantity = "Số lượng phải lớn hơn 0";
-    }
-
-    if (!formData.description.trim()) {
-      newErrors.description = "Vui lòng nhập mô tả sản phẩm";
-    }
-
-    if (!formData.categoryName) {
-      newErrors.categoryName = "Vui lòng chọn danh mục";
-    }
-
+    if (!formData.name.trim()) newErrors.name = "Vui lòng nhập tên sản phẩm";
+    if (!formData.price || parseFloat(formData.price) <= 0) newErrors.price = "Giá phải lớn hơn 0";
+    if (!formData.quantity || parseInt(formData.quantity) <= 0) newErrors.quantity = "Số lượng phải lớn hơn 0";
+    if (!formData.description.trim()) newErrors.description = "Vui lòng nhập mô tả sản phẩm";
+    if (!formData.categoryName) newErrors.categoryName = "Vui lòng chọn danh mục";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (validateForm()) {
       const submittedData = {
         name: formData.name,
@@ -148,12 +127,10 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
         categoryName: formData.categoryName,
       };
       console.log("Submitting product:", submittedData);
-
-
       if (mode === "edit" && productData) {
-        onSubmit(productData[0], submittedData); // Pass product ID for edit
+        onSubmit(productData[0], submittedData);
       } else {
-        onSubmit(submittedData); // Just data for add
+        onSubmit(submittedData);
       }
       onClose();
     }
@@ -163,17 +140,11 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
 
   const isViewMode = mode === "view";
   const isEditMode = mode === "edit";
-  //   const isAddMode = mode === 'add';
 
   const getTitle = () => {
     if (isViewMode) return "Chi tiết sản phẩm";
     if (isEditMode) return "Chỉnh sửa sản phẩm";
     return "Thêm sản phẩm mới";
-  };
-
-  const getSubmitButtonText = () => {
-    if (isEditMode) return "Cập nhật";
-    return "Thêm sản phẩm";
   };
 
   return (
@@ -205,9 +176,7 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
               className={errors.name ? "error" : ""}
               disabled={isViewMode}
             />
-            {errors.name && (
-              <span className="error-message">{errors.name}</span>
-            )}
+            {errors.name && <span className="error-message">{errors.name}</span>}
           </div>
 
           <div className="form-row">
@@ -224,9 +193,7 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
                 className={errors.price ? "error" : ""}
                 disabled={isViewMode}
               />
-              {errors.price && (
-                <span className="error-message">{errors.price}</span>
-              )}
+              {errors.price && <span className="error-message">{errors.price}</span>}
             </div>
 
             <div className="form-group">
@@ -242,9 +209,7 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
                 className={errors.quantity ? "error" : ""}
                 disabled={isViewMode}
               />
-              {errors.quantity && (
-                <span className="error-message">{errors.quantity}</span>
-              )}
+              {errors.quantity && <span className="error-message">{errors.quantity}</span>}
             </div>
           </div>
 
@@ -252,21 +217,15 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
             <label htmlFor="categoryName">
               Danh mục {!isViewMode && <span className="required">*</span>}
             </label>
-            <select
-              id="categoryName"
-              name="categoryName"
+            <CustomSelect
+              options={categories.map((cat) => cat.name)}
               value={formData.categoryName}
-              onChange={handleChange}
-              className={errors.categoryName ? "error" : ""}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, categoryName: value }))
+              }
               disabled={isViewMode}
-            >
-              <option value="">-- Chọn danh mục --</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.name}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
+              placeholder="-- Chọn danh mục --"
+            />
             {errors.categoryName && (
               <span className="error-message">{errors.categoryName}</span>
             )}
@@ -283,9 +242,7 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
               className={errors.description ? "error" : ""}
               disabled={isViewMode}
             />
-            {errors.description && (
-              <span className="error-message">{errors.description}</span>
-            )}
+            {errors.description && <span className="error-message">{errors.description}</span>}
           </div>
 
           <div className="form-actions">
@@ -294,7 +251,7 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
             </button>
             {!isViewMode && (
               <button type="submit" className="submit-button">
-                {mode === "edit" ? "Cập nhật" : "Thêm sản phẩm"}
+                {isEditMode ? "Cập nhật" : "Thêm sản phẩm"}
               </button>
             )}
           </div>

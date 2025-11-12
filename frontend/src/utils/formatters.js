@@ -61,7 +61,7 @@ export const productToRow = (product) => {
     product.price,
     product.quantity,
     product.description,
-    product.category
+    product.categoryName
   ];
 };
 
