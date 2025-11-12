@@ -22,13 +22,13 @@
         @Value("${jwt.expiration-minutes}")
         private long expirationMinutes;
 
-        public String generateToken(String email,String role) {
+        public String generateToken(String username,String role) {
             Date now = new Date();
             Date expiryDate = new Date(now.getTime() + expirationMinutes * 60 * 1000);
-            return Jwts.builder().setSubject(email).claim("role", role).setIssuedAt(now).setExpiration(expiryDate).signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
+            return Jwts.builder().setSubject(username).claim("role", role).setIssuedAt(now).setExpiration(expiryDate).signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
         }
 
-        public String getEmail(String token) {
+        public String getUsername(String token) {
             return getClaims(token).getSubject();
         }
 

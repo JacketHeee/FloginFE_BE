@@ -19,7 +19,7 @@ public class User  {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String email;
+    private String username;
 
     @Column(nullable = false,name = "password_hash")
     private String passwordHash;
@@ -33,8 +33,8 @@ public class User  {
 
     public User() {}
 
-    public User(String email, String passwordHash, String firstName, String lastName) {
-        this.email = email;
+    public User(String username, String passwordHash, String firstName, String lastName) {
+        this.username = username;
         this.passwordHash = passwordHash;
         this.firstName = firstName;
         this.lastName = lastName;
