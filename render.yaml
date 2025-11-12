@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: floqin-backend
+    env: docker
+    rootDir: backend
+    plan: free
+    branch: feat/deploy-backend-db-railway
+    envVars:
+      - key: SPRING_DATASOURCE_USERNAME
+        value: backend_db_mru8_user
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: 20fd1klOUdUyMP5fDrwMic66uGE8Pyrh
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:postgresql://dpg-d49k9395pdvs73cvfn90-a:5432/backend_db_mru8?sslmode=require
+      - key: JWT_SECRET_KEY_BASE64
+        value: =============NguyenHungManh-HoHoangLong-BuiNguyenTrongNghia-LuuPhungKhaiNguyen-NguyenHoangAnh============
+      - key: JWT_EXPIRATION_MINUTES
+        value: 60

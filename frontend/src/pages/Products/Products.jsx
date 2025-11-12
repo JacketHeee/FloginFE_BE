@@ -32,24 +32,24 @@ const Products = () => {
   } = useProducts();
 
   // Convert products to table format
-  const dataTable = products.map(productToRow);
+  const dataTable = Array.isArray(products) ? products.map(productToRow) : [];
 
   // Handle popup submit (Add or Edit)
   const handlePopupSubmit = async (productIdOrData, productData) => {
     if (popupState.mode === 'add') {
       // productIdOrData is actually productData for add mode
       const result = await addProduct({
-        name: productIdOrData.productName,
+        name: productIdOrData.name,
         price: productIdOrData.price,
         quantity: productIdOrData.quantity,
         description: productIdOrData.description,
-        category: productIdOrData.category
+        categoryName: productIdOrData.categoryName
       });
       
       if (result.success) {
         setToast({ 
           isVisible: true, 
-          message: `Đã thêm sản phẩm "${productIdOrData.productName}" thành công!`, 
+          message: `Đã thêm sản phẩm "${productIdOrData.name}" thành công!`, 
           type: 'success' 
         });
       } else {
@@ -63,17 +63,17 @@ const Products = () => {
       // productIdOrData is productId, productData is the updated data
       const productId = productIdOrData;
       const result = await updateProduct(productId, {
-        name: productData.productName,
+        name: productData.name,
         price: productData.price,
         quantity: productData.quantity,
         description: productData.description,
-        category: productData.category
+        categoryName: productData.categoryName
       });
       
       if (result.success) {
         setToast({ 
           isVisible: true, 
-          message: `Đã cập nhật sản phẩm "${productData.productName}" thành công!`, 
+          message: `Đã cập nhật sản phẩm "${productData.name}" thành công!`, 
           type: 'success' 
         });
       } else {

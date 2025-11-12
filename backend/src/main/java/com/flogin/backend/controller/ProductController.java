@@ -23,36 +23,34 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts() {
-        List<Product> products = productService.findAll();
-        List<ProductResponse> response = products.stream()
-                .map(p -> new ProductResponse(
-                        p.getId(),
-                        p.getName(),
-                        p.getPrice(),
-                        p.getQuantity(),
-                        p.getDescription(),
-                        p.getCategory().getName()
-                ))
-                .toList();
-        return ResponseEntity.ok(new ApiResponse<>("Danh sách sản phẩm: ", response));
+    public ResponseEntity<?> getAllProducts(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortOrder
+    ) {
+        var result = productService.getProducts(page, limit, search, category, sortBy, sortOrder);
+        return ResponseEntity.ok(result);
     }
 
+
     @PostMapping
-    public ResponseEntity<ApiResponse<ProductResponse>> createProduct(@Valid @RequestBody CreateProductRequest createRequest) {
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody CreateProductRequest createRequest) {
         ProductResponse productResponse = productService.createProduct(createRequest);
-        return ResponseEntity.ok(new ApiResponse<>("Tạo sản phẩm thành công", productResponse));
+        return ResponseEntity.ok(productResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<ProductResponse>> updateProduct (@Valid @RequestBody UpdateProductRequest updateRequest,@PathVariable Long id)  {
+    public ResponseEntity<ProductResponse> updateProduct (@Valid @RequestBody UpdateProductRequest updateRequest,@PathVariable Long id)  {
         ProductResponse productResponse = productService.update(updateRequest, id);
-        return ResponseEntity.ok(new ApiResponse<>("Cập nhật sản phẩm thành công", productResponse));
+        return ResponseEntity.ok(productResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<ProductResponse>> deteleProduct(@PathVariable Long id) {
+    public ResponseEntity<ProductResponse> deleteProduct(@PathVariable Long id) {
         ProductResponse productResponse = productService.deleteProduct(id);
-        return ResponseEntity.ok(new ApiResponse<>("Xóa sản phẩm thành công",productResponse));
+        return ResponseEntity.ok(productResponse);
     }
 }

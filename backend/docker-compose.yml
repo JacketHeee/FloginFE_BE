@@ -1,0 +1,7 @@
+services:
+  backend:
+    build: .
+    container_name: backend-postgres
+    ports:
+      - "8083:8080"  # map cổng local 8083 -> container 8080
+    network_mode: bridge  # container có internet outbound

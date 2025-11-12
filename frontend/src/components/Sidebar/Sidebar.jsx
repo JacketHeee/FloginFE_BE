@@ -138,7 +138,7 @@ const Sidebar = () => {
       <div className="sidebar-content">
         {
           menuItems.map(item => (
-            <div className="menu-section" key={item.id} >
+            <div className="menu-section" key={item.id}>
               <div className="menu-label">{item.label}</div>
               {item.subItems.map(item => (
                 <div key={item.id}>

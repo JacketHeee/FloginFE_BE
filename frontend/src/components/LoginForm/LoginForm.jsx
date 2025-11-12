@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
 import './LoginForm.scss';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import "./LoginForm.scss";
+import Logo from "../Logo/Logo";
+import { useNavigate } from 'react-router-dom';
+import { login } from '../../services/authService';
+
 
 const LoginForm = ({ onSwitchToRegister }) => {
-  const { login, logout } = useAuth();
-  const navigate = useNavigate();
+  const {logout } = useAuth();
+  const nav = useNavigate();
 
   useEffect(() => {
     logout()
@@ -14,7 +18,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
       window.history.pushState(null, "", window.location.href);
     };
   }, [])
-  
+
   const [formData, setFormData] = useState({
     username: 'admin@gmail.com', // Default for testing
     password: 'admin123', // Default for testing
@@ -27,38 +31,55 @@ const LoginForm = ({ onSwitchToRegister }) => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
     // Clear error when user types
     if (error) setError('');
   };
 
   const handleSubmit = async (e) => {
+    setLoading(true)
     e.preventDefault();
-    setError('');
-    setLoading(true);
-
+    console.log("Login submitted:", formData);
+    // Handle login logic here
     try {
-      setTimeout(() => {
-        navigate("/products")
-        login()
-      }, 1000)
+      const data = await login(formData.email, formData.password);
+      console.log("Đăng nhập login thành công!", data);
 
-    } catch {
-      setError('Đã xảy ra lỗi. Vui lòng thử lại.');
-    } finally {
-      setLoading(false);
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        // Navigate to dashboard
+        nav("/products")
+      } else {
+        console.warn("Không tìm thấy token trong response:", data);
+      }
+    } catch (err) {
+      console.error("Đăng nhập thất bại!", err);
+      alert("Kiểm tra lại email và password");
+    }
+    finally {
+      setLoading(false)
     }
   };
+
 
   return (
     <div className="login-form">
       <div className="form-content">
         <h1>Xin chào!</h1>
         <p className="subtitle">
-          Bạn chưa có tài khoản? <a href="#" onClick={(e) => { e.preventDefault(); onSwitchToRegister(); }}>Đăng ký ngay</a>
+          Bạn chưa có tài khoản?{" "}
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              onSwitchToRegister();
+            }}
+          >
+            Đăng ký ngay
+          </a>
         </p>
 
         {error && (
@@ -99,7 +120,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
               onClick={() => setShowPassword(!showPassword)}
               disabled={loading}
             >
-              {showPassword ? '👁️' : '👁️‍🗨️'}
+              {showPassword ? "👁️" : "👁️‍🗨️"}
             </button>
           </div>
 

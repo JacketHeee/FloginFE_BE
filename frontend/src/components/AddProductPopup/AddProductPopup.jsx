@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./AddProductPopup.scss";
 import Icon from "../Icon/Icon";
+import productService from "../../services/productService";
 
 const CustomSelect = ({ options, value, onChange, disabled, placeholder }) => {
   const [open, setOpen] = useState(false);
@@ -45,36 +46,48 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
   });
 
   const [errors, setErrors] = useState({});
+  const [categories, setCategories] = useState([]);
 
-  const categories = [
-    "Electronics",
-    "Fashion",
-    "Home & Kitchen",
-    "Home Appliances",
-    "Books",
-    "Office",
-    "Furniture",
-    "Accessories",
-    "Toys",
-  ];
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await productService.getCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
+  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen) {
-      if ((mode === "edit" || mode === "view") && productData) {
+      if (mode === "edit" && productData) {
+        // Populate form with existing product data for edit mode
         setFormData({
-          productName: productData[1] || "",
+          name: productData[1] || "",
           price: productData[2] || "",
           quantity: productData[3] || "",
           description: productData[4] || "",
-          category: productData[5] || "",
+          categoryName: productData[5] || "",
+        });
+      } else if (mode === "view" && productData) {
+        // Populate form with existing product data for view mode
+        setFormData({
+          name: productData[1] || "",
+          price: productData[2] || "",
+          quantity: productData[3] || "",
+          description: productData[4] || "",
+          categoryName: productData[5] || "",
         });
       } else {
         setFormData({
-          productName: "",
+          name: "",
           price: "",
           quantity: "",
           description: "",
-          category: "",
+          categoryName: "",
         });
       }
       setErrors({});
@@ -83,38 +96,65 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
-  };
-
-  const handleSelectChange = (value) => {
-    setFormData((prev) => ({ ...prev, category: value }));
-    if (errors.category) setErrors((prev) => ({ ...prev, category: "" }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    // Clear error when user types
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
   };
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.productName.trim()) newErrors.productName = "Vui lòng nhập tên sản phẩm";
-    if (!formData.price || parseFloat(formData.price) <= 0) newErrors.price = "Giá phải lớn hơn 0";
-    if (!formData.quantity || parseInt(formData.quantity) <= 0) newErrors.quantity = "Số lượng phải lớn hơn 0";
-    if (!formData.description.trim()) newErrors.description = "Vui lòng nhập mô tả sản phẩm";
-    if (!formData.category) newErrors.category = "Vui lòng chọn danh mục";
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Vui lòng nhập tên sản phẩm";
+    }
+
+    if (!formData.price || parseFloat(formData.price) <= 0) {
+      newErrors.price = "Giá phải lớn hơn 0";
+    }
+
+    if (!formData.quantity || parseInt(formData.quantity) <= 0) {
+      newErrors.quantity = "Số lượng phải lớn hơn 0";
+    }
+
+    if (!formData.description.trim()) {
+      newErrors.description = "Vui lòng nhập mô tả sản phẩm";
+    }
+
+    if (!formData.categoryName) {
+      newErrors.categoryName = "Vui lòng chọn danh mục";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (validateForm()) {
-      const data = {
-        productName: formData.productName,
+      const submittedData = {
+        name: formData.name,
         price: parseFloat(formData.price),
         quantity: parseInt(formData.quantity),
         description: formData.description,
-        category: formData.category,
+        categoryName: formData.categoryName,
       };
-      if (mode === "edit" && productData) onSubmit(productData[0], data);
-      else onSubmit(data);
+      console.log("Submitting product:", submittedData);
+
+
+      if (mode === "edit" && productData) {
+        onSubmit(productData[0], submittedData); // Pass product ID for edit
+      } else {
+        onSubmit(submittedData); // Just data for add
+      }
       onClose();
     }
   };
@@ -122,8 +162,19 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
   if (!isOpen) return null;
 
   const isViewMode = mode === "view";
-  const getTitle = () =>
-    mode === "view" ? "Chi tiết sản phẩm" : mode === "edit" ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm mới";
+  const isEditMode = mode === "edit";
+  //   const isAddMode = mode === 'add';
+
+  const getTitle = () => {
+    if (isViewMode) return "Chi tiết sản phẩm";
+    if (isEditMode) return "Chỉnh sửa sản phẩm";
+    return "Thêm sản phẩm mới";
+  };
+
+  const getSubmitButtonText = () => {
+    if (isEditMode) return "Cập nhật";
+    return "Thêm sản phẩm";
+  };
 
   return (
     <div className="popup-overlay" onClick={onClose}>
@@ -141,17 +192,22 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
 
         <form onSubmit={handleSubmit} className="popup-form">
           <div className="form-group">
-            <label>Tên sản phẩm {!isViewMode && <span className="required">*</span>}</label>
+            <label htmlFor="name">
+              Tên sản phẩm {!isViewMode && <span className="required">*</span>}
+            </label>
             <input
               type="text"
-              name="productName"
-              value={formData.productName}
+              id="name"
+              name="name"
+              value={formData.name}
               onChange={handleChange}
               placeholder="Nhập tên sản phẩm..."
+              className={errors.name ? "error" : ""}
               disabled={isViewMode}
-              className={errors.productName ? "error" : ""}
             />
-            {errors.productName && <span className="error-message">{errors.productName}</span>}
+            {errors.name && (
+              <span className="error-message">{errors.name}</span>
+            )}
           </div>
 
           <div className="form-row">
@@ -165,10 +221,12 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
                 placeholder="0"
                 min="0"
                 step="1000"
-                disabled={isViewMode}
                 className={errors.price ? "error" : ""}
+                disabled={isViewMode}
               />
-              {errors.price && <span className="error-message">{errors.price}</span>}
+              {errors.price && (
+                <span className="error-message">{errors.price}</span>
+              )}
             </div>
 
             <div className="form-group">
@@ -181,23 +239,37 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
                 placeholder="0"
                 min="0"
                 step="1"
-                disabled={isViewMode}
                 className={errors.quantity ? "error" : ""}
+                disabled={isViewMode}
               />
-              {errors.quantity && <span className="error-message">{errors.quantity}</span>}
+              {errors.quantity && (
+                <span className="error-message">{errors.quantity}</span>
+              )}
             </div>
           </div>
 
           <div className="form-group">
-            <label>Danh mục {!isViewMode && <span className="required">*</span>}</label>
-            <CustomSelect
-              options={categories}
-              value={formData.category}
-              onChange={handleSelectChange}
+            <label htmlFor="categoryName">
+              Danh mục {!isViewMode && <span className="required">*</span>}
+            </label>
+            <select
+              id="categoryName"
+              name="categoryName"
+              value={formData.categoryName}
+              onChange={handleChange}
+              className={errors.categoryName ? "error" : ""}
               disabled={isViewMode}
-              placeholder="-- Chọn danh mục --"
-            />
-            {errors.category && <span className="error-message">{errors.category}</span>}
+            >
+              <option value="">-- Chọn danh mục --</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+            {errors.categoryName && (
+              <span className="error-message">{errors.categoryName}</span>
+            )}
           </div>
 
           <div className="form-group">
@@ -208,10 +280,12 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
               onChange={handleChange}
               placeholder="Nhập mô tả sản phẩm..."
               rows="4"
-              disabled={isViewMode}
               className={errors.description ? "error" : ""}
+              disabled={isViewMode}
             />
-            {errors.description && <span className="error-message">{errors.description}</span>}
+            {errors.description && (
+              <span className="error-message">{errors.description}</span>
+            )}
           </div>
 
           <div className="form-actions">

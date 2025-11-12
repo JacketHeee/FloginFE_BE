@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './RegisterForm.scss';
 import Logo from '../Logo/Logo';
 import { useNavigate } from 'react-router-dom';
+import { register } from "../../services/authService";
 
 const RegisterForm = ({ onSwitchToLogin }) => {
   const [formData, setFormData] = useState({
@@ -14,24 +15,38 @@ const RegisterForm = ({ onSwitchToLogin }) => {
 
   const [showPassword, setShowPassword] = useState(false);
   const nav = useNavigate()
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     console.log('Form submitted:', formData);
     
-    setTimeout(() => {
-      nav("/login")
-    }, 1000);
-    // Handle registration logic here
+    try {
+      const data = await register(
+        formData.firstName,
+        formData.lastName,
+        formData.email,
+        formData.password
+      );
+
+      console.log("Đăng ký thành công! ", data);
+      nav("/login");
+    } catch (err) {
+      console.error("Đăng ký thất bại", err);
+      alert("Kiểm tra lại các trường dữ liệu");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,7 +54,16 @@ const RegisterForm = ({ onSwitchToLogin }) => {
       <div className="form-content">
         <h1>Tạo tài khoản</h1>
         <p className="subtitle">
-          Bạn đã có tài khoản? <a href="#" onClick={(e) => { e.preventDefault(); onSwitchToLogin(); }}>Đăng nhập ngay</a>
+          Bạn đã có tài khoản?{" "}
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              onSwitchToLogin();
+            }}
+          >
+            Đăng nhập ngay
+          </a>
         </p>
 
         <form onSubmit={handleSubmit}>
@@ -52,6 +76,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
                 value={formData.firstName}
                 onChange={handleChange}
                 required
+                disabled={loading}
               />
             </div>
             <div className="form-group">
@@ -62,6 +87,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
                 value={formData.lastName}
                 onChange={handleChange}
                 required
+                disabled={loading}
               />
             </div>
           </div>
@@ -73,6 +99,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
               placeholder="Email"
               value={formData.email}
               onChange={handleChange}
+              disabled={loading}
               required
             />
           </div>
@@ -85,13 +112,15 @@ const RegisterForm = ({ onSwitchToLogin }) => {
               value={formData.password}
               onChange={handleChange}
               required
+              disabled={loading}
             />
             <button
               type="button"
               className="toggle-password"
               onClick={() => setShowPassword(!showPassword)}
+              disabled={loading}
             >
-              {showPassword ? '👁️' : '👁️‍🗨️'}
+              {showPassword ? "👁️" : "👁️‍🗨️"}
             </button>
           </div>
 
@@ -103,13 +132,16 @@ const RegisterForm = ({ onSwitchToLogin }) => {
                 checked={formData.agreeToTerms}
                 onChange={handleChange}
                 required
+                disabled={loading}
               />
-              <span>Tôi đồng ý với các <a href="/terms"> Điều khoản & Điều kiện</a></span>
+              <span>
+                Tôi đồng ý với các <a href="/terms"> Điều khoản & Điều kiện</a>
+              </span>
             </label>
           </div>
 
-          <button type="submit" className="submit-button">
-            Đăng ký
+          <button type="submit" className="submit-button" disabled={loading}>
+            {loading? "Đang đăng ký ...": "Đăng ký"}
           </button>
         </form>
 
