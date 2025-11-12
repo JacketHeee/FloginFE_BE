@@ -6,10 +6,12 @@ import user from "../../assets/user.jpg"
 import Icon from '../Icon/Icon';
 import Button from '../Button/Button';
 import Logo from '../Logo/Logo';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const {setIsLoggedIn} = useAuth();
 
   // Calculate active menu based on current path
   const getActiveMenu = () => {
@@ -117,6 +119,7 @@ const Sidebar = () => {
 
   const confirmLogout = async () => {
     navigate("/login");
+    setIsLoggedIn(false)
   };
 
   const cancelLogout = () => {

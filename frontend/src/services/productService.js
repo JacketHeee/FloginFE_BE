@@ -10,6 +10,7 @@ const productService = {
   async getProducts(params = {}) {
     try {
       const res = await api.get("/products", { params });
+      console.log(res)
       return res.data;
     } catch (err) {
       console.error("Lấy danh sách sản phẩm lỗi!", err);

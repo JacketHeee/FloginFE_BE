@@ -9,12 +9,6 @@ const Register = () => {
   const handleSwitchToLogin = () => {
     navigate('/login')
   }
-
-  const handleRegisterSuccess = () => {
-    // Sau khi đăng ký thành công, chuyển sang login
-    navigate('/login')
-  }
-
   return (
     <div className="register-page">
       <div className="register-container">
@@ -24,7 +18,6 @@ const Register = () => {
         <div className="right-section">
           <RegisterForm
             onSwitchToLogin={handleSwitchToLogin}
-            onRegisterSuccess={handleRegisterSuccess}
           />
         </div>
       </div>
