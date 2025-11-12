@@ -1,58 +1,70 @@
-drop table user_role;
-drop table roles;
-drop table users;
-drop table products;
-drop table categories;
+-- Xóa bảng nếu tồn tại
+DROP TABLE IF EXISTS user_role CASCADE;
+DROP TABLE IF EXISTS roles CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS products CASCADE;
+DROP TABLE IF EXISTS categories CASCADE;
 
-create table roles (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE
+-- Bảng vai trò
+CREATE TABLE roles (
+                       id BIGSERIAL PRIMARY KEY,
+                       name VARCHAR(50) NOT NULL UNIQUE
 );
+
+-- Bảng người dùng
 CREATE TABLE users (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(255),
-    last_name VARCHAR(255),
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL
+                       id BIGSERIAL PRIMARY KEY,
+                       first_name VARCHAR(255),
+                       last_name VARCHAR(255),
+                       email VARCHAR(255) NOT NULL UNIQUE,
+                       password_hash VARCHAR(255) NOT NULL
 );
 
-create table user_role (
-    user_id BIGINT NOT NULL ,
-    role_id BIGINT NOT NULL ,
-    PRIMARY KEY (user_id,role_id),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ,
-    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+-- Liên kết người dùng & vai trò
+CREATE TABLE user_role (
+                           user_id BIGINT NOT NULL,
+                           role_id BIGINT NOT NULL,
+                           PRIMARY KEY (user_id, role_id),
+                           FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                           FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
 );
 
-create table categories (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY ,
-    name VARCHAR(255) NOT NULL UNIQUE
+-- Bảng danh mục
+CREATE TABLE categories (
+                            id BIGSERIAL PRIMARY KEY,
+                            name VARCHAR(255) NOT NULL UNIQUE
 );
 
-create table products (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY ,
-    name VARCHAR(255) NOT NULL ,
-    price DECIMAL(10,2) NOT NULL ,
-    quantity INT NOT NULL DEFAULT 0,
-    description TEXT,
-    category_id BIGINT NOT NULL,
-    CONSTRAINT FK_PRODUCT_CATEGORY FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE RESTRICT ON UPDATE CASCADE
+-- Bảng sản phẩm
+CREATE TABLE products (
+                          id BIGSERIAL PRIMARY KEY,
+                          name VARCHAR(255) NOT NULL,
+                          price DECIMAL(10,2) NOT NULL,
+                          quantity INT NOT NULL DEFAULT 0,
+                          description TEXT,
+                          category_id BIGINT NOT NULL,
+                          CONSTRAINT FK_PRODUCT_CATEGORY FOREIGN KEY (category_id)
+                              REFERENCES categories(id)
+                              ON DELETE RESTRICT
+                              ON UPDATE CASCADE
 );
 
-insert into roles(id, name)
-values (1,"USER"),
-       (2,"ADMIN");
+-- Thêm dữ liệu mặc định
+INSERT INTO roles (name) VALUES
+                             ('USER'),
+                             ('ADMIN');
 
 INSERT INTO categories (name)
-VALUES('Electronics'),
-      ('Home & Kitchen'),
-      ('Fashion'),
-      ('Home Appliances'),
-      ('Books'),
-      ('Office'),
-      ('Furniture'),
-      ('Accessories'),
-      ('Toys');
+VALUES
+    ('Electronics'),
+    ('Home & Kitchen'),
+    ('Fashion'),
+    ('Home Appliances'),
+    ('Books'),
+    ('Office'),
+    ('Furniture'),
+    ('Accessories'),
+    ('Toys');
 
 INSERT INTO products (name, price, quantity, description, category_id) VALUES
                                                                            ('Laptop Acer Aspire 7', 18990000, 25, 'Laptop gaming hiệu năng cao với chip Intel Gen 12.', 1),
@@ -75,10 +87,3 @@ INSERT INTO products (name, price, quantity, description, category_id) VALUES
                                                                            ('Bộ đồ chơi LEGO City', 1450000, 18, 'Bộ LEGO phát triển tư duy sáng tạo cho trẻ.', 9),
                                                                            ('Máy in Canon LBP2900', 3650000, 15, 'Máy in laser đơn năng, in nhanh 12 trang/phút.', 6),
                                                                            ('Máy lọc không khí Sharp FP-J40E-W', 4500000, 10, 'Máy lọc không khí có ion âm, lọc sạch bụi mịn PM2.5.', 4);
-
-
-
-select * from users;
-select * from roles;
-select * from categories;
-select  * from products;
