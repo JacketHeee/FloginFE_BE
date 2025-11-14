@@ -1,5 +1,4 @@
 import axios from "axios";
-
 const api = axios.create({
   baseURL: "https://floqin-backend.onrender.com/api",
   withCredentials: true,
