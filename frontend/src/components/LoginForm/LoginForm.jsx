@@ -45,11 +45,8 @@ const LoginForm = ({ onSwitchToRegister }) => {
     if (validateForm()) {
       setLoading(true);
       try {
-        console.log("Submitting login:", formData);
-
         // Gọi API với username và password
         const response = await login(formData.username, formData.password);
-        console.log("Đăng nhập thành công:", response);
 
         if (response?.token) {
           localStorage.setItem("token", response.token);

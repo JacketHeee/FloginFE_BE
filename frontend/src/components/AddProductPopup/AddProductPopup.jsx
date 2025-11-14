@@ -138,7 +138,6 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
         description: formData.description,
         categoryName: formData.categoryName,
       };
-      console.log("Submitting product:", submittedData);
       if (mode === "edit" && productData) {
         onSubmit(productData[0], submittedData);
       } else {

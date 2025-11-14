@@ -3,7 +3,6 @@ import api from "./api";
 export const login = async (username, password) => {
   const res = await api.post("/auth/login", { username, password });
   localStorage.setItem("token", res.data.token);
-  console.log(res);
   return res.data;
 };
 
