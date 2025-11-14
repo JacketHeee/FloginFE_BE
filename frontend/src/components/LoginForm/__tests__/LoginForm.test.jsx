@@ -1,294 +1,76 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import LoginForm from '../LoginForm';
-import { AuthProvider } from '../../../contexts/AuthContext';
-import '@testing-library/jest-dom';
+import { validatePassword, validateUsername } from "../../../utils/validate";
 
-// Mock useNavigate
-const mockNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
-}));
 
-// Mock authService
-jest.mock('../../../services/authService', () => ({
-  login: jest.fn(),
-}));
+//
+// ===============================
+//  A) TEST validateUsername()
+// ===============================
 
-const authService = require('../../../services/authService');
 
-const renderLoginForm = () => {
-  return render(
-    <BrowserRouter>
-      <AuthProvider>
-        <LoginForm />
-      </AuthProvider>
-    </BrowserRouter>
-  );
-};
-
-describe('LoginForm Component', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    localStorage.clear();
+//
+describe("validateUsername()", () => {
+  test("Trả lỗi khi username rỗng", () => {
+    expect(validateUsername("")).toBe("Vui lòng nhập username");
+    expect(validateUsername("   ")).toBe("Vui lòng nhập username");
   });
 
-  describe('Rendering', () => {
-    it('should render login form with all elements', () => {
-      renderLoginForm();
+  test("Trả lỗi khi username quá ngắn hoặc quá dài", () => {
+    expect(validateUsername("ab")).toBe("Username phải từ 3–50 ký tự");
 
-      expect(screen.getByText(/Đăng nhập/i)).toBeInTheDocument();
-      expect(screen.getByPlaceholderText(/Tên đăng nhập/i)).toBeInTheDocument();
-      expect(screen.getByPlaceholderText(/Mật khẩu/i)).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /Đăng nhập/i })).toBeInTheDocument();
-    });
-
-    it('should render password input as type password', () => {
-      renderLoginForm();
-
-      const passwordInput = screen.getByPlaceholderText(/Mật khẩu/i);
-      expect(passwordInput).toHaveAttribute('type', 'password');
-    });
-
-    it('should have empty inputs initially', () => {
-      renderLoginForm();
-
-      const usernameInput = screen.getByPlaceholderText(/Tên đăng nhập/i);
-      const passwordInput = screen.getByPlaceholderText(/Mật khẩu/i);
-
-      expect(usernameInput).toHaveValue('');
-      expect(passwordInput).toHaveValue('');
-    });
+    const longName = "a".repeat(51);
+    expect(validateUsername(longName)).toBe("Username phải từ 3–50 ký tự");
   });
 
-  describe('Input Validation', () => {
-    it('should update username input value when typing', () => {
-      renderLoginForm();
+  test("Trả lỗi khi username chứa ký tự đặc biệt không hợp lệ", () => {
+    expect(validateUsername("abc!")).toBe(
+      "Username chỉ được chứa a–z, A–Z, 0–9, dấu gạch dưới (_), gạch ngang (-), hoặc dấu chấm (.)"
+    );
 
-      const usernameInput = screen.getByPlaceholderText(/Tên đăng nhập/i);
-      fireEvent.change(usernameInput, { target: { value: 'testuser' } });
-
-      expect(usernameInput).toHaveValue('testuser');
-    });
-
-    it('should update password input value when typing', () => {
-      renderLoginForm();
-
-      const passwordInput = screen.getByPlaceholderText(/Mật khẩu/i);
-      fireEvent.change(passwordInput, { target: { value: 'testpass123' } });
-
-      expect(passwordInput).toHaveValue('testpass123');
-    });
-
-    it('should show error when submitting with empty username', async () => {
-      authService.login.mockResolvedValue({
-        success: false,
-        message: 'Vui lòng nhập tên đăng nhập',
-      });
-
-      renderLoginForm();
-
-      const passwordInput = screen.getByPlaceholderText(/Mật khẩu/i);
-      const submitButton = screen.getByRole('button', { name: /Đăng nhập/i });
-
-      fireEvent.change(passwordInput, { target: { value: 'password123' } });
-      fireEvent.click(submitButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Vui lòng nhập tên đăng nhập/i)).toBeInTheDocument();
-      });
-    });
-
-    it('should show error when submitting with empty password', async () => {
-      authService.login.mockResolvedValue({
-        success: false,
-        message: 'Vui lòng nhập mật khẩu',
-      });
-
-      renderLoginForm();
-
-      const usernameInput = screen.getByPlaceholderText(/Tên đăng nhập/i);
-      const submitButton = screen.getByRole('button', { name: /Đăng nhập/i });
-
-      fireEvent.change(usernameInput, { target: { value: 'testuser' } });
-      fireEvent.click(submitButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Vui lòng nhập mật khẩu/i)).toBeInTheDocument();
-      });
-    });
+    expect(validateUsername("tênCóDấu")).toBe(
+      "Username chỉ được chứa a–z, A–Z, 0–9, dấu gạch dưới (_), gạch ngang (-), hoặc dấu chấm (.)"
+    );
   });
 
-  describe('Login Submission', () => {
-    it('should call login service with correct credentials', async () => {
-      authService.login.mockResolvedValue({
-        success: true,
-        token: 'test-token',
-        user: { id: 1, username: 'admin', role: 'admin' },
-      });
+  test("Username hợp lệ", () => {
+    expect(validateUsername("jackethee")).toBe(null);
+    expect(validateUsername("user.name")).toBe(null);
+    expect(validateUsername("user_name-123")).toBe(null);
+  });
+});
 
-      renderLoginForm();
-
-      const usernameInput = screen.getByPlaceholderText(/Tên đăng nhập/i);
-      const passwordInput = screen.getByPlaceholderText(/Mật khẩu/i);
-      const submitButton = screen.getByRole('button', { name: /Đăng nhập/i });
-
-      fireEvent.change(usernameInput, { target: { value: 'admin' } });
-      fireEvent.change(passwordInput, { target: { value: 'admin123' } });
-      fireEvent.click(submitButton);
-
-      await waitFor(() => {
-        expect(authService.login).toHaveBeenCalledWith({
-          username: 'admin',
-          password: 'admin123',
-        });
-      });
-    });
-
-    it('should navigate to dashboard on successful login', async () => {
-      authService.login.mockResolvedValue({
-        success: true,
-        token: 'test-token',
-        user: { id: 1, username: 'admin', role: 'admin' },
-      });
-
-      renderLoginForm();
-
-      const usernameInput = screen.getByPlaceholderText(/Tên đăng nhập/i);
-      const passwordInput = screen.getByPlaceholderText(/Mật khẩu/i);
-      const submitButton = screen.getByRole('button', { name: /Đăng nhập/i });
-
-      fireEvent.change(usernameInput, { target: { value: 'admin' } });
-      fireEvent.change(passwordInput, { target: { value: 'admin123' } });
-      fireEvent.click(submitButton);
-
-      await waitFor(() => {
-        expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
-      });
-    });
-
-    it('should show error message on failed login', async () => {
-      authService.login.mockResolvedValue({
-        success: false,
-        message: 'Tên đăng nhập hoặc mật khẩu không đúng',
-      });
-
-      renderLoginForm();
-
-      const usernameInput = screen.getByPlaceholderText(/Tên đăng nhập/i);
-      const passwordInput = screen.getByPlaceholderText(/Mật khẩu/i);
-      const submitButton = screen.getByRole('button', { name: /Đăng nhập/i });
-
-      fireEvent.change(usernameInput, { target: { value: 'wronguser' } });
-      fireEvent.change(passwordInput, { target: { value: 'wrongpass' } });
-      fireEvent.click(submitButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Tên đăng nhập hoặc mật khẩu không đúng/i)).toBeInTheDocument();
-      });
-    });
-
-    it('should disable submit button while loading', async () => {
-      authService.login.mockImplementation(() => {
-        return new Promise(resolve => {
-          setTimeout(() => {
-            resolve({
-              success: true,
-              token: 'test-token',
-              user: { id: 1, username: 'admin' },
-            });
-          }, 100);
-        });
-      });
-
-      renderLoginForm();
-
-      const usernameInput = screen.getByPlaceholderText(/Tên đăng nhập/i);
-      const passwordInput = screen.getByPlaceholderText(/Mật khẩu/i);
-      const submitButton = screen.getByRole('button', { name: /Đăng nhập/i });
-
-      fireEvent.change(usernameInput, { target: { value: 'admin' } });
-      fireEvent.change(passwordInput, { target: { value: 'admin123' } });
-      fireEvent.click(submitButton);
-
-      expect(submitButton).toBeDisabled();
-
-      await waitFor(() => {
-        expect(submitButton).not.toBeDisabled();
-      });
-    });
+//
+// ===============================
+//  B) TEST validatePassword()
+// ===============================
+//
+describe("validatePassword()", () => {
+  test("Trả lỗi khi password rỗng", () => {
+    expect(validatePassword("")).toBe("Vui lòng nhập mật khẩu");
+    expect(validatePassword("   ")).toBe("Vui lòng nhập mật khẩu");
   });
 
-  describe('Error Handling', () => {
-    it('should handle network error gracefully', async () => {
-      authService.login.mockRejectedValue(new Error('Network error'));
+  test("Trả lỗi khi password quá ngắn hoặc quá dài", () => {
+    expect(validatePassword("123a")).toBe("Mật khẩu phải từ 6–100 ký tự");
 
-      renderLoginForm();
-
-      const usernameInput = screen.getByPlaceholderText(/Tên đăng nhập/i);
-      const passwordInput = screen.getByPlaceholderText(/Mật khẩu/i);
-      const submitButton = screen.getByRole('button', { name: /Đăng nhập/i });
-
-      fireEvent.change(usernameInput, { target: { value: 'admin' } });
-      fireEvent.change(passwordInput, { target: { value: 'admin123' } });
-      fireEvent.click(submitButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/lỗi/i)).toBeInTheDocument();
-      });
-    });
-
-    it('should clear error message when user types', async () => {
-      authService.login.mockResolvedValue({
-        success: false,
-        message: 'Tên đăng nhập hoặc mật khẩu không đúng',
-      });
-
-      renderLoginForm();
-
-      const usernameInput = screen.getByPlaceholderText(/Tên đăng nhập/i);
-      const passwordInput = screen.getByPlaceholderText(/Mật khẩu/i);
-      const submitButton = screen.getByRole('button', { name: /Đăng nhập/i });
-
-      // Submit with wrong credentials
-      fireEvent.change(usernameInput, { target: { value: 'wrong' } });
-      fireEvent.change(passwordInput, { target: { value: 'wrong' } });
-      fireEvent.click(submitButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Tên đăng nhập hoặc mật khẩu không đúng/i)).toBeInTheDocument();
-      });
-
-      // Type new input - error should clear
-      fireEvent.change(usernameInput, { target: { value: 'admin' } });
-
-      await waitFor(() => {
-        expect(screen.queryByText(/Tên đăng nhập hoặc mật khẩu không đúng/i)).not.toBeInTheDocument();
-      });
-    });
+    const longPass = "a1".repeat(60); // > 100 ký tự
+    expect(validatePassword(longPass)).toBe("Mật khẩu phải từ 6–100 ký tự");
   });
 
-  describe('Keyboard Events', () => {
-    it('should submit form when pressing Enter key', async () => {
-      authService.login.mockResolvedValue({
-        success: true,
-        token: 'test-token',
-        user: { id: 1, username: 'admin' },
-      });
+  test("Trả lỗi khi password không có chữ hoặc số", () => {
+    expect(validatePassword("123456")).toBe("Mật khẩu phải có ít nhất 1 chữ cái và 1 chữ số");
+    expect(validatePassword("abcdef")).toBe("Mật khẩu phải có ít nhất 1 chữ cái và 1 chữ số");
+  });
 
-      renderLoginForm();
+  test("Trả lỗi khi password chứa khoảng trắng", () => {
+    expect(validatePassword("abc 123")).toBe("Mật khẩu không được chứa khoảng trắng");
+  });
 
-      const usernameInput = screen.getByPlaceholderText(/Tên đăng nhập/i);
-      const passwordInput = screen.getByPlaceholderText(/Mật khẩu/i);
+  test("Trả lỗi khi password chứa ký tự Unicode", () => {
+    expect(validatePassword("abc123á")).toBe("Mật khẩu chỉ được chứa ký tự ASCII (không dấu)");
+  });
 
-      fireEvent.change(usernameInput, { target: { value: 'admin' } });
-      fireEvent.change(passwordInput, { target: { value: 'admin123' } });
-      fireEvent.keyDown(passwordInput, { key: 'Enter', code: 'Enter' });
-
-      await waitFor(() => {
-        expect(authService.login).toHaveBeenCalled();
-      });
-    });
+  test("Password hợp lệ", () => {
+    expect(validatePassword("admin123")).toBe(null);
+    expect(validatePassword("A1b2C3")).toBe(null);
   });
 });

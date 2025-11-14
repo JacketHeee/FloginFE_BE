@@ -22,7 +22,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
 
   const [formData, setFormData] = useState({
     username: "jackethee",
-    password: "admin@123",
+    password: "admin123",
     rememberMe: false
   });
 

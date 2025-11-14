@@ -3,6 +3,15 @@ import "./AddProductPopup.scss";
 import Icon from "../Icon/Icon";
 import productService from "../../services/productService";
 
+import {
+  validateProductName,
+  validatePrice,
+  validateQuantity,
+  validateDescription,
+  validateCategory,
+} from "../../utils/validate";
+
+
 const CustomSelect = ({ options, value, onChange, disabled, placeholder }) => {
   const [open, setOpen] = useState(false);
 
@@ -101,16 +110,23 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "Vui lòng nhập tên sản phẩm";
-    if (formData.price === "" || isNaN(formData.price) || formData.price <= 0)
-      newErrors.price = "Giá phải lớn hơn 0";
-    if (formData.quantity === "" || isNaN(formData.quantity) || formData.quantity <= 0)
-      newErrors.quantity = "Số lượng phải lớn hơn 0";
-    if (!formData.description.trim()) newErrors.description = "Vui lòng nhập mô tả sản phẩm";
-    if (!formData.categoryName) newErrors.categoryName = "Vui lòng chọn danh mục";
+
+    const nameErr = validateProductName(formData.name);
+    const priceErr = validatePrice(formData.price);
+    const quantityErr = validateQuantity(formData.quantity);
+    const descErr = validateDescription(formData.description);
+    const categoryErr = validateCategory(formData.categoryName, categories.map(c => c.name));
+
+    if (nameErr) newErrors.name = nameErr;
+    if (priceErr) newErrors.price = priceErr;
+    if (quantityErr) newErrors.quantity = quantityErr;
+    if (descErr) newErrors.description = descErr;
+    if (categoryErr) newErrors.categoryName = categoryErr;
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
