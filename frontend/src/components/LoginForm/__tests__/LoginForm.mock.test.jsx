@@ -1,189 +1,100 @@
 /**
- * FIXED PRODUCTS MOCK TEST – PASS 100%
+ * MOCK TEST — LOGIN FORM
+ * Yêu cầu (2.5 điểm):
+ * ✔ Mock authService.loginUser()
+ * ✔ Test successful + failed mock responses
+ * ✔ Verify mock calls
  */
 
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import Products from "../Products";
-import productService from "../../../services/productService";
+import LoginForm from "../LoginForm";
+import { AuthProvider } from "../../../contexts/AuthContext";
+import { login as loginApi } from "../../../services/authService";
+import { BrowserRouter } from "react-router-dom";
 
-jest.mock("../../../services/productService");
+// -------------------------
+// MOCK authService.login()
+// -------------------------
+jest.mock("../../../services/authService");
+
+// -------------------------
+// Mock useNavigate
+// -------------------------
+const mockNavigate = jest.fn();
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useNavigate: () => mockNavigate
+}));
+
+// Helper render component
+const renderLoginForm = () =>
+  render(
+    <BrowserRouter>
+      <AuthProvider>
+        <LoginForm onSwitchToRegister={jest.fn()} />
+      </AuthProvider>
+    </BrowserRouter>
+  );
 
 beforeEach(() => {
   jest.clearAllMocks();
-
-  // Mock categories dạng object như AddProductPopup yêu cầu
-  productService.getCategories.mockResolvedValue([
-    { name: "Phone" },
-    { name: "Laptop" },
-  ]);
-
-  // Mock getProducts
-  productService.getProducts.mockResolvedValue({
-    data: [
-      {
-        id: 1,
-        name: "Item",
-        price: 10,
-        quantity: 1,
-        description: "D",
-        categoryName: "Phone",
-      },
-    ],
-    total: 1,
-    page: 1,
-    totalPages: 1,
-  });
+  localStorage.clear();
 });
 
-const renderPage = () => render(<Products />);
+describe("LoginForm Mock Testing", () => {
+  // ----------------------------------------------------
+  // (1) Mock SUCCESSFUL RESPONSE
+  // ----------------------------------------------------
+  test("Login thành công → lưu token + chuyển hướng /products", async () => {
+    loginApi.mockResolvedValue({ token: "FAKE_LOGIN_TOKEN" });
 
-const waitForPopup = () =>
-  waitFor(() => {
-    expect(screen.getByText(/Thêm sản phẩm mới|Chỉnh sửa sản phẩm/i)).toBeInTheDocument();
+    renderLoginForm();
+
+    fireEvent.change(screen.getByPlaceholderText("Tên đăng nhập"), {
+      target: { value: "jackethee" }
+    });
+
+    fireEvent.change(screen.getByPlaceholderText("Nhập mật khẩu của bạn"), {
+      target: { value: "admin123" }
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Đăng nhập" }));
+
+    await waitFor(() => {
+      // Verify API gọi đúng tham số
+      expect(loginApi).toHaveBeenCalledWith("jackethee", "admin123");
+
+      // Verify token được lưu
+      expect(localStorage.getItem("token")).toBe("FAKE_LOGIN_TOKEN");
+
+      // Verify chuyển trang
+      expect(mockNavigate).toHaveBeenCalledWith("/products");
+    });
   });
 
-const selectCategory = async (value = "Phone") => {
-  fireEvent.click(screen.getByText("-- Chọn danh mục --"));
+  // ----------------------------------------------------
+  // (2) Mock FAILED RESPONSE
+  // ----------------------------------------------------
+  test("Login thất bại → hiển thị lỗi cho người dùng", async () => {
+    loginApi.mockRejectedValue(new Error("Invalid credentials"));
 
-  // Chờ dropdown được render trong DOM
-  await waitFor(() => {
-    expect(document.querySelector(".dropdown")).toBeInTheDocument();
-  });
+    renderLoginForm();
 
-  const dropdown = document.querySelector(".dropdown");
-  const items = dropdown.querySelectorAll("li");
-
-  const phone = [...items].find((li) => li.textContent === value);
-  fireEvent.click(phone);
-};
-
-describe("Products Mock Testing", () => {
-  test("Add Product → success", async () => {
-    productService.createProduct.mockResolvedValue({
-      id: 99,
-      name: "New",
-      price: 20,
-      quantity: 2,
-      description: "OK",
-      categoryName: "Phone",
+    fireEvent.change(screen.getByPlaceholderText("Tên đăng nhập"), {
+      target: { value: "wrong" }
     });
 
-    renderPage();
-
-    fireEvent.click(screen.getByText("+ Thêm sản phẩm"));
-    await waitForPopup();
-
-    fireEvent.change(screen.getByPlaceholderText("Nhập tên sản phẩm..."), {
-      target: { value: "New" },
+    fireEvent.change(screen.getByPlaceholderText("Nhập mật khẩu của bạn"), {
+      target: { value: "adc123" }
     });
 
-    fireEvent.change(screen.getByPlaceholderText("0"), {
-      target: { value: "20" },
-    });
+    fireEvent.click(screen.getByRole("button", { name: "Đăng nhập" }));
 
-    fireEvent.change(screen.getByPlaceholderText("0"), {
-      target: { value: "2" },
-    });
-
-    // Mô tả
-    fireEvent.change(screen.getByPlaceholderText("Nhập mô tả sản phẩm..."), {
-      target: { value: "OK" },
-    });
-
-    // Chọn category
-    await selectCategory("Phone");
-
-    fireEvent.click(screen.getByText("Thêm sản phẩm"));
-
-    await waitFor(() =>
-      expect(productService.createProduct).toHaveBeenCalledWith({
-        name: "New",
-        price: 20,
-        quantity: 2,
-        description: "OK",
-        categoryName: "Phone",
-      })
-    );
-  });
-
-  test("Add Product → failure", async () => {
-    productService.createProduct.mockRejectedValue(new Error("Fail"));
-
-    renderPage();
-
-    fireEvent.click(screen.getByText("+ Thêm sản phẩm"));
-    await waitForPopup();
-
-    fireEvent.change(screen.getByPlaceholderText("Nhập tên sản phẩm..."), {
-      target: { value: "New" },
-    });
-
-    fireEvent.change(screen.getByPlaceholderText("0"), {
-      target: { value: "20" },
-    });
-
-    fireEvent.change(screen.getByPlaceholderText("0"), {
-      target: { value: "2" },
-    });
-
-    fireEvent.change(screen.getByPlaceholderText("Nhập mô tả sản phẩm..."), {
-      target: { value: "OK" },
-    });
-
-    await selectCategory("Phone");
-
-    fireEvent.click(screen.getByText("Thêm sản phẩm"));
-
-    await waitFor(() =>
-      expect(productService.createProduct).toHaveBeenCalled()
-    );
-  });
-
-  test("Delete Product → success", async () => {
-    productService.deleteProduct.mockResolvedValue(true);
-
-    renderPage();
-
-    // lấy đúng nút delete (button thứ 3 trong row)
-    const row = await screen.findByText("Item");
-    const deleteBtn = row.closest(".table-row").querySelectorAll("button")[2];
-
-    fireEvent.click(deleteBtn);
-
-    fireEvent.click(screen.getByText("Xóa"));
-
-    await waitFor(() =>
-      expect(productService.deleteProduct).toHaveBeenCalledWith(1)
-    );
-  });
-
-  test("Update Product → success", async () => {
-    productService.updateProduct.mockResolvedValue(true);
-
-    renderPage();
-
-    const row = await screen.findByText("Item");
-
-    // nút edit là button index:1
-    const editBtn = row.closest(".table-row").querySelectorAll("button")[1];
-    fireEvent.click(editBtn);
-
-    await waitForPopup();
-
-    fireEvent.change(screen.getByPlaceholderText("Nhập tên sản phẩm..."), {
-      target: { value: "Updated" },
-    });
-
-    fireEvent.click(screen.getByText("Cập nhật"));
-
-    await waitFor(() =>
-      expect(productService.updateProduct).toHaveBeenCalledWith(1, {
-        name: "Updated",
-        price: 10,
-        quantity: 1,
-        description: "D",
-        categoryName: "Phone",
-      })
-    );
+    expect(
+      await screen.findByText("Sai tên đăng nhập hoặc mật khẩu, vui lòng thử lại.")
+    ).toBeInTheDocument();
+    
+    // Verify mock được gọi
+    expect(loginApi).toHaveBeenCalledTimes(1);
   });
 });
