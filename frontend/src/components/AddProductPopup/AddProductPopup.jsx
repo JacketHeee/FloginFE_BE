@@ -23,9 +23,10 @@ const CustomSelect = ({ options, value, onChange, disabled, placeholder }) => {
   return (
     <div
       className={`custom-select ${open ? "open" : ""} ${disabled ? "disabled" : ""}`}
+      data-cy="popup-category-select"
       onClick={() => !disabled && setOpen(!open)}
     >
-      <div className="selected">
+      <div className="selected" data-cy="popup-category-selected">
         <span>{value || placeholder}</span>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
@@ -33,9 +34,9 @@ const CustomSelect = ({ options, value, onChange, disabled, placeholder }) => {
       </div>
 
       {open && (
-        <ul className="dropdown">
+        <ul className="dropdown" data-cy="popup-category-options">
           {options.map((opt, index) => (
-            <li key={index} onClick={() => handleSelect(opt)}>
+            <li key={index} data-cy="popup-category-option" onClick={() => handleSelect(opt)}>
               {opt}
             </li>
           ))}
@@ -159,8 +160,8 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
   };
 
   return (
-    <div className="popup-overlay" onClick={onClose}>
-      <div className="popup-container" onClick={(e) => e.stopPropagation()}>
+    <div className="popup-overlay" data-cy="product-form-popup" onClick={onClose}>
+      <div className="popup-container" data-cy="product-form-container" onClick={(e) => e.stopPropagation()}>
         <div className="popup-header">
           <h2>{getTitle()}</h2>
           <button className="close-button" onClick={onClose}>
@@ -172,7 +173,7 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="popup-form">
+        <form onSubmit={handleSubmit} className="popup-form" data-cy="product-form">
           <div className="form-group">
             <label htmlFor="name">
               Tên sản phẩm {!isViewMode && <span className="required">*</span>}
@@ -186,6 +187,7 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
               placeholder="Nhập tên sản phẩm..."
               className={errors.name ? "error" : ""}
               disabled={isViewMode}
+              data-cy="product-name-input"
             />
             {errors.name && <span className="error-message">{errors.name}</span>}
           </div>
@@ -203,6 +205,7 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
                 step="any"
                 className={errors.price ? "error" : ""}
                 disabled={isViewMode}
+                data-cy="product-price-input"
               />
               {errors.price && <span className="error-message">{errors.price}</span>}
             </div>
@@ -219,6 +222,7 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
                 step="1"
                 className={errors.quantity ? "error" : ""}
                 disabled={isViewMode}
+                data-cy="product-quantity-input"
               />
               {errors.quantity && <span className="error-message">{errors.quantity}</span>}
             </div>
@@ -248,16 +252,17 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
               rows="4"
               className={errors.description ? "error" : ""}
               disabled={isViewMode}
+              data-cy="product-description-input"
             />
             {errors.description && <span className="error-message">{errors.description}</span>}
           </div>
 
           <div className="form-actions">
-            <button type="button" className="cancel-button" onClick={onClose}>
+            <button type="button" className="cancel-button" onClick={onClose} data-cy="product-cancel-btn">
               {isViewMode ? "Đóng" : "Hủy"}
             </button>
             {!isViewMode && (
-              <button type="submit" className="submit-button">
+              <button type="submit" className="submit-button" data-cy="product-submit-btn">
                 {isEditMode ? "Cập nhật" : "Thêm sản phẩm"}
               </button>
             )}

@@ -1,107 +1,132 @@
-/* eslint-env cypress */
-
 class ProductsPage {
+
   visit() {
     cy.visit("/products");
+    this.waitForProducts();
   }
 
-  // ========== LIST TABLE SELECTORS ==========
+  waitForProducts() {
+    cy.get(".custom-table", { timeout: 15000 }).should("exist");
+    cy.get(".table-body", { timeout: 15000 }).should("exist");
+  }
+
+  // ==========================
+  // PAGINATION (NEW)
+  // ==========================
+  goToLastPage() {
+    cy.get('[data-cy="pagination-last"]').click({ force: true });
+    this.waitForProducts();
+  }
+
+  // ==========================
+  // TABLE
+  // ==========================
   tableRows() {
     return cy.get(".table-body .table-row");
   }
 
+  rowById(id) {
+    return cy.get(`[data-cy="table-row-${id}"]`);
+  }
+
+  // ==========================
+  // SEARCH
+  // ==========================
   searchInput() {
-    return cy.get(".search-input");
+    return cy.get('[data-cy="products-search-input"]');
   }
 
+  search(keyword) {
+    this.searchInput().first().clear().type(keyword, { force: true });
+    cy.wait(500);
+  }
+
+  // ==========================
+  // BUTTONS
+  // ==========================
   addButton() {
-    return cy.get(".add-button");
+    return cy.contains("+ Thêm sản phẩm");
   }
 
-  // ========== POPUP ==========
+  editButtonByRowId(id) {
+    return this.rowById(id).find("button").eq(1);
+  }
+
+  deleteButtonByRowId(id) {
+    return this.rowById(id).find("button").eq(2);
+  }
+
+  // ==========================
+  // POPUP
+  // ==========================
   popup() {
-    return cy.get(".popup-overlay");
+    return cy.get('[data-cy="product-form-popup"]');
   }
 
-  popupTitle() {
-    return cy.get(".popup-header h2");
-  }
-
-  // ========== FORM INPUTS (ADD/EDIT) ==========
   nameInput() {
-    return cy.get('input[name="name"], input#name');
+    return cy.get('[data-cy="product-name-input"]');
   }
 
   priceInput() {
-    return cy.get('input[name="price"]');
+    return cy.get('[data-cy="product-price-input"]');
   }
 
   quantityInput() {
-    return cy.get('input[name="quantity"]');
+    return cy.get('[data-cy="product-quantity-input"]');
   }
 
   descriptionInput() {
-    return cy.get('textarea[name="description"]');
+    return cy.get('[data-cy="product-description-input"]');
   }
 
-  // ========== CATEGORY DROPDOWN ==========
+  // CATEGORY
   categorySelect() {
-    return cy.get(".custom-select .selected");
+    return cy.get('[data-cy="popup-category-selected"]');
   }
 
   categoryOptions() {
-    return cy.get(".custom-select ul.dropdown li");
+    return cy.get('[data-cy="popup-category-option"]');
   }
 
-  // ========== SUBMIT / CANCEL ==========
-  submitButton() {
-    return cy.get(".submit-button");
+  selectCategory(categoryName) {
+    this.categorySelect().click({ force: true });
+    cy.wait(150);
+    this.categoryOptions().contains(categoryName).click({ force: true });
   }
 
-  cancelButton() {
-    return cy.get(".cancel-button");
-  }
-
-  // ========== ACTION ICONS ==========
-  editButton(rowIndex = 0) {
-    return this.tableRows().eq(rowIndex).find("button").eq(1); // ICON EDIT
-  }
-
-  deleteButton(rowIndex = 0) {
-    return this.tableRows().eq(rowIndex).find("button").eq(2); // ICON DELETE
-  }
-
-  // ========== METHODS ==========
-
+  // FILL FORM
   fillForm({ name, price, quantity, description, category }) {
-    if (name) this.nameInput().clear().type(name);
-    if (price) this.priceInput().clear().type(price);
-    if (quantity) this.quantityInput().clear().type(quantity);
-    if (description) this.descriptionInput().clear().type(description);
-
-    if (category) {
-      this.categorySelect().click();
-      this.categoryOptions().contains(category).click();
-    }
+    if (name) this.nameInput().clear().type(name, { force: true });
+    if (price) this.priceInput().clear().type(price, { force: true });
+    if (quantity) this.quantityInput().clear().type(quantity, { force: true });
+    if (description) this.descriptionInput().clear().type(description, { force: true });
+    if (category) this.selectCategory(category);
   }
 
+  submitButton() {
+    return cy.get('[data-cy="product-submit-btn"]');
+  }
+
+  // ==========================
+  // ACTIONS
+  // ==========================
   addProduct(product) {
-    this.addButton().click();
+    this.addButton().click({ force: true });
     this.popup().should("be.visible");
     this.fillForm(product);
-    this.submitButton().click();
+    this.submitButton().click({ force: true });
   }
 
-  updateProduct(rowIndex, product) {
-    this.editButton(rowIndex).click();
+  updateProductById(id, updated) {
+    this.editButtonByRowId(id).click({ force: true });
     this.popup().should("be.visible");
-    this.fillForm(product);
-    this.submitButton().click();
+    this.fillForm(updated);
+    this.submitButton().click({ force: true });
   }
 
-  deleteProduct(rowIndex) {
-    this.deleteButton(rowIndex).click();
-    cy.contains("Xóa").click();
+  deleteProductById(id) {
+    this.deleteButtonByRowId(id).click({ force: true });
+    cy.contains("Xóa").click({ force: true });
   }
 }
 
