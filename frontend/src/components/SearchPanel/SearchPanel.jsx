@@ -21,6 +21,7 @@ export default function SearchPanel({
               placeholder={placeholder}
               className="search-input"
               onChange={onChange}
+              data-cy={backWhite ?"products-search-input" : "global-search-input"}
               value={value}
             />
             {isButtonSearch && <button className="search-button">Tìm kiếm</button>}

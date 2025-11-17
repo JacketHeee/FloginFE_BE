@@ -56,7 +56,6 @@ const RegisterForm = ({ onSwitchToLogin }) => {
 
     if (validateForm()) {
       setLoading(true);
-      console.log("Form submitted:", formData);
 
       try {
         const data = await register(
@@ -65,7 +64,6 @@ const RegisterForm = ({ onSwitchToLogin }) => {
           formData.username,
           formData.password
         );
-        console.log("Đăng ký thành công! ", data);
         nav("/login");
       } catch (err) {
         console.error("Đăng ký thất bại", err);

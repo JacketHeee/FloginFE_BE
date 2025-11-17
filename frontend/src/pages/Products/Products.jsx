@@ -32,10 +32,8 @@ const Products = () => {
     changePage
   } = useProducts();
 
-  console.log(products)
   // Convert products to table format
   const dataTable = Array.isArray(products) ? products.map(productToRow) : [];
-  console.log(dataTable)
 
   // Handle popup submit (Add or Edit)
   const handlePopupSubmit = async (productIdOrData, productData) => {
@@ -51,6 +49,9 @@ const Products = () => {
       
       if (result.success) {
         setLastAddedProduct(productIdOrData);
+
+        changePage(pagination.totalPages);
+
         setToast({ 
           isVisible: true, 
           message: `Đã thêm sản phẩm "${productIdOrData.name}" thành công!`, 
@@ -276,6 +277,7 @@ const Products = () => {
                   className="pagination-button" 
                   disabled={pagination.page === 1}
                   onClick={() => changePage(pagination.page - 1)}
+                  data-cy="pagination-prev"
                 >
                   &lt;
                 </button>
@@ -283,8 +285,17 @@ const Products = () => {
                   className="pagination-button pagination-next"
                   disabled={pagination.page === pagination.totalPages}
                   onClick={() => changePage(pagination.page + 1)}
+                  data-cy="pagination-next"
                 >
                   &gt;
+                </button>
+                <button 
+                  className="pagination-button"
+                  disabled={pagination.page === pagination.totalPages}
+                  onClick={() => changePage(pagination.totalPages)}
+                  data-cy="pagination-last"
+                >
+                  &gt;&gt;
                 </button>
               </div>
             </div>

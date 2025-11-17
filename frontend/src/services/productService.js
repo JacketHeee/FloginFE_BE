@@ -10,7 +10,6 @@ const productService = {
   async getProducts(params = {}) {
     try {
       const res = await api.get("/products", { params });
-      console.log(res)
       return res.data;
     } catch (err) {
       console.error("Lấy danh sách sản phẩm lỗi!", err);
@@ -54,9 +53,7 @@ const productService = {
    */
   async createProduct(productData) {
     try {
-      console.log("Products: ", productData);
       const res = await api.post("/products", productData);
-      console.log("backend tra ve: ", res.data);
       return res.data;
     } catch (err) {
       console.error("thêm sản phẩm lỗi", err);

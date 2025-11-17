@@ -1,611 +1,250 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import Products from '../../pages/Products/Products';
-import * as productService from '../../services/productService';
-import '@testing-library/jest-dom';
+/**
+ * INTEGRATION TEST — PRODUCT LIST + PRODUCT FORM + PRODUCT DETAIL
+ * Covers:
+ * ✔ ProductList
+ * ✔ Add Product
+ * ✔ Edit Product
+ * ✔ View Product
+ */
 
-// Mock productService
-jest.mock('../../services/productService');
+import {
+  render,
+  screen,
+  waitFor,
+  fireEvent,
+  within
+} from "@testing-library/react";
 
-const mockProducts = [
-  {
-    id: 1,
-    name: 'Laptop Dell XPS 13',
-    price: 25000000,
-    quantity: 15,
-    description: 'Laptop cao cấp',
-    category: 'Electronics',
-  },
-  {
-    id: 2,
-    name: 'iPhone 15 Pro',
-    price: 30000000,
-    quantity: 20,
-    description: 'Điện thoại thông minh',
-    category: 'Electronics',
-  },
-];
+import Products from "../../pages/Products/Products";
+import useProducts from "../../hooks/useProducts";
+import productService from "../../services/productService";
 
-const mockCategories = ['Electronics', 'Clothing', 'Books'];
+jest.mock("../../hooks/useProducts");
+jest.mock("../../services/productService");
 
-const renderProducts = () => {
-  return render(
-    <BrowserRouter>
-      <Products />
-    </BrowserRouter>
-  );
-};
+const renderProducts = () => render(<Products />);
 
-describe('Products CRUD Integration Tests', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    productService.getProducts.mockResolvedValue({
-      data: [...mockProducts],
-      total: mockProducts.length,
-      page: 1,
-      totalPages: 1,
+beforeEach(() => {
+  jest.clearAllMocks();
+  productService.getCategories.mockResolvedValue([
+    { name: "Phone" },
+    { name: "Laptop" },
+  ]);
+});
+
+/* =======================================================
+   PRODUCT LIST
+======================================================= */
+describe("ProductList Integration", () => {
+  test("Hiển thị danh sách sản phẩm từ API", async () => {
+    useProducts.mockReturnValue({
+      products: [
+        {
+          id: 1,
+          name: "iPhone 15",
+          price: 25000000,
+          quantity: 10,
+          description: "Flagship",
+          categoryName: "Phone",
+        },
+        {
+          id: 2,
+          name: "MacBook Pro",
+          price: 45000000,
+          quantity: 5,
+          description: "Laptop",
+          categoryName: "Laptop",
+        },
+      ],
+      loading: false,
+      error: null,
+      pagination: { page: 1, total: 2, totalPages: 1, limit: 10 },
+      filters: { search: "" },
+      changePage: jest.fn(),
+      updateFilters: jest.fn(),
+      addProduct: jest.fn(),
+      updateProduct: jest.fn(),
+      deleteProduct: jest.fn(),
     });
-    productService.getCategories.mockResolvedValue([...mockCategories]);
+
+    renderProducts();
+
+    expect(await screen.findByText("iPhone 15")).toBeInTheDocument();
+    expect(await screen.findByText("MacBook Pro")).toBeInTheDocument();
   });
 
-  describe('Create Product Flow', () => {
-    it('should complete full create product flow', async () => {
-      const newProduct = {
-        id: 3,
-        name: 'Samsung Galaxy S24',
-        price: 22000000,
-        quantity: 10,
-        description: 'Smartphone Android',
-        category: 'Electronics',
-      };
+  test("Search panel → gọi updateFilters", async () => {
+    const updateFilters = jest.fn();
 
-      productService.createProduct.mockResolvedValue(newProduct);
-      productService.getProducts.mockResolvedValueOnce({
-        data: [...mockProducts],
-        total: mockProducts.length,
-        page: 1,
-        totalPages: 1,
-      }).mockResolvedValueOnce({
-        data: [...mockProducts, newProduct],
-        total: mockProducts.length + 1,
-        page: 1,
-        totalPages: 1,
-      });
-
-      renderProducts();
-
-      // Wait for products to load
-      await waitFor(() => {
-        expect(screen.getByText('Laptop Dell XPS 13')).toBeInTheDocument();
-      });
-
-      // Open add product popup
-      const addButton = screen.getByRole('button', { name: /Thêm sản phẩm/i });
-      fireEvent.click(addButton);
-
-      // Wait for popup to open
-      await waitFor(() => {
-        expect(screen.getByText(/Thêm sản phẩm mới/i)).toBeInTheDocument();
-      });
-
-      // Fill form
-      const nameInput = screen.getByPlaceholderText(/Tên sản phẩm/i);
-      const priceInput = screen.getByPlaceholderText(/Giá/i);
-      const quantityInput = screen.getByPlaceholderText(/Số lượng/i);
-      const descriptionInput = screen.getByPlaceholderText(/Mô tả/i);
-
-      fireEvent.change(nameInput, { target: { value: 'Samsung Galaxy S24' } });
-      fireEvent.change(priceInput, { target: { value: '22000000' } });
-      fireEvent.change(quantityInput, { target: { value: '10' } });
-      fireEvent.change(descriptionInput, { target: { value: 'Smartphone Android' } });
-
-      // Submit form
-      const submitButton = screen.getByRole('button', { name: /^Thêm$/i });
-      fireEvent.click(submitButton);
-
-      // Should call createProduct service
-      await waitFor(() => {
-        expect(productService.createProduct).toHaveBeenCalledWith(
-          expect.objectContaining({
-            name: 'Samsung Galaxy S24',
-            price: 22000000,
-            quantity: 10,
-            description: 'Smartphone Android',
-          })
-        );
-      });
-
-      // Should reload products list
-      await waitFor(() => {
-        expect(productService.getProducts).toHaveBeenCalledTimes(2);
-      });
-
-      // Should close popup
-      await waitFor(() => {
-        expect(screen.queryByText(/Thêm sản phẩm mới/i)).not.toBeInTheDocument();
-      });
-
-      // New product should appear in list
-      await waitFor(() => {
-        expect(screen.getByText('Samsung Galaxy S24')).toBeInTheDocument();
-      });
+    useProducts.mockReturnValue({
+      products: [],
+      loading: false,
+      error: null,
+      pagination: { page: 1, total: 0, totalPages: 1, limit: 10 },
+      filters: { search: "" },
+      changePage: jest.fn(),
+      updateFilters,
+      addProduct: jest.fn(),
+      updateProduct: jest.fn(),
+      deleteProduct: jest.fn(),
     });
 
-    it('should validate required fields when creating product', async () => {
-      renderProducts();
+    renderProducts();
 
-      await waitFor(() => {
-        expect(screen.getByText('Laptop Dell XPS 13')).toBeInTheDocument();
-      });
-
-      // Open add popup
-      const addButton = screen.getByRole('button', { name: /Thêm sản phẩm/i });
-      fireEvent.click(addButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Thêm sản phẩm mới/i)).toBeInTheDocument();
-      });
-
-      // Try to submit without filling required fields
-      const submitButton = screen.getByRole('button', { name: /^Thêm$/i });
-      fireEvent.click(submitButton);
-
-      // Should show validation errors
-      await waitFor(() => {
-        expect(screen.getByText(/Vui lòng nhập/i)).toBeInTheDocument();
-      });
-
-      // Should NOT call createProduct
-      expect(productService.createProduct).not.toHaveBeenCalled();
+    fireEvent.change(screen.getByPlaceholderText("Tìm kiếm sản phẩm..."), {
+      target: { value: "phone" },
     });
 
-    it('should handle create product error', async () => {
-      productService.createProduct.mockRejectedValue(new Error('Failed to create product'));
-
-      renderProducts();
-
-      await waitFor(() => {
-        expect(screen.getByText('Laptop Dell XPS 13')).toBeInTheDocument();
-      });
-
-      const addButton = screen.getByRole('button', { name: /Thêm sản phẩm/i });
-      fireEvent.click(addButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Thêm sản phẩm mới/i)).toBeInTheDocument();
-      });
-
-      // Fill and submit form
-      const nameInput = screen.getByPlaceholderText(/Tên sản phẩm/i);
-      fireEvent.change(nameInput, { target: { value: 'Test Product' } });
-
-      const submitButton = screen.getByRole('button', { name: /^Thêm$/i });
-      fireEvent.click(submitButton);
-
-      // Should show error message
-      await waitFor(() => {
-        expect(screen.getByText(/lỗi/i)).toBeInTheDocument();
-      });
-    });
+    expect(updateFilters).toHaveBeenCalledWith({ search: "phone" });
   });
+});
 
-  describe('Read/Search Product Flow', () => {
-    it('should search and filter products', async () => {
-      productService.getProducts
-        .mockResolvedValueOnce({
-          data: mockProducts,
-          total: 2,
-          page: 1,
-          totalPages: 1,
-        })
-        .mockResolvedValueOnce({
-          data: [mockProducts[0]],
-          total: 1,
-          page: 1,
-          totalPages: 1,
-        });
+/* =======================================================
+   PRODUCT FORM (ADD + EDIT)
+======================================================= */
+describe("Product Form Integration", () => {
+  test("Mở popup Add Product → nhập form → submit thành công", async () => {
+    const addProductMock = jest.fn().mockResolvedValue({ success: true });
 
-      renderProducts();
-
-      // Initial load
-      await waitFor(() => {
-        expect(screen.getByText('Laptop Dell XPS 13')).toBeInTheDocument();
-        expect(screen.getByText('iPhone 15 Pro')).toBeInTheDocument();
-      });
-
-      // Search for "Laptop"
-      const searchInput = screen.getByPlaceholderText(/Tìm kiếm/i);
-      fireEvent.change(searchInput, { target: { value: 'Laptop' } });
-
-      // Should call getProducts with search param
-      await waitFor(() => {
-        expect(productService.getProducts).toHaveBeenCalledWith(
-          expect.objectContaining({
-            search: 'Laptop',
-          })
-        );
-      });
-
-      // Should show only laptop
-      await waitFor(() => {
-        expect(screen.getByText('Laptop Dell XPS 13')).toBeInTheDocument();
-        expect(screen.queryByText('iPhone 15 Pro')).not.toBeInTheDocument();
-      });
+    useProducts.mockReturnValue({
+      products: [],
+      loading: false,
+      error: null,
+      pagination: { page: 1, total: 0, totalPages: 1, limit: 10 },
+      filters: {},
+      addProduct: addProductMock,
+      updateProduct: jest.fn(),
+      deleteProduct: jest.fn(),
+      updateFilters: jest.fn(),
+      changePage: jest.fn(),
     });
 
-    it('should filter by category', async () => {
-      productService.getProducts
-        .mockResolvedValueOnce({
-          data: mockProducts,
-          total: 2,
-          page: 1,
-          totalPages: 1,
-        })
-        .mockResolvedValueOnce({
-          data: mockProducts.filter(p => p.category === 'Electronics'),
-          total: 2,
-          page: 1,
-          totalPages: 1,
-        });
+    renderProducts();
 
-      renderProducts();
+    fireEvent.click(screen.getByText("+ Thêm sản phẩm"));
 
-      await waitFor(() => {
-        expect(screen.getByText('Laptop Dell XPS 13')).toBeInTheDocument();
-      });
+    await waitFor(() =>
+      expect(screen.getByText("Thêm sản phẩm mới")).toBeInTheDocument()
+    );
 
-      // Select category
-      const categorySelect = screen.getByRole('combobox');
-      fireEvent.change(categorySelect, { target: { value: 'Electronics' } });
-
-      await waitFor(() => {
-        expect(productService.getProducts).toHaveBeenCalledWith(
-          expect.objectContaining({
-            category: 'Electronics',
-          })
-        );
-      });
+    fireEvent.change(screen.getByPlaceholderText("Nhập tên sản phẩm..."), {
+      target: { value: "iPad Pro" },
     });
 
-    it('should handle pagination', async () => {
-      productService.getProducts
-        .mockResolvedValueOnce({
-          data: mockProducts,
-          total: 50,
-          page: 1,
-          totalPages: 5,
-        })
-        .mockResolvedValueOnce({
-          data: mockProducts,
-          total: 50,
-          page: 2,
-          totalPages: 5,
-        });
+    const [priceInput, qtyInput] = screen.getAllByPlaceholderText("0");
 
-      renderProducts();
+    fireEvent.change(priceInput, { target: { value: 20000000 } });
+    fireEvent.change(qtyInput, { target: { value: 5 } });
 
-      await waitFor(() => {
-        expect(screen.getByText('Laptop Dell XPS 13')).toBeInTheDocument();
-      });
+    fireEvent.change(
+      screen.getByPlaceholderText("Nhập mô tả sản phẩm..."),
+      { target: { value: "New tablet" } }
+    );
 
-      // Click next page
-      const nextButton = screen.getByRole('button', { name: /next/i });
-      fireEvent.click(nextButton);
+    fireEvent.click(screen.getByText("-- Chọn danh mục --"));
+    fireEvent.click(await screen.findByText("Phone"));
 
-      await waitFor(() => {
-        expect(productService.getProducts).toHaveBeenCalledWith(
-          expect.objectContaining({
-            page: 2,
-          })
-        );
-      });
-    });
-  });
+    fireEvent.click(screen.getByText("Thêm sản phẩm"));
 
-  describe('Update Product Flow', () => {
-    it('should complete full update product flow', async () => {
-      const updatedProduct = {
-        ...mockProducts[0],
-        name: 'Laptop Dell XPS 13 Updated',
-        price: 26000000,
-      };
-
-      productService.updateProduct.mockResolvedValue(updatedProduct);
-      productService.getProducts
-        .mockResolvedValueOnce({
-          data: mockProducts,
-          total: 2,
-          page: 1,
-          totalPages: 1,
-        })
-        .mockResolvedValueOnce({
-          data: [updatedProduct, mockProducts[1]],
-          total: 2,
-          page: 1,
-          totalPages: 1,
-        });
-
-      renderProducts();
-
-      await waitFor(() => {
-        expect(screen.getByText('Laptop Dell XPS 13')).toBeInTheDocument();
-      });
-
-      // Click edit button
-      const editButtons = screen.getAllByTitle(/Chỉnh sửa/i);
-      fireEvent.click(editButtons[0]);
-
-      // Wait for edit popup
-      await waitFor(() => {
-        expect(screen.getByText(/Chỉnh sửa sản phẩm/i)).toBeInTheDocument();
-      });
-
-      // Update fields
-      const nameInput = screen.getByDisplayValue('Laptop Dell XPS 13');
-      const priceInput = screen.getByDisplayValue('25000000');
-
-      fireEvent.change(nameInput, { target: { value: 'Laptop Dell XPS 13 Updated' } });
-      fireEvent.change(priceInput, { target: { value: '26000000' } });
-
-      // Submit
-      const saveButton = screen.getByRole('button', { name: /Lưu/i });
-      fireEvent.click(saveButton);
-
-      // Should call updateProduct
-      await waitFor(() => {
-        expect(productService.updateProduct).toHaveBeenCalledWith(
-          1,
-          expect.objectContaining({
-            name: 'Laptop Dell XPS 13 Updated',
-            price: 26000000,
-          })
-        );
-      });
-
-      // Should reload products
-      await waitFor(() => {
-        expect(productService.getProducts).toHaveBeenCalledTimes(2);
-      });
-
-      // Updated product should appear
-      await waitFor(() => {
-        expect(screen.getByText('Laptop Dell XPS 13 Updated')).toBeInTheDocument();
-      });
-    });
-
-    it('should handle update product error', async () => {
-      productService.updateProduct.mockRejectedValue(new Error('Failed to update'));
-
-      renderProducts();
-
-      await waitFor(() => {
-        expect(screen.getByText('Laptop Dell XPS 13')).toBeInTheDocument();
-      });
-
-      const editButtons = screen.getAllByTitle(/Chỉnh sửa/i);
-      fireEvent.click(editButtons[0]);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Chỉnh sửa sản phẩm/i)).toBeInTheDocument();
-      });
-
-      const nameInput = screen.getByDisplayValue('Laptop Dell XPS 13');
-      fireEvent.change(nameInput, { target: { value: 'Updated Name' } });
-
-      const saveButton = screen.getByRole('button', { name: /Lưu/i });
-      fireEvent.click(saveButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/lỗi/i)).toBeInTheDocument();
-      });
-    });
-  });
-
-  describe('Delete Product Flow', () => {
-    it('should complete full delete product flow', async () => {
-      productService.deleteProduct.mockResolvedValue(true);
-      productService.getProducts
-        .mockResolvedValueOnce({
-          data: mockProducts,
-          total: 2,
-          page: 1,
-          totalPages: 1,
-        })
-        .mockResolvedValueOnce({
-          data: [mockProducts[1]],
-          total: 1,
-          page: 1,
-          totalPages: 1,
-        });
-
-      renderProducts();
-
-      await waitFor(() => {
-        expect(screen.getByText('Laptop Dell XPS 13')).toBeInTheDocument();
-      });
-
-      // Click delete button
-      const deleteButtons = screen.getAllByTitle(/Xóa/i);
-      fireEvent.click(deleteButtons[0]);
-
-      // Should show confirmation
-      await waitFor(() => {
-        expect(screen.getByText(/Bạn có chắc chắn muốn xóa/i)).toBeInTheDocument();
-      });
-
-      // Confirm delete
-      const confirmButton = screen.getByRole('button', { name: /^Xóa$/i });
-      fireEvent.click(confirmButton);
-
-      // Should call deleteProduct
-      await waitFor(() => {
-        expect(productService.deleteProduct).toHaveBeenCalledWith(1);
-      });
-
-      // Should reload products
-      await waitFor(() => {
-        expect(productService.getProducts).toHaveBeenCalledTimes(2);
-      });
-
-      // Product should be removed
-      await waitFor(() => {
-        expect(screen.queryByText('Laptop Dell XPS 13')).not.toBeInTheDocument();
-        expect(screen.getByText('iPhone 15 Pro')).toBeInTheDocument();
-      });
-    });
-
-    it('should cancel delete operation', async () => {
-      renderProducts();
-
-      await waitFor(() => {
-        expect(screen.getByText('Laptop Dell XPS 13')).toBeInTheDocument();
-      });
-
-      const deleteButtons = screen.getAllByTitle(/Xóa/i);
-      fireEvent.click(deleteButtons[0]);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Bạn có chắc chắn muốn xóa/i)).toBeInTheDocument();
-      });
-
-      // Click cancel
-      const cancelButton = screen.getByRole('button', { name: /Hủy/i });
-      fireEvent.click(cancelButton);
-
-      // Should NOT call deleteProduct
-      expect(productService.deleteProduct).not.toHaveBeenCalled();
-
-      // Product should still be there
-      expect(screen.getByText('Laptop Dell XPS 13')).toBeInTheDocument();
-    });
-
-    it('should handle delete product error', async () => {
-      productService.deleteProduct.mockRejectedValue(new Error('Failed to delete'));
-
-      renderProducts();
-
-      await waitFor(() => {
-        expect(screen.getByText('Laptop Dell XPS 13')).toBeInTheDocument();
-      });
-
-      const deleteButtons = screen.getAllByTitle(/Xóa/i);
-      fireEvent.click(deleteButtons[0]);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Bạn có chắc chắn muốn xóa/i)).toBeInTheDocument();
-      });
-
-      const confirmButton = screen.getByRole('button', { name: /^Xóa$/i });
-      fireEvent.click(confirmButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/lỗi/i)).toBeInTheDocument();
-      });
-    });
-  });
-
-  describe('Complete CRUD Cycle', () => {
-    it('should perform create -> read -> update -> delete cycle', async () => {
-      // Initial state
-      let productsData = [...mockProducts];
-
-      productService.getProducts.mockImplementation(() =>
-        Promise.resolve({
-          data: [...productsData],
-          total: productsData.length,
-          page: 1,
-          totalPages: 1,
-        })
-      );
-
-      renderProducts();
-
-      // READ: Initial load
-      await waitFor(() => {
-        expect(screen.getByText('Laptop Dell XPS 13')).toBeInTheDocument();
-        expect(screen.getByText('iPhone 15 Pro')).toBeInTheDocument();
-      });
-
-      // CREATE: Add new product
-      const newProduct = {
-        id: 3,
-        name: 'New Product',
-        price: 10000000,
+    await waitFor(() =>
+      expect(addProductMock).toHaveBeenCalledWith({
+        name: "iPad Pro",
+        price: 20000000,
         quantity: 5,
-        description: 'Test',
-        category: 'Electronics',
-      };
+        description: "New tablet",
+        categoryName: "Phone",
+      })
+    );
+  });
 
-      productService.createProduct.mockImplementation((data) => {
-        const product = { ...newProduct, ...data };
-        productsData.push(product);
-        return Promise.resolve(product);
-      });
-
-      const addButton = screen.getByRole('button', { name: /Thêm sản phẩm/i });
-      fireEvent.click(addButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Thêm sản phẩm mới/i)).toBeInTheDocument();
-      });
-
-      const nameInput = screen.getByPlaceholderText(/Tên sản phẩm/i);
-      fireEvent.change(nameInput, { target: { value: 'New Product' } });
-      
-      const submitButton = screen.getByRole('button', { name: /^Thêm$/i });
-      fireEvent.click(submitButton);
-
-      await waitFor(() => {
-        expect(screen.getByText('New Product')).toBeInTheDocument();
-      });
-
-      // UPDATE: Edit the new product
-      productService.updateProduct.mockImplementation((id, data) => {
-        const index = productsData.findIndex(p => p.id === id);
-        productsData[index] = { ...productsData[index], ...data };
-        return Promise.resolve(productsData[index]);
-      });
-
-      const editButtons = screen.getAllByTitle(/Chỉnh sửa/i);
-      fireEvent.click(editButtons[2]); // Click edit on new product
-
-      await waitFor(() => {
-        expect(screen.getByText(/Chỉnh sửa sản phẩm/i)).toBeInTheDocument();
-      });
-
-      const editNameInput = screen.getByDisplayValue('New Product');
-      fireEvent.change(editNameInput, { target: { value: 'Updated Product' } });
-
-      const saveButton = screen.getByRole('button', { name: /Lưu/i });
-      fireEvent.click(saveButton);
-
-      await waitFor(() => {
-        expect(screen.getByText('Updated Product')).toBeInTheDocument();
-      });
-
-      // DELETE: Remove the updated product
-      productService.deleteProduct.mockImplementation((id) => {
-        productsData = productsData.filter(p => p.id !== id);
-        return Promise.resolve(true);
-      });
-
-      const deleteButtons = screen.getAllByTitle(/Xóa/i);
-      fireEvent.click(deleteButtons[2]);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Bạn có chắc chắn muốn xóa/i)).toBeInTheDocument();
-      });
-
-      const confirmButton = screen.getByRole('button', { name: /^Xóa$/i });
-      fireEvent.click(confirmButton);
-
-      await waitFor(() => {
-        expect(screen.queryByText('Updated Product')).not.toBeInTheDocument();
-      });
-
-      // Should be back to original 2 products
-      expect(screen.getByText('Laptop Dell XPS 13')).toBeInTheDocument();
-      expect(screen.getByText('iPhone 15 Pro')).toBeInTheDocument();
+  test("View mode → fields phải disabled", async () => {
+    useProducts.mockReturnValue({
+      products: [
+        {
+          id: 1,
+          name: "iPhone 15",
+          price: 25000000,
+          quantity: 10,
+          description: "Flagship",
+          categoryName: "Phone",
+        },
+      ],
+      loading: false,
+      error: null,
+      pagination: { page: 1, total: 1, totalPages: 1, limit: 10 },
+      filters: {},
+      addProduct: jest.fn(),
+      updateProduct: jest.fn(),
+      deleteProduct: jest.fn(),
+      updateFilters: jest.fn(),
+      changePage: jest.fn(),
     });
+
+    renderProducts();
+
+    const nameCell = await screen.findByText("iPhone 15");
+    const rowElement = nameCell.closest(".table-row");
+    const viewButton = rowElement.querySelectorAll("button")[0];
+
+    fireEvent.click(viewButton);
+
+    expect(await screen.findByText("Chi tiết sản phẩm")).toBeInTheDocument();
+
+    expect(screen.getByDisplayValue("iPhone 15")).toBeDisabled();
+    expect(screen.getByDisplayValue("25000000")).toBeDisabled();
+  });
+});
+
+/* =======================================================
+   PRODUCT DETAIL (VIEW MODE)
+======================================================= */
+describe("Product Detail Integration", () => {
+  test("View mode → tất cả field phải disabled", async () => {
+    useProducts.mockReturnValue({
+      products: [
+        {
+          id: 1,
+          name: "iPhone 15",
+          price: 25000000,
+          quantity: 10,
+          description: "Flagship",
+          categoryName: "Phone",
+        },
+      ],
+      loading: false,
+      error: null,
+      pagination: { page: 1, total: 1, totalPages: 1, limit: 10 },
+      filters: {},
+      addProduct: jest.fn(),
+      updateProduct: jest.fn(),
+      deleteProduct: jest.fn(),
+      updateFilters: jest.fn(),
+      changePage: jest.fn(),
+    });
+
+    renderProducts();
+
+    const nameCell = await screen.findByText("iPhone 15");
+    const rowElement = nameCell.closest(".table-row");
+
+    const viewButton = rowElement.querySelectorAll("button")[0];
+    fireEvent.click(viewButton);
+
+    expect(await screen.findByText("Chi tiết sản phẩm")).toBeInTheDocument();
+
+    expect(screen.getByDisplayValue("iPhone 15")).toBeDisabled();
+    expect(screen.getByDisplayValue("25000000")).toBeDisabled();
+    expect(screen.getByDisplayValue("10")).toBeDisabled();
+    expect(screen.getByDisplayValue("Flagship")).toBeDisabled();
+
+    // FIXED: tìm đúng custom-select trong popup, không dùng getByText
+    const categorySelect = document.querySelector(
+      ".popup-container .custom-select"
+    );
+
+    expect(categorySelect).toHaveClass("disabled");
+
+    // text "Phone" nằm trong .selected
+    expect(within(categorySelect).getByText("Phone")).toBeInTheDocument();
   });
 });

@@ -4,7 +4,7 @@ module.exports = {
     browser: true,
     es2020: true,
     node: true,
-  },
+    cypress: true  },
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',

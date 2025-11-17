@@ -13,7 +13,6 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = async (email, password) => {
-    console.log("Login:", email, password);
     localStorage.setItem("auth_token", "FAKE_TOKEN");
     setIsLoggedIn(true);
   };
