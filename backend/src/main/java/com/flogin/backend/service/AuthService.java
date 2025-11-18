@@ -1,14 +1,15 @@
 package com.flogin.backend.service;
 
-import com.flogin.backend.dto.auth.AuthResponse;
-import com.flogin.backend.dto.auth.LoginRequest;
-import com.flogin.backend.dto.auth.RegisterRequest;
-import com.flogin.backend.entity.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.flogin.backend.dto.auth.AuthResponse;
+import com.flogin.backend.dto.auth.LoginRequest;
+import com.flogin.backend.dto.auth.RegisterRequest;
+import com.flogin.backend.entity.User;
 
 @Service
 public class AuthService {
@@ -22,6 +23,19 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest registerRequest) {
+        if (registerRequest.getUsername() == null || registerRequest.getUsername().isBlank()) {
+            throw new RuntimeException("Username không được để trống");
+        }
+        if (registerRequest.getPassword() == null || registerRequest.getPassword().isBlank()) {
+            throw new RuntimeException("Password không được để trống");
+        }
+        if (registerRequest.getFirstName() == null || registerRequest.getFirstName().isBlank()) {
+        throw new RuntimeException("First name không được để trống");
+        }
+        if (registerRequest.getLastName() == null || registerRequest.getLastName().isBlank()) {
+            throw new RuntimeException("Last name không được để trống");
+        }
+
         if(userService.existsByUsername(registerRequest.getUsername())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email đã tồn tại!!!!");
         }
@@ -37,6 +51,13 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest loginRequest) {
+
+         if (loginRequest.getUsername() == null || loginRequest.getUsername().isBlank()) {
+            throw new BadCredentialsException("Username không được để trống");
+        }
+        if (loginRequest.getPassword() == null || loginRequest.getPassword().isBlank()) {
+            throw new BadCredentialsException("Password không được để trống");
+        }
         User user = userService.findByUsername(loginRequest.getUsername());
         if(user == null) {
             throw new BadCredentialsException("Xác thực ko hợp lệ: user ko tồn tại");
