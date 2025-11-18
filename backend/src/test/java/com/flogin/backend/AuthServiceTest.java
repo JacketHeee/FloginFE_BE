@@ -32,32 +32,34 @@ public class AuthServiceTest {
                 }
 
 
-                    @Override
+                @Override
                 public boolean existsByUsername(String username) {
                     return "existinguser".equals(username);
                 }
 
                 @Override
                 public User save(User user) {
-                    return user; // giả lập lưu thành công
+                    return user; 
                 }
             };
 
-              authService = new AuthService(
-            userServiceFake,
-            new PasswordEncoder() {
+            PasswordEncoder passWordEncoderFake = new PasswordEncoder() {
                 @Override
                 public String encode(CharSequence rawPassword) { return rawPassword.toString(); }
                 @Override
                 public boolean matches(CharSequence rawPassword, String encodedPassword) {
                     return rawPassword.toString().equals(encodedPassword);
                 }
-            },// test ko can hash 
-            new JwtService() {
+            };
+
+            JwtService jwtServiceFake = new JwtService(){
                 @Override
                 public String generateToken(String username, String role) { return "fake-token"; }
-            }
-        );
+            };
+
+        
+
+            authService = new AuthService(userServiceFake,passWordEncoderFake,jwtServiceFake);
 
 
     }

@@ -1,24 +1,22 @@
 package com.flogin.backend.service;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
 import com.flogin.backend.dto.product.CreateProductRequest;
 import com.flogin.backend.dto.product.ProductResponse;
 import com.flogin.backend.dto.product.UpdateProductRequest;
 import com.flogin.backend.entity.Category;
 import com.flogin.backend.entity.Product;
-import com.flogin.backend.repository.CategoryRepository;
-import com.flogin.backend.repository.ProductRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 import com.flogin.backend.exception.BadRequestException;
-
-
-import java.awt.print.Pageable;
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.flogin.backend.repository.ProductRepository;
 
 @Service
 public class ProductService {
