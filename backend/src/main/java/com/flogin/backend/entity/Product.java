@@ -1,6 +1,7 @@
 package com.flogin.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
 
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 @Table(name = "products")
 @ToString(exclude = "category")
 @Data
+@AllArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
