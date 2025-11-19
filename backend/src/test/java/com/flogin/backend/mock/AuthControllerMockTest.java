@@ -1,4 +1,4 @@
-package com.flogin.backend;
+package com.flogin.backend.mock;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
