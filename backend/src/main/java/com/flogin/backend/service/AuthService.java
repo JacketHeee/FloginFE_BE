@@ -19,7 +19,7 @@ public class AuthService {
     private final JwtService jwtService;
 
     public AuthResponse register(RegisterRequest registerRequest) {
-        if(userService.existsByUsername(registerRequest.getUsername())) {
+        if (userService.existsByUsername(registerRequest.getUsername())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username đã tồn tại");
         }
         User user = new User();
@@ -32,27 +32,27 @@ public class AuthService {
         }
         user = userService.save(user);
 
-        String token = jwtService.generateToken(user.getUsername(),user.getRole());
-        return new AuthResponse("Đăng kí thành công",token);
+        String token = jwtService.generateToken(user.getUsername(), user.getRole());
+        return new AuthResponse(true, "Đăng kí thành công", token, user);
     }
 
     public AuthResponse login(LoginRequest loginRequest) {
-        User user = userService.findByUsername(loginRequest.getUsername());
 
         if (loginRequest.getUsername() == null || loginRequest.getPassword() == null) {
             throw new BadCredentialsException("Xác thực ko hợp lệ: username hoặc mật khẩu null");
         }
 
-        if(user == null) {
+        User user = userService.findByUsername(loginRequest.getUsername());
+
+        if (user == null) {
             throw new BadCredentialsException("Xác thực ko hợp lệ: user ko tồn tại");
         }
-        if(!passwordEncoder.matches(loginRequest.getPassword(),user.getPasswordHash())) {
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
             throw new BadCredentialsException("Xác thực ko hợp lệ: sai mật khẩu");
         }
 
-
-        String token = jwtService.generateToken(user.getUsername(),user.getRole());
-        return new AuthResponse("Đăng nhập thành công",token);
+        String token = jwtService.generateToken(user.getUsername(), user.getRole());
+        return new AuthResponse(true, "Đăng nhập thành công", token, user);
     }
 
 }
