@@ -40,7 +40,7 @@ public class ProductService {
 
     //create
     public ProductResponse createProduct(CreateProductRequest createRequest) {
-        if(createRequest.getName() == null || createRequest.getPrice().compareTo(BigDecimal.ZERO) <= 0 || createRequest.getQuantity() <= 0) {
+        if(createRequest.getName().isBlank() || createRequest.getPrice().compareTo(BigDecimal.ZERO) <= 0 || createRequest.getQuantity() <= 0) {
             throw new BadRequestException("Request không hợp lệ: vui lòng thử lại!!!");
         }
         Category category = categoryService.findByName(createRequest.getCategoryName());
