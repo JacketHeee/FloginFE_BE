@@ -1,10 +1,11 @@
 package com.flogin.backend.service;
 
-import com.flogin.backend.entity.Category;
-import com.flogin.backend.repository.CategoryRepository;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.flogin.backend.entity.Category;
+import com.flogin.backend.repository.CategoryRepository;
 
 @Service
 public class CategoryService {

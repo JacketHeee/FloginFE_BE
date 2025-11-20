@@ -1,8 +1,9 @@
 package com.flogin.backend.service;
 
+import org.springframework.stereotype.Service;
+
 import com.flogin.backend.entity.User;
 import com.flogin.backend.repository.UserRepository;
-import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {

@@ -1,11 +1,18 @@
 package com.flogin.backend.dto.product;
 
-import lombok.Data;
-
-import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CreateProductRequest {
     @NotBlank(message = "Tên sản phẩm không được để trống")
     private String name;
