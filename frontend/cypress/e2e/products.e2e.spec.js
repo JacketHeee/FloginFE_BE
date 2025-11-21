@@ -1,13 +1,12 @@
 import ProductsPage from "../pages/Products";
 
 describe("E2E – Products CRUD + Search (1 product flow)", () => {
-
   const created = {
     name: "Cypress Auto Product " + Date.now(),
     price: "990000",
     quantity: "12",
     description: "Product created by Cypress",
-    category: "Electronics"
+    category: "Electronics",
   };
 
   const updated = {
@@ -15,7 +14,7 @@ describe("E2E – Products CRUD + Search (1 product flow)", () => {
     price: "1500000",
     quantity: "9",
     description: "Updated by Cypress",
-    category: "Fashion"
+    category: "Fashion",
   };
 
   let productId = null;
@@ -58,7 +57,7 @@ describe("E2E – Products CRUD + Search (1 product flow)", () => {
     cy.intercept("PUT", `**/products/${productId}`).as("updateProduct");
 
     // Visit lại trang products
-    ProductsPage.visit();
+    // ProductsPage.visit();
 
     // Đi đến trang cuối nơi product vừa tạo nằm
     ProductsPage.goToLastPage();
@@ -83,7 +82,7 @@ describe("E2E – Products CRUD + Search (1 product flow)", () => {
   it("b) READ + e) SEARCH - Search and find the updated product", () => {
     // Visit lại trang products
     ProductsPage.visit();
-    
+
     // Search theo tên đã update
     ProductsPage.search(updated.name);
 

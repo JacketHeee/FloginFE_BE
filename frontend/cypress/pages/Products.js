@@ -1,5 +1,4 @@
 class ProductsPage {
-
   visit() {
     cy.visit("/products");
     this.waitForProducts();
@@ -99,7 +98,8 @@ class ProductsPage {
     if (name) this.nameInput().clear().type(name, { force: true });
     if (price) this.priceInput().clear().type(price, { force: true });
     if (quantity) this.quantityInput().clear().type(quantity, { force: true });
-    if (description) this.descriptionInput().clear().type(description, { force: true });
+    if (description)
+      this.descriptionInput().clear().type(description, { force: true });
     if (category) this.selectCategory(category);
   }
 
@@ -127,6 +127,12 @@ class ProductsPage {
   deleteProductById(id) {
     this.deleteButtonByRowId(id).click({ force: true });
     cy.contains("Xóa").click({ force: true });
+  }
+  clearSearch() {
+    cy.get('input[placeholder="Tìm kiếm sản phẩm..."]').clear().type("{enter}");
+
+    this.waitForProducts();
+    cy.wait(1000); // Đợi thêm chút cho chắc ăn
   }
 }
 
