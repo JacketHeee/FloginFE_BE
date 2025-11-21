@@ -32,9 +32,11 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    public Product() {}
+    public Product() {
+    }
 
-    public Product(String name, BigDecimal price, int quantity, String description) {
+    public Product(Long id, String name, BigDecimal price, int quantity, String description) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.quantity = quantity;

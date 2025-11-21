@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Data
-public class User  {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,7 +21,7 @@ public class User  {
     @Column(unique = true, nullable = false)
     private String username;
 
-    @Column(nullable = false,name = "password_hash")
+    @Column(nullable = false, name = "password_hash")
     private String passwordHash;
 
     @Column(name = "first_name")
@@ -31,7 +31,18 @@ public class User  {
 
     private String role;
 
-    public User() {}
+    public User() {
+    }
+
+    public User(String username, String passwordHash) {
+        this.username = username;
+        this.passwordHash = passwordHash;
+    }
+
+    public User(Long id, String username) {
+        this.id = id;
+        this.username = username;
+    }
 
     public User(String username, String passwordHash, String firstName, String lastName) {
         this.username = username;

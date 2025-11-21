@@ -11,13 +11,13 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
     private final ProductService productService;
+
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
@@ -29,12 +29,10 @@ public class ProductController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String category,
             @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortOrder
-    ) {
+            @RequestParam(defaultValue = "asc") String sortOrder) {
         var result = productService.getProducts(page, limit, search, category, sortBy, sortOrder);
         return ResponseEntity.ok(result);
     }
-
 
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody CreateProductRequest createRequest) {
@@ -43,7 +41,8 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> updateProduct (@Valid @RequestBody UpdateProductRequest updateRequest,@PathVariable Long id)  {
+    public ResponseEntity<ProductResponse> updateProduct(@Valid @RequestBody UpdateProductRequest updateRequest,
+            @PathVariable Long id) {
         ProductResponse productResponse = productService.update(updateRequest, id);
         return ResponseEntity.ok(productResponse);
     }

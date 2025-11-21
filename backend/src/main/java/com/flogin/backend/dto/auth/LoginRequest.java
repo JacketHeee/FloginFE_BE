@@ -1,6 +1,5 @@
 package com.flogin.backend.dto.auth;
 
-
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
