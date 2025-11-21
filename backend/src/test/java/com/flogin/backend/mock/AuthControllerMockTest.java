@@ -76,7 +76,8 @@ public class AuthControllerMockTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\":\"\",\"password\":\"Pass123\"}"))
                 .andExpect(status().isBadRequest());
-               
+
+        verify(authService, never()).login(any(LoginRequest.class));
     }
 
     @Test
@@ -88,6 +89,8 @@ public class AuthControllerMockTest {
                 .content("{\"password\":\"Pass123\"}"))
                 .andExpect(status().isBadRequest());
           
+        verify(authService, never()).login(any(LoginRequest.class));
+
     }
 
     @Test
@@ -98,6 +101,9 @@ public class AuthControllerMockTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\":\"testuser@example.com\",\"password\":\"\"}"))
                 .andExpect(status().isBadRequest());
+
+        verify(authService, never()).login(any(LoginRequest.class));
+
               
     }
 
@@ -109,6 +115,9 @@ public class AuthControllerMockTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\":\"testuser@example.com\"}"))
                 .andExpect(status().isBadRequest());
+
+        verify(authService, never()).login(any(LoginRequest.class));
+                
     }
 
     //-------------------------------------------------------------------------------------------------
@@ -141,6 +150,9 @@ public class AuthControllerMockTest {
                         "{\"username\":\"\",\"password\":\"Pass123\",\"firstName\":\"John\",\"lastName\":\"Doe\"}"))
                 .andExpect(status().isBadRequest());
 
+        verify(authService, never()).register(any(RegisterRequest.class));
+
+
     }
 
       @Test
@@ -152,6 +164,9 @@ public class AuthControllerMockTest {
                 .content(
                         "{\"password\":\"Pass123\",\"firstName\":\"John\",\"lastName\":\"Doe\"}"))
                 .andExpect(status().isBadRequest());
+
+        verify(authService, never()).register(any(RegisterRequest.class));
+
 
     }
     
@@ -165,6 +180,9 @@ public class AuthControllerMockTest {
                         "{\"username\":\"newuser@example.com\",\"password\":\"\",\"firstName\":\"John\",\"lastName\":\"Doe\"}"))
                 .andExpect(status().isBadRequest());
 
+        verify(authService, never()).register(any(RegisterRequest.class));
+
+
     }
 
      @Test
@@ -176,6 +194,9 @@ public class AuthControllerMockTest {
                 .content(
                         "{\"username\":\"newuser@example.com\",\"firstName\":\"John\",\"lastName\":\"Doe\"}"))
                 .andExpect(status().isBadRequest());
+
+        verify(authService, never()).register(any(RegisterRequest.class));
+
 
     }
 
@@ -189,6 +210,9 @@ public class AuthControllerMockTest {
                         "{\"username\":\"newuser@example.com\",\"password\":\"Pass123\",\"firstName\":\"\",\"lastName\":\"Doe\"}"))
                 .andExpect(status().isBadRequest());
 
+        verify(authService, never()).register(any(RegisterRequest.class));
+
+
     }
 
     @Test
@@ -200,6 +224,9 @@ public class AuthControllerMockTest {
                 .content(
                         "{\"username\":\"newuser@example.com\",\"password\":\"Pass123\",\"lastName\":\"Doe\"}"))
                 .andExpect(status().isBadRequest());
+
+        verify(authService, never()).register(any(RegisterRequest.class));
+
 
     }
 
@@ -213,6 +240,9 @@ public class AuthControllerMockTest {
                         "{\"username\":\"newuser@example.com\",\"password\":\"Pass123\",\"firstName\":\"John\",\"lastName\":\"\"}"))
                 .andExpect(status().isBadRequest());
 
+        verify(authService, never()).register(any(RegisterRequest.class));
+
+
     }
 
 
@@ -225,6 +255,9 @@ public class AuthControllerMockTest {
                 .content(
                         "{\"username\":\"newuser@example.com\",\"password\":\"Pass123\",\"firstName\":\"John\"}"))
                 .andExpect(status().isBadRequest());
+
+        verify(authService, never()).register(any(RegisterRequest.class));
+
 
     }
 
