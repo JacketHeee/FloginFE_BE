@@ -1,15 +1,17 @@
 package com.flogin.backend.controller;
 
-import com.flogin.backend.dto.auth.AuthResponse;
-import com.flogin.backend.dto.auth.LoginRequest;
-import com.flogin.backend.dto.auth.RegisterRequest;
-import com.flogin.backend.service.AuthService;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.flogin.backend.dto.auth.AuthResponse;
+import com.flogin.backend.dto.auth.LoginRequest;
+import com.flogin.backend.dto.auth.RegisterRequest;
+import com.flogin.backend.service.AuthService;
+
+import jakarta.validation.Valid;
 
 
 @RestController
