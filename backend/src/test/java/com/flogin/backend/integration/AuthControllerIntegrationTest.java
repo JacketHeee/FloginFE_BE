@@ -19,12 +19,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -36,7 +37,7 @@ import com.flogin.backend.entity.User;
 import com.flogin.backend.service.AuthService;
 
 @WebMvcTest(AuthController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc(addFilters = true)
 @DisplayName("Login API Integration Tests")
 @CrossOrigin(origins = "*")
 public class AuthControllerIntegrationTest {
@@ -47,7 +48,7 @@ public class AuthControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     private AuthService authService;
 
     @TestConfiguration
@@ -181,6 +182,7 @@ public class AuthControllerIntegrationTest {
     @Test
     @DisplayName("Check CORS and Headers configuration")
     void testCorsAndHeaders() throws Exception {
+
         // Giả lập một request từ Frontend (React chạy ở localhost:3000)
         mockMvc.perform(options("/api/auth/login")
                 .header("Access-Control-Request-Method", "POST")
@@ -192,8 +194,9 @@ public class AuthControllerIntegrationTest {
 
                 // Kiểm tra CORS Headers (Cho phép kết nối từ nguồn khác)
                 .andExpect(header().exists("Access-Control-Allow-Origin"))
-                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
-                .andExpect(header().exists("Access-Control-Allow-Methods"));
+                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"))
+                .andExpect(header().exists("Access-Control-Allow-Methods"))
+                .andExpect(header().string("Access-Control-Allow-Credentials", "true"));
     }
 
     @Test

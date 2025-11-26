@@ -24,20 +24,20 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest registerRequest) {
         if (registerRequest.getUsername() == null || registerRequest.getUsername().isBlank()) {
-            throw new RuntimeException("Username không được để trống");
+            throw new BadCredentialsException("Username không được để trống");
         }
         if (registerRequest.getPassword() == null || registerRequest.getPassword().isBlank()) {
-            throw new RuntimeException("Password không được để trống");
+            throw new BadCredentialsException("Password không được để trống");
         }
         if (registerRequest.getFirstName() == null || registerRequest.getFirstName().isBlank()) {
-        throw new RuntimeException("First name không được để trống");
+        throw new BadCredentialsException("First name không được để trống");
         }
         if (registerRequest.getLastName() == null || registerRequest.getLastName().isBlank()) {
-            throw new RuntimeException("Last name không được để trống");
+            throw new BadCredentialsException("Last name không được để trống");
         }
 
         if(userService.existsByUsername(registerRequest.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email đã tồn tại!!!!");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username đã tồn tại!!!!");
         }
         User user = new User();
         user.setUsername(registerRequest.getUsername());
@@ -47,7 +47,7 @@ public class AuthService {
         user = userService.save(user);
 
         String token = jwtService.generateToken(user.getUsername(),user.getRole());
-        return new AuthResponse("Đăng kí thành công",token);
+        return new AuthResponse(true,"Đăng kí thành công",token,user);
     }
 
     public AuthResponse login(LoginRequest loginRequest) {
@@ -66,7 +66,7 @@ public class AuthService {
             throw new BadCredentialsException("Xác thực ko hợp lệ: sai mật khẩu");
         }
         String token = jwtService.generateToken(user.getUsername(),user.getRole());
-        return new AuthResponse("Đăng nhập thành công",token);
+        return new AuthResponse(true,"Đăng nhập thành công",token,user);
     }
 
 }

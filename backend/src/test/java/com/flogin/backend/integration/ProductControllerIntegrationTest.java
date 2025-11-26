@@ -1,6 +1,6 @@
 package com.flogin.backend.integration;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -17,15 +17,20 @@ import static org.hamcrest.Matchers.hasSize;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,7 +50,7 @@ class ProductControllerIntegrationTest {
         @Autowired
         private ObjectMapper objectMapper;
 
-        @MockBean
+        @MockitoBean
         private ProductService productService; // Mock Service của Product
 
         @Test
@@ -56,12 +61,15 @@ class ProductControllerIntegrationTest {
                                 new Product(1L, "Laptop Dell", new BigDecimal("15000000"), 10, "Electronics"),
                                 new Product(2L, "Mouse Logitech", new BigDecimal("200000"), 50, "Accessories"));
 
-                when(productService.findAll()).thenReturn(mockList);
+                Page<Product> mockPage = new PageImpl<>(mockList, PageRequest.of(0,10),mockList.size());
+
+                when(productService.getProducts(anyInt(),anyInt(),any(),any(),anyString(),anyString())).thenReturn((HashMap<String, Object>) mockPage);
 
                 // 2. ACT & ASSERT
                 mockMvc.perform(get("/api/products")
+                                .param("page", "1")
+                                .param("limit","10")
                                 .contentType(MediaType.APPLICATION_JSON))
-
                                 .andDo(print())
                                 .andExpect(status().isOk())
 

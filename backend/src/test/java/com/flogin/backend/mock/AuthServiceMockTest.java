@@ -73,6 +73,8 @@ public class AuthServiceMockTest {
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername("registerUser");
         registerRequest.setPassword("testPassword");
+        registerRequest.setFirstName("test");
+        registerRequest.setLastName("demo");
 
 
         when(userService.existsByUsername("registerUser")).thenReturn(false);
@@ -103,6 +105,33 @@ public class AuthServiceMockTest {
         verify(passwordEncoder).encode("testPassword");
         verify(userService).save(any(User.class));
         verify(jwtService).generateToken("registerUser", "USER");
+    }
+
+    @Test
+    void registerButFirstNameIsNull() {
+        RegisterRequest registerRequest = new RegisterRequest();
+        registerRequest.setUsername("registerUser");
+        registerRequest.setPassword("testPassword");
+        registerRequest.setFirstName(null);
+        registerRequest.setLastName("demo");
+
+        BadCredentialsException exception = assertThrows(BadCredentialsException.class,() -> authService.register(registerRequest));
+
+        assertEquals("First name không được để trống", exception.getMessage());
+    }
+
+    @Test
+    void registerButLastNameIsNull() {
+        RegisterRequest registerRequest = new RegisterRequest();
+        registerRequest.setUsername("registerUser");
+        registerRequest.setPassword("testPassword");
+        registerRequest.setFirstName("test");
+        registerRequest.setLastName(null);
+
+        BadCredentialsException exception = assertThrows(BadCredentialsException.class,() -> authService.register(registerRequest));
+
+
+        assertEquals("Last name không được để trống", exception.getMessage());
     }
 
 
@@ -166,31 +195,61 @@ public class AuthServiceMockTest {
     //     ------------------- Validation / Edge Cases ----------------------
     @Test
     @DisplayName("TC6: Đăng nhập không thành công do username or password null")
-    void loginButUsernameOrPasswordNull() {
+    void loginButUsernameNull() {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername(null);
-        loginRequest.setPassword(null);
+        loginRequest.setPassword("test123");
 
         BadCredentialsException exception = assertThrows(
                 BadCredentialsException.class,
                 () -> authService.login(loginRequest)
             );
-        assertEquals("Xác thực ko hợp lệ: username hoặc mật khẩu null", exception.getMessage());
+        assertEquals("Username không được để trống", exception.getMessage());
     }
 
     @Test
-    void registerButUsernameOrPasswordNull() {
+    void loginButPasswordNull() {
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setUsername("test");
+        loginRequest.setPassword(null);
+
+        BadCredentialsException exception = assertThrows(
+                BadCredentialsException.class,
+                () -> authService.login(loginRequest)
+        );
+
+        assertEquals("Password không được để trống", exception.getMessage());
+
+    }
+
+    @Test
+    void registerButUsernameNull() {
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setFirstName("test");
         registerRequest.setLastName("user");
         registerRequest.setUsername(null);
+        registerRequest.setPassword("testpassword");
+
+        BadCredentialsException exception = assertThrows(
+                BadCredentialsException.class,
+                () -> authService.register(registerRequest)
+        );
+        assertEquals("Username không được để trống", exception.getMessage());
+    }
+
+    @Test
+    void registerButPasswordNull() {
+        RegisterRequest registerRequest = new RegisterRequest();
+        registerRequest.setFirstName("test");
+        registerRequest.setLastName("user");
+        registerRequest.setUsername("testusername");
         registerRequest.setPassword(null);
 
         BadCredentialsException exception = assertThrows(
                 BadCredentialsException.class,
                 () -> authService.register(registerRequest)
         );
-        assertEquals("Xác thực ko hợp lệ: username hoặc mật khẩu null", exception.getMessage());
+        assertEquals("Password không được để trống", exception.getMessage());
     }
 
 }

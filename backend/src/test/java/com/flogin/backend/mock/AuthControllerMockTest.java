@@ -5,13 +5,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.ArgumentMatchers.any;
 
+import com.flogin.backend.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.flogin.backend.controller.AuthController;
@@ -27,13 +28,13 @@ public class AuthControllerMockTest {
     @Autowired
     private MockMvc mockMvc; //mo phong http req/res
 
-    @MockBean
+    @MockitoBean
     private AuthService authService; //mock object gia lap inject vao moi khi goi http 
 
     @Test
     @DisplayName("Login thành công với mocked service")
     void testLoginWithMockedService() throws Exception {
-        AuthResponse mockResponse =  new AuthResponse("Success", "mock-token");
+        AuthResponse mockResponse =  new AuthResponse(true,"Success", "mock-token",new User());
 
         when(authService.login(any(LoginRequest.class))).thenReturn(mockResponse);
 
@@ -51,7 +52,7 @@ public class AuthControllerMockTest {
     @Test
     @DisplayName("Register thành công với mocked service")
     void testRegisterWithMockedService() throws Exception {
-        AuthResponse mockResponse = new AuthResponse( "Registered", "mock-token");
+        AuthResponse mockResponse = new AuthResponse( true,"Registered", "mock-token",new User());
 
         when(authService.register(any(RegisterRequest.class))).thenReturn(mockResponse);
 

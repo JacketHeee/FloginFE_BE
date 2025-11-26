@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.flogin.backend.dto.auth.AuthResponse;
@@ -16,6 +17,7 @@ import com.flogin.backend.entity.User;
 import com.flogin.backend.service.AuthService;
 import com.flogin.backend.service.JwtService;
 import com.flogin.backend.service.UserService;
+import org.springframework.web.server.ResponseStatusException;
 
 public class AuthServiceTest {
     private AuthService authService;
@@ -128,8 +130,8 @@ public class AuthServiceTest {
             "John",
             "Doe"
         );
-        Exception ex = assertThrows(RuntimeException.class, () -> authService.register(request));
-        assertTrue(ex.getMessage().contains("Email đã tồn tại!!!!"));
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> authService.register(request));
+        assertTrue(ex.getMessage().contains("Username đã tồn tại!!!!"));
     }
 
     @Test
