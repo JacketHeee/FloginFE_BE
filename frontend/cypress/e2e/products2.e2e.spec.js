@@ -53,12 +53,13 @@ describe(
     // b) READ + e) SEARCH (0.5 điểm)
 
     it("b) READ + e) SEARCH - Search and find the updated product", () => {
+      cy.intercept("GET", "**/products*").as("searchProduct");
       // Search theo tên đã update
       ProductsPage.search(created.name);
 
-      cy.wait(1000); // Đợi search filter apply
+      cy.wait("@searchProduct");
 
-      cy.log(` Searching for: ${updated.name}`);
+      cy.log(` Searching for: ${created.name}`);
 
       // Verify product được tìm thấy
       ProductsPage.rowById(productId)
@@ -68,30 +69,36 @@ describe(
     });
 
     // c) UPDATE
-
     it("c) UPDATE - Update the same product successfully", () => {
+      cy.intercept("GET", "**/products*").as("getProductsList");
       cy.intercept("PUT", `**/products/${productId}`).as("updateProduct");
 
-      // Visit lại trang products
       ProductsPage.clearSearch();
-
-      // Đi đến trang cuối nơi product vừa tạo nằm
+      cy.wait("@getProductsList");
       ProductsPage.goToLastPage();
 
-      // Update product
       ProductsPage.updateProductById(productId, updated);
 
       cy.wait("@updateProduct");
 
-      cy.log(` Product ${productId} updated`);
+      cy.wait("@getProductsList");
 
-      // Verify thông tin đã được update
+      ProductsPage.goToLastPage();
+
+      cy.log(` Product ${productId} updated and list reloaded`);
+
+      // 6. Verify (Lúc này đang ở đúng trang, chắc chắn sẽ thấy)
       ProductsPage.rowById(productId)
         .should("exist")
         .and("contain.text", updated.name)
         .and("contain.text", updated.quantity);
     });
-
+    //View detail
+    it("BONUS: VIEW DETAIL - Verify updated product info in detail view", () => {
+      cy.intercept("GET", "**/api/categories*").as("getCategories");
+      ProductsPage.goToLastPage();
+      ProductsPage.viewDetailById(productId, updated);
+    });
     // d) DELETE (0.5 điểm)
 
     it("d) DELETE - Delete the product successfully", () => {

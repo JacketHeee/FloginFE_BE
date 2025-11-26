@@ -46,7 +46,9 @@ class ProductsPage {
   addButton() {
     return cy.contains("+ Thêm sản phẩm");
   }
-
+  viewDetailButtonById(id) {
+    return this.rowById(id).find("button").eq(0);
+  }
   editButtonByRowId(id) {
     return this.rowById(id).find("button").eq(1);
   }
@@ -92,6 +94,9 @@ class ProductsPage {
     cy.wait(150);
     this.categoryOptions().contains(categoryName).click({ force: true });
   }
+  categoryDisplay() {
+    return cy.get('[data-cy="popup-category-selected"]');
+  }
 
   // FILL FORM
   fillForm({ name, price, quantity, description, category }) {
@@ -102,7 +107,24 @@ class ProductsPage {
       this.descriptionInput().clear().type(description, { force: true });
     if (category) this.selectCategory(category);
   }
-
+  verifyDetailForm({ name, price, quantity, description, category }) {
+    if (name) {
+      this.nameInput().should("have.value", name);
+    }
+    if (price) {
+      this.priceInput().should("have.value", price);
+    }
+    if (quantity) {
+      this.quantityInput().should("have.value", quantity);
+    }
+    if (description) {
+      this.descriptionInput().should("have.value", description);
+    }
+    // 5. Kiểm tra Danh mục (Category)
+    if (category) {
+      this.categoryDisplay().should("be.visible").and("contain.text", category);
+    }
+  }
   submitButton() {
     return cy.get('[data-cy="product-submit-btn"]');
   }
@@ -127,6 +149,14 @@ class ProductsPage {
   deleteProductById(id) {
     this.deleteButtonByRowId(id).click({ force: true });
     cy.contains("Xóa").click({ force: true });
+  }
+
+  viewDetailById(id, updatedProduct) {
+    this.viewDetailButtonById(id).click({ force: true });
+    this.popup().should("be.visible");
+    this.verifyDetailForm(updatedProduct);
+    cy.contains("Đóng").click({ force: true });
+    this.popup().should("not.exist");
   }
   clearSearch() {
     cy.get('input[placeholder="Tìm kiếm sản phẩm..."]').clear().type("{enter}");
