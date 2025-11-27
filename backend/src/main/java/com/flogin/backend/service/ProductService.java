@@ -1,32 +1,34 @@
 package com.flogin.backend.service;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-
 import com.flogin.backend.dto.product.CreateProductRequest;
 import com.flogin.backend.dto.product.ProductResponse;
 import com.flogin.backend.dto.product.UpdateProductRequest;
 import com.flogin.backend.entity.Category;
 import com.flogin.backend.entity.Product;
-import com.flogin.backend.exception.BadRequestException;
+import com.flogin.backend.repository.CategoryRepository;
 import com.flogin.backend.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import com.flogin.backend.exception.BadRequestException;
+
+import java.awt.print.Pageable;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
 
-    public ProductService(ProductRepository productRepository,CategoryService categoryService) {
+    public ProductService(ProductRepository productRepository, CategoryService categoryService) {
         this.productRepository = productRepository;
         this.categoryService = categoryService;
     }
+
     public List<Product> findAll() {
         return productRepository.findAll();
     }
@@ -35,41 +37,45 @@ public class ProductService {
         return productRepository.findById(id).orElse(null);
     }
 
-
-    //create
+    // create
     public ProductResponse createProduct(CreateProductRequest createRequest) {
-        if(createRequest.getName() == null || createRequest.getPrice().compareTo(BigDecimal.ZERO) <= 0 || createRequest.getQuantity() <= 0) {
+        if (createRequest.getName() == null || createRequest.getPrice().compareTo(BigDecimal.ZERO) <= 0
+                || createRequest.getQuantity() <= 0) {
             throw new BadRequestException("Request không hợp lệ: vui lòng thử lại!!!");
         }
         Category category = categoryService.findByName(createRequest.getCategoryName());
-        if(category == null) throw new BadRequestException("Request không hợp lệ: danh mục không tồn tại");
+        if (category == null)
+            throw new BadRequestException("Request không hợp lệ: danh mục không tồn tại");
         Product newProduct = new Product();
         newProduct.setName(createRequest.getName());
         newProduct.setPrice(createRequest.getPrice());
         newProduct.setQuantity(createRequest.getQuantity());
         String description = createRequest.getDescription();
-        if(description == null ||description.isEmpty()) description = "Không có mô tả";
+        if (description == null || description.isEmpty())
+            description = "Không có mô tả";
         newProduct.setDescription(description);
         newProduct.setCategory(category);
 
         productRepository.save(newProduct);
 
-        return new ProductResponse(newProduct.getId(), newProduct.getName(), newProduct.getPrice(), newProduct.getQuantity(), newProduct.getDescription(),newProduct.getCategory().getName());
+        return new ProductResponse(newProduct.getId(), newProduct.getName(), newProduct.getPrice(),
+                newProduct.getQuantity(), newProduct.getDescription(), newProduct.getCategory().getName());
     }
 
-    //update
-    public ProductResponse update(UpdateProductRequest updateRequest,Long id) {
-        if(updateRequest.getName() == null || updateRequest.getPrice().compareTo(BigDecimal.ZERO) <=0 || updateRequest.getQuantity() <= 0) {
+    // update
+    public ProductResponse update(UpdateProductRequest updateRequest, Long id) {
+        if (updateRequest.getName() == null || updateRequest.getPrice().compareTo(BigDecimal.ZERO) <= 0
+                || updateRequest.getQuantity() <= 0) {
             throw new BadRequestException("Request không hợp lệ: vui lòng thử lại!!!");
         }
 
         Product updateProduct = findById(id);
-        if(updateProduct == null) {
+        if (updateProduct == null) {
             throw new BadRequestException("Request không hợp lệ: sản phẩm không tồn tại!!!");
         }
 
         Category category = categoryService.findByName(updateRequest.getCategoryName());
-        if(category == null) {
+        if (category == null) {
             throw new BadRequestException("Request không hợp lệ: danh mục không tồn tại");
         }
         updateProduct.setName(updateRequest.getName());
@@ -79,10 +85,11 @@ public class ProductService {
         updateProduct.setCategory(category);
 
         productRepository.save(updateProduct);
-        return new ProductResponse(updateProduct.getId(), updateProduct.getName(), updateProduct.getPrice(), updateProduct.getQuantity(), updateProduct.getDescription(), updateProduct.getCategory().getName());
+        return new ProductResponse(updateProduct.getId(), updateProduct.getName(), updateProduct.getPrice(),
+                updateProduct.getQuantity(), updateProduct.getDescription(), updateProduct.getCategory().getName());
     }
 
-    //delete
+    // delete
     public ProductResponse deleteProduct(Long id) {
         Product product = findById(id);
         if (product == null) {
@@ -90,21 +97,22 @@ public class ProductService {
         }
         productRepository.delete(product);
 
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getQuantity(), product.getDescription(), product.getCategory().getName());
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getQuantity(),
+                product.getDescription(), product.getCategory().getName());
     }
 
-    //pagination
-    public Map<String,Object> getProducts(int page, int limit, String search, String category, String sortBy, String sortOrder) {
+    // pagination
+    public Map<String, Object> getProducts(int page, int limit, String search, String category, String sortBy,
+            String sortOrder) {
         PageRequest pageRequest = PageRequest.of(
                 page - 1,
                 limit,
-                sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending()
-        );
+                sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending());
 
         Page<Product> productInPage;
 
-        if(search != null && !search.isEmpty()) {
-            productInPage = productRepository.findByNameContainingIgnoreCase(search,pageRequest);
+        if (search != null && !search.isEmpty()) {
+            productInPage = productRepository.findByNameContainingIgnoreCase(search, pageRequest);
         } else {
             productInPage = productRepository.findAll(pageRequest);
         }
@@ -116,10 +124,10 @@ public class ProductService {
                         product.getPrice(),
                         product.getQuantity(),
                         product.getDescription(),
-                        product.getCategory().getName()
-                )).toList();
+                        product.getCategory().getName()))
+                .toList();
 
-        Map<String,Object> res = new HashMap<>();
+        Map<String, Object> res = new HashMap<>();
         res.put("data", productResponses);
         res.put("total", productInPage.getTotalElements());
         res.put("page", page);
