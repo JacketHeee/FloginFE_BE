@@ -155,7 +155,7 @@ public class AuthServiceUnitTest {
                 assertThrows(ResponseStatusException.class, () -> authService.register(req));
 
         assertEquals(HttpStatus.CONFLICT, ex.getStatusCode());
-        assertEquals("Username đã tồn tại", ex.getReason());
+        assertEquals("Username đã tồn tại!!!!", ex.getReason());
     }
 
     @Test
