@@ -55,6 +55,8 @@ public class AuthControllerIntegrationTest {
                 @Bean
                 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                         http
+                                .cors()
+                                .and()
                                         .csrf(csrf -> csrf.disable()) // Tắt CSRF để test POST
                                         .authorizeHttpRequests(auth -> auth
                                                         .anyRequest().permitAll() // Cho phép TẤT CẢ các request đi qua
@@ -62,6 +64,20 @@ public class AuthControllerIntegrationTest {
                                         );
                         return http.build();
                 }
+            @Bean
+            public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
+                org.springframework.web.cors.CorsConfiguration cfg = new org.springframework.web.cors.CorsConfiguration();
+                cfg.setAllowedOrigins(java.util.List.of("http://localhost:5173"));
+                cfg.setAllowedMethods(java.util.List.of("GET", "POST", "OPTIONS", "PUT", "DELETE"));
+                cfg.setAllowedHeaders(java.util.List.of("*"));
+                cfg.setAllowCredentials(true);
+                cfg.setMaxAge(3600L);
+
+                org.springframework.web.cors.UrlBasedCorsConfigurationSource source =
+                        new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", cfg);
+                return source;
+            }
         }
 
         @Test
