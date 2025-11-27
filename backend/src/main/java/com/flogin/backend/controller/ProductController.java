@@ -1,17 +1,13 @@
 package com.flogin.backend.controller;
 
-import com.flogin.backend.dto.product.ApiResponse;
 import com.flogin.backend.dto.product.CreateProductRequest;
 import com.flogin.backend.dto.product.ProductResponse;
 import com.flogin.backend.dto.product.UpdateProductRequest;
 import com.flogin.backend.entity.Product;
 import com.flogin.backend.service.ProductService;
 import jakarta.validation.Valid;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -32,6 +28,12 @@ public class ProductController {
             @RequestParam(defaultValue = "asc") String sortOrder) {
         var result = productService.getProducts(page, limit, search, category, sortBy, sortOrder);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        Product product = productService.findById(id);
+        return ResponseEntity.ok(product);
     }
 
     @PostMapping
