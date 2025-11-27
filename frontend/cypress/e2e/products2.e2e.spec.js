@@ -51,7 +51,6 @@ describe(
     });
 
     // b) READ + e) SEARCH (0.5 điểm)
-
     it("b) READ + e) SEARCH - Search and find the updated product", () => {
       cy.intercept("GET", "**/products*").as("searchProduct");
       // Search theo tên đã update
@@ -81,6 +80,7 @@ describe(
 
       cy.wait("@updateProduct");
 
+      cy.wait("@getProductsList");
       cy.wait("@getProductsList");
 
       ProductsPage.goToLastPage();
