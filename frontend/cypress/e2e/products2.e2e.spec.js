@@ -51,22 +51,45 @@ describe(
     });
 
     // b) READ + e) SEARCH (0.5 điểm)
-    it("b) READ + e) SEARCH - Search and find the updated product", () => {
-      cy.intercept("GET", "**/products*").as("searchProduct");
-      // Search theo tên đã update
+    // it("b) READ + e) SEARCH - Search and find the updated product", () => {
+    //   cy.intercept("GET", "**/products*").as("searchProduct");
+    //   // Search theo tên đã update
+    //   ProductsPage.search(created.name);
+
+    //   cy.wait("@searchProduct");
+
+    //   cy.log(` Searching for: ${created.name}`);
+
+    //   // Verify product được tìm thấy
+    //   ProductsPage.rowById(productId)
+    //     .should("exist")
+    //     .and("be.visible")
+    //     .and("contain.text", created.name);
+    // });
+    it("b) READ + e) SEARCH - Search and find the created product", () => {
+      //Reset search
+      ProductsPage.clearSearch();
+
+      // Đợi danh sách load lại (để input search sẵn sàng)
+      cy.wait(1000);
+
+      // cy.intercept("GET", "**/products*search=*Cypress*").as("searchProduct");
+      cy.intercept("GET", "**/products*search=*Cypress*").as("searchProduct");
+
+      // Thực hiện Search
       ProductsPage.search(created.name);
 
+      // Đợi request search (Lần này chắc chắn sẽ bắt dính)
       cy.wait("@searchProduct");
 
       cy.log(` Searching for: ${created.name}`);
 
-      // Verify product được tìm thấy
+      // Verify
       ProductsPage.rowById(productId)
         .should("exist")
         .and("be.visible")
         .and("contain.text", created.name);
     });
-
     // c) UPDATE
     it("c) UPDATE - Update the same product successfully", () => {
       cy.intercept("GET", "**/products*").as("getProductsList");
