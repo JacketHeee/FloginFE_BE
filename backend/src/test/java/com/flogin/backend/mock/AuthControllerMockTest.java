@@ -168,6 +168,7 @@ public class AuthControllerMockTest {
         mockMvc.perform(post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
+                // writeValueAsString convert object Java thanh json String
                 //{"username":"newuser@example.com","password":"Pass123","firstName":"John","lastName":"Doe"}
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Registered"))
