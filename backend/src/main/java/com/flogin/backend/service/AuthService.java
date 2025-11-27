@@ -11,8 +11,6 @@ import com.flogin.backend.dto.auth.LoginRequest;
 import com.flogin.backend.dto.auth.RegisterRequest;
 import com.flogin.backend.entity.User;
 
-import lombok.AllArgsConstructor;
-
 @Service
 public class AuthService {
     private final UserService userService;
