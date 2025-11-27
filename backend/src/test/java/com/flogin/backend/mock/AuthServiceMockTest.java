@@ -51,7 +51,6 @@ public class AuthServiceMockTest {
         testUser.setRole("USER");
     }
 
-    // ------------- Happy Path -------------------
     @Test
     @DisplayName("TC1: Đăng nhập thành công với credentials hợp lệ")
     void loginSuccess() {

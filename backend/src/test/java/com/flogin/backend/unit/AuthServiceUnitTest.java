@@ -163,12 +163,12 @@ public class AuthServiceUnitTest {
     void testRegisterUsernameEmpty() {
         RegisterRequest blank =
                 new RegisterRequest("", "Test123", "John", "Doe");
-        Exception ex1 = assertThrows(RuntimeException.class, () -> authService.register(blank));
+        Exception ex1 = assertThrows(BadCredentialsException.class, () -> authService.register(blank));
         assertEquals("Username không được để trống", ex1.getMessage());
 
         RegisterRequest nullUser =
                 new RegisterRequest(null, "Test123", "John", "Doe");
-        Exception ex2 = assertThrows(RuntimeException.class, () -> authService.register(nullUser));
+        Exception ex2 = assertThrows(BadCredentialsException.class, () -> authService.register(nullUser));
         assertEquals("Username không được để trống", ex2.getMessage());
     }
 
@@ -177,12 +177,12 @@ public class AuthServiceUnitTest {
     void testRegisterPasswordEmptyOrNull() {
         RegisterRequest blank =
                 new RegisterRequest("newuser", "", "John", "Doe");
-        Exception ex1 = assertThrows(RuntimeException.class, () -> authService.register(blank));
+        Exception ex1 = assertThrows(BadCredentialsException.class, () -> authService.register(blank));
         assertEquals("Password không được để trống", ex1.getMessage());
 
         RegisterRequest nullPass =
                 new RegisterRequest("newuser", null, "John", "Doe");
-        Exception ex2 = assertThrows(RuntimeException.class, () -> authService.register(nullPass));
+        Exception ex2 = assertThrows(BadCredentialsException.class, () -> authService.register(nullPass));
         assertEquals("Password không được để trống", ex2.getMessage());
     }
 
@@ -191,12 +191,12 @@ public class AuthServiceUnitTest {
     void testRegisterFirstNameEmpty() {
         RegisterRequest blank =
                 new RegisterRequest("newuser", "Test123", "", "Doe");
-        Exception ex1 = assertThrows(RuntimeException.class, () -> authService.register(blank));
+        Exception ex1 = assertThrows(BadCredentialsException.class, () -> authService.register(blank));
         assertEquals("First name không được để trống", ex1.getMessage());
 
         RegisterRequest nullFN =
                 new RegisterRequest("newuser", "Test123", null, "Doe");
-        Exception ex2 = assertThrows(RuntimeException.class, () -> authService.register(nullFN));
+        Exception ex2 = assertThrows(BadCredentialsException.class, () -> authService.register(nullFN));
         assertEquals("First name không được để trống", ex2.getMessage());
     }
 
@@ -205,12 +205,12 @@ public class AuthServiceUnitTest {
     void testRegisterLastNameEmpty() {
         RegisterRequest blank =
                 new RegisterRequest("newuser", "Test123", "John", "");
-        Exception ex1 = assertThrows(RuntimeException.class, () -> authService.register(blank));
+        Exception ex1 = assertThrows(BadCredentialsException.class, () -> authService.register(blank));
         assertEquals("Last name không được để trống", ex1.getMessage());
 
         RegisterRequest nullLN =
                 new RegisterRequest("newuser", "Test123", "John", null);
-        Exception ex2 = assertThrows(RuntimeException.class, () -> authService.register(nullLN));
+        Exception ex2 = assertThrows(BadCredentialsException.class, () -> authService.register(nullLN));
         assertEquals("Last name không được để trống", ex2.getMessage());
     }
 }
