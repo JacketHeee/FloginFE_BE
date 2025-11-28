@@ -179,7 +179,42 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>com.lazerycode.jmeter</groupId>
+                <artifactId>jmeter-maven-plugin</artifactId>
+                <version>3.7.0</version>
+
+                <executions>
+                    <!-- STEP 1: Generate config.json -->
+                    <execution>
+                        <id>configuration</id>
+                        <goals>
+                            <goal>configure</goal>
+                        </goals>
+                    </execution>
+
+                    <!-- STEP 2: Run JMeter Tests -->
+                    <execution>
+                        <id>jmeter-tests</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jmeter</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <testFilesDirectory>src/test/jmeter</testFilesDirectory>
+                    <resultsDirectory>target/jmeter/results</resultsDirectory>
+                    <generateReports>true</generateReports>
+                </configuration>
+            </plugin>
+
+
+
         </plugins>
+
+
 
 
     </build>
