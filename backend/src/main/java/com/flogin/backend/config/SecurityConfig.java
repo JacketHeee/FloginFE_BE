@@ -44,6 +44,7 @@ public class SecurityConfig {
         corsConfig.setAllowedOriginPatterns(List.of(
                 "http://localhost:*",
                 "https://*.vercel.app",
+                "http://127.0.0.1:*",
                 "https://flogin-fe-be.vercel.app"
         ));
         corsConfig.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
