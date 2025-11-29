@@ -150,22 +150,84 @@ public class ProductCrudLoadTest {
 
                 // Overall Statistics
                 report.append("=== OVERALL TEST RESULTS ===\n");
-                report.append("Total Samples: ").append(stats.overall().samplesCount()).append("\n");
-                report.append("Error Count: ").append(stats.overall().errorsCount()).append("\n");
 
                 long totalSamples = stats.overall().samplesCount();
                 long errorCount = stats.overall().errorsCount();
+                long successCount = totalSamples - errorCount;
                 double errorRate = totalSamples > 0 ? (errorCount * 100.0 / totalSamples) : 0.0;
+                double successRate = 100.0 - errorRate;
+                long durationMs = stats.duration().toMillis();
+                double durationSec = durationMs / 1000.0;
+                double throughput = durationSec > 0 ? (totalSamples / durationSec) : 0.0;
 
-                report.append("Error Rate: ").append(String.format("%.2f", errorRate)).append("%\n");
-                report.append("Success Rate: ").append(String.format("%.2f", 100.0 - errorRate)).append("%\n");
-                report.append("Total Duration: ").append(stats.duration().toMillis()).append(" ms\n");
+                report.append("Total Samples: ").append(totalSamples).append("\n");
+                report.append("Success Count: ").append(successCount).append("\n");
+                report.append("Error Count: ").append(errorCount).append("\n");
+                report.append("Success Rate: ").append(String.format("%.2f", successRate)).append("%\n");
+                report.append("Error Rate: ").append(String.format("%.2f", errorRate)).append("%\n\n");
 
-                // Danh sách các endpoints đã test
-                report.append("\nEndpoints tested:\n");
+                // Performance Metrics
+                report.append("=== PERFORMANCE METRICS ===\n");
+                report.append("Total Duration: ").append(durationMs).append(" ms (")
+                                .append(String.format("%.2f", durationSec)).append(" seconds)\n");
+                report.append("Throughput: ").append(String.format("%.2f", throughput))
+                                .append(" requests/second\n");
+                report.append("Average Time per Request: ")
+                                .append(String.format("%.2f",
+                                                totalSamples > 0 ? durationMs / (double) totalSamples : 0))
+                                .append(" ms\n");
+                report.append("Average Time per User: ")
+                                .append(String.format("%.2f", users > 0 ? durationMs / (double) users : 0))
+                                .append(" ms\n\n");
+
+                // Detailed Statistics by Endpoint
+                report.append("=== DETAILED STATS BY ENDPOINT ===\n");
                 int count = 1;
                 for (String label : stats.labels()) {
-                        report.append("  ").append(count++).append(". ").append(label).append("\n");
+                        var labelStats = stats.byLabel(label);
+
+                        long samples = labelStats.samplesCount();
+                        long errors = labelStats.errorsCount();
+                        long successes = samples - errors;
+                        double labelErrorRate = samples > 0 ? (errors * 100.0 / samples) : 0.0;
+                        double labelSuccessRate = 100.0 - labelErrorRate;
+
+                        report.append("\n").append(count++).append(". ").append(label).append("\n");
+                        report.append("   Total Samples: ").append(samples).append("\n");
+                        report.append("   Successes: ").append(successes).append("\n");
+                        report.append("   Errors: ").append(errors).append("\n");
+                        report.append("   Success Rate: ").append(String.format("%.2f", labelSuccessRate))
+                                        .append("%\n");
+                        report.append("   Error Rate: ").append(String.format("%.2f", labelErrorRate)).append("%\n");
+                }
+
+                // Summary & Recommendations
+                report.append("\n=== SUMMARY & RECOMMENDATIONS ===\n");
+                if (errorRate == 0) {
+                        report.append("✓ EXCELLENT: All requests successful (0% error rate)\n");
+                } else if (errorRate < 1) {
+                        report.append("✓ VERY GOOD: Error rate below 1% (").append(String.format("%.2f", errorRate))
+                                        .append("%)\n");
+                } else if (errorRate < 5) {
+                        report.append("⚠ ACCEPTABLE: Error rate is ").append(String.format("%.2f", errorRate))
+                                        .append("% (target: < 1%)\n");
+                        report.append("  → Review failed requests and improve error handling\n");
+                } else {
+                        report.append("✗ NEEDS ATTENTION: High error rate at ").append(String.format("%.2f", errorRate))
+                                        .append("%\n");
+                        report.append("  → Check server logs, database connections, and API validations\n");
+                        report.append("  → Verify test data (category exists, valid product IDs)\n");
+                }
+
+                if (throughput < 10) {
+                        report.append("⚠ LOW THROUGHPUT: ").append(String.format("%.2f", throughput))
+                                        .append(" req/s (consider optimization)\n");
+                } else if (throughput < 50) {
+                        report.append("✓ MODERATE THROUGHPUT: ").append(String.format("%.2f", throughput))
+                                        .append(" req/s\n");
+                } else {
+                        report.append("✓ GOOD THROUGHPUT: ").append(String.format("%.2f", throughput))
+                                        .append(" req/s\n");
                 }
 
                 String reportText = report.toString();
