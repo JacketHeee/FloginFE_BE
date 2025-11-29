@@ -1,0 +1,20 @@
+================================================================================
+           PRODUCT API PERFORMANCE TEST REPORT
+================================================================================
+Test Date: 2025-11-29 15:16:40
+Base URL: https://floqin-backend.onrender.com
+Target Users: 10
+Iterations per user: 5
+Total Requests: 350 (7 operations per iteration)
+================================================================================
+
+=== OVERALL TEST RESULTS ===
+Total Samples: 350
+Error Count: 50
+Error Rate: 14.29%
+Success Rate: 85.71%
+Total Duration: 53427 ms
+
+Endpoints tested:
+  1. HTTP Request
+
