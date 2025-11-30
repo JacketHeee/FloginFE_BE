@@ -7,13 +7,11 @@ describe("E2E – Login Flow", () => {
     LoginPage.visit();
   });
 
-  
-
   // ============================================
   // 1) Đăng nhập thành công
   // ============================================
   it("Đăng nhập thành công với thông tin hợp lệ", () => {
-    cy.loginUITest();
+    cy.loginUIReal();
     cy.url().should("include", "/products");
   });
 

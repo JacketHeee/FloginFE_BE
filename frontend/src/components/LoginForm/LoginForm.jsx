@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../../services/authService";
 import Message from "../Message/Message";
 import Icon from "../Icon/Icon";
-import { validateUsername, validatePassword } from "../../utils/validate";
+import { validateUsername, validatePassword } from "../../utils/validateLogin";
 
 const LoginForm = ({ onSwitchToRegister }) => {
   const { logout, setIsLoggedIn } = useAuth();

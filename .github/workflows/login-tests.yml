@@ -25,14 +25,14 @@ jobs:
 
       - name: Run Unit Tests (Login Tests)
         working-directory: ./frontend
-        run: npm run test:unit
+        run: npm run test:unit:login
 
       - name: Generate Coverage Report
         working-directory: ./frontend
-        run: npm run test:coverage
+        run: npm run test:coverage:login
 
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: frontend-coverage
-          path: frontend/coverage/
+          name: frontend-coverage-login
+          path: frontend/coverage/login

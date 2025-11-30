@@ -8,16 +8,22 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-
     "test": "jest",
     "test:once": "jest --watchAll=false",
     "test:coverage": "jest --coverage --watchAll=false",
     "test:unit": "jest __tests__",
-    "test:integration": "jest --testPathPattern=integration",
+    "test:unit:login": "npm run test validateLogin.unit.test.js",
+    "test:unit:product": "npm run test validateProduct.unit.test.js",
+    "test:unit:prf": "npm run test AddProductPopup.test.jsx",
+    "test:unit:cv:pr": "npm run test:coverage -- validateProduct.unit.test.js AddProductPopup.test.jsx",
+    "test:integration": "jest --testPathPatterns=integration",
+    "test:inte:login": "jest --testPathPatterns=integration/Login.integration.test.jsx",
+    "test:inte:product": "jest --testPathPatterns=integration/products.integration.test.jsx",
+    "test:mock:login": "npx jest LoginForm.mock.test.jsx",
+    "test:mock:product": "npx jest Products.mock.test.jsx",
     "test:verbose": "jest --verbose --watchAll=false",
-
     "test:e2e": "cypress run",
-    "test:e2eb": "npx cypress open"  
+    "test:e2eb": "npx cypress open"
   },
   "dependencies": {
     "axios": "^1.12.2",

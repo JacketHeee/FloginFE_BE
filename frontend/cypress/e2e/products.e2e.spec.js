@@ -1,123 +1,149 @@
 import ProductsPage from "../pages/Products";
 
-describe("E2E – Products CRUD + Search (1 product flow)", () => {
-  const created = {
-    name: "Cypress Auto Product " + Date.now(),
-    price: "990000",
-    quantity: "12",
-    description: "Product created by Cypress",
-    category: "Electronics",
-  };
+// 1. THÊM { testIsolation: false } VÀO ĐÂY
+describe(
+  "E2E – Products CRUD + Search (1 product flow)",
+  { testIsolation: false },
+  () => {
+    const created = {
+      name: "Cypress Auto Product " + Date.now(),
+      price: "990000",
+      quantity: "12",
+      description: "Product created by Cypress",
+      category: "Electronics",
+    };
 
-  const updated = {
-    name: "Cypress Auto Updated " + Date.now(),
-    price: "1500000",
-    quantity: "9",
-    description: "Updated by Cypress",
-    category: "Fashion",
-  };
+    const updated = {
+      name: "Cypress Auto Updated " + Date.now(),
+      price: "1500000",
+      quantity: "9",
+      description: "Updated by Cypress",
+      category: "Fashion",
+    };
 
-  let productId = null;
+    let productId = null;
 
-  before(() => {
-    // Login một lần cho toàn bộ test suite
-    cy.loginUIReal();
-    ProductsPage.waitForProducts();
-  });
+    before(() => {
+      // Login một lần, state sẽ được giữ nguyên cho toàn bộ các it bên dưới
+      cy.loginUIReal();
+      ProductsPage.waitForProducts();
+    });
 
-  // ===========================================
-  // a) CREATE (0.5 điểm)
-  // ===========================================
-  it("a) CREATE - Create product successfully", () => {
-    cy.intercept("POST", "**/products").as("createProduct");
+    // a) CREATE
 
-    ProductsPage.addProduct(created);
+    it("a) CREATE - Create product successfully", () => {
+      cy.intercept("POST", "**/products").as("createProduct");
 
-    cy.wait("@createProduct").then((res) => {
-      productId = res.response.body.id;
-      expect(productId).to.exist;
+      ProductsPage.addProduct(created);
 
-      cy.log(`✅ Product created with ID: ${productId}`);
+      cy.wait("@createProduct").then((res) => {
+        productId = res.response.body.id;
+        expect(productId).to.exist;
+        cy.log(` Product created with ID: ${productId}`);
 
-      // Đi đến trang cuối để tìm product vừa tạo
-      ProductsPage.goToLastPage();
+        ProductsPage.goToLastPage();
 
-      // Verify product xuất hiện trong table
+        ProductsPage.rowById(productId)
+          .should("exist")
+          .and("contain.text", created.name)
+          .and("contain.text", created.quantity);
+      });
+    });
+
+    // b) READ + e) SEARCH (0.5 điểm)
+    // it("b) READ + e) SEARCH - Search and find the updated product", () => {
+    //   cy.intercept("GET", "**/products*").as("searchProduct");
+    //   // Search theo tên đã update
+    //   ProductsPage.search(created.name);
+
+    //   cy.wait("@searchProduct");
+
+    //   cy.log(` Searching for: ${created.name}`);
+
+    //   // Verify product được tìm thấy
+    //   ProductsPage.rowById(productId)
+    //     .should("exist")
+    //     .and("be.visible")
+    //     .and("contain.text", created.name);
+    // });
+    it("b) READ + e) SEARCH - Search and find the created product", () => {
+      //Reset search
+      ProductsPage.clearSearch();
+
+      // Đợi danh sách load lại (để input search sẵn sàng)
+      cy.wait(1000);
+
+      // cy.intercept("GET", "**/products*search=*Cypress*").as("searchProduct");
+      cy.intercept("GET", "**/products*search=*Cypress*").as("searchProduct");
+
+      // Thực hiện Search
+      ProductsPage.search(created.name);
+
+      // Đợi request search (Lần này chắc chắn sẽ bắt dính)
+      cy.wait("@searchProduct");
+
+      cy.log(` Searching for: ${created.name}`);
+
+      // Verify
       ProductsPage.rowById(productId)
         .should("exist")
-        .and("contain.text", created.name)
-        .and("contain.text", created.quantity);
+        .and("be.visible")
+        .and("contain.text", created.name);
     });
-  });
+    // c) UPDATE
+    it("c) UPDATE - Update the same product successfully", () => {
+      cy.intercept("GET", "**/products*").as("getProductsList");
+      cy.intercept("PUT", `**/products/${productId}`).as("updateProduct");
 
-  // ===========================================
-  // c) UPDATE (0.5 điểm)
-  // ===========================================
-  it("c) UPDATE - Update the same product successfully", () => {
-    cy.intercept("PUT", `**/products/${productId}`).as("updateProduct");
+      ProductsPage.clearSearch();
+      cy.wait("@getProductsList");
+      ProductsPage.goToLastPage();
 
-    // Visit lại trang products
-    // ProductsPage.visit();
+      ProductsPage.updateProductById(productId, updated);
 
-    // Đi đến trang cuối nơi product vừa tạo nằm
-    ProductsPage.goToLastPage();
+      cy.wait("@updateProduct");
 
-    // Update product
-    ProductsPage.updateProductById(productId, updated);
+      cy.wait("@getProductsList");
+      cy.wait("@getProductsList");
 
-    cy.wait("@updateProduct");
+      ProductsPage.goToLastPage();
 
-    cy.log(`✅ Product ${productId} updated`);
+      cy.log(` Product ${productId} updated and list reloaded`);
 
-    // Verify thông tin đã được update
-    ProductsPage.rowById(productId)
-      .should("exist")
-      .and("contain.text", updated.name)
-      .and("contain.text", updated.quantity);
-  });
+      // 6. Verify (Lúc này đang ở đúng trang, chắc chắn sẽ thấy)
+      ProductsPage.rowById(productId)
+        .should("exist")
+        .and("contain.text", updated.name)
+        .and("contain.text", updated.quantity);
+    });
+    //View detail
+    it("BONUS: VIEW DETAIL - Verify updated product info in detail view", () => {
+      cy.intercept("GET", "**/api/categories*").as("getCategories");
+      ProductsPage.goToLastPage();
+      ProductsPage.viewDetailById(productId, updated);
+    });
+    // d) DELETE (0.5 điểm)
 
-  // ===========================================
-  // b) READ + e) SEARCH (0.5 điểm)
-  // ===========================================
-  it("b) READ + e) SEARCH - Search and find the updated product", () => {
-    // Visit lại trang products
-    ProductsPage.visit();
+    it("d) DELETE - Delete the product successfully", () => {
+      ProductsPage.clearSearch();
+      ProductsPage.goToLastPage();
 
-    // Search theo tên đã update
-    ProductsPage.search(updated.name);
+      // Phải chắc chắn sản phẩm có id này đang hiển thị trước khi xóa
+      cy.log(`Checking existence of ID: ${productId}`);
+      ProductsPage.rowById(productId)
+        .scrollIntoView()
+        .should("exist")
+        .and("be.visible");
 
-    cy.wait(1000); // Đợi search filter apply
+      cy.intercept("DELETE", `**/products/${productId}`).as("deleteProduct");
 
-    cy.log(`✅ Searching for: ${updated.name}`);
+      // 4. Thực hiện hành động Xóa
+      ProductsPage.deleteProductById(productId);
 
-    // Verify product được tìm thấy
-    ProductsPage.rowById(productId)
-      .should("exist")
-      .and("be.visible")
-      .and("contain.text", updated.name);
-  });
+      cy.log(`Product ${productId} deleted`);
 
-  // ===========================================
-  // d) DELETE (0.5 điểm)
-  // ===========================================
-  it("d) DELETE - Delete the same product successfully", () => {
-    cy.intercept("DELETE", `**/products/${productId}`).as("deleteProduct");
-
-    // Visit lại trang products
-    ProductsPage.visit();
-
-    // Search lại để tìm product
-    ProductsPage.search(updated.name);
-    cy.wait(1000);
-
-    // Delete product
-    ProductsPage.deleteProductById(productId);
-
-    cy.wait("@deleteProduct");
-
-    cy.log(`✅ Product ${productId} deleted`);
-
-    // Verify product không còn tồn tại
-    ProductsPage.rowById(productId).should("not.exist");
-  });
-});
+      // Lưu ý: Sau khi xóa, UI thường reload, cần wait hoặc check logic
+      ProductsPage.rowById(productId).should("not.exist");
+    });
+  }
+);

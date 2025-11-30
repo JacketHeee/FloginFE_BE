@@ -28,12 +28,12 @@ import {
   validateQuantity,
   validateDescription,
   validateCategory,
-} from "../../../utils/validate";
+} from "../../../utils/validateProduct";
 
 import productService from "../../../services/productService";
 
 // Mock validation functions
-jest.mock("../../../utils/validate");
+jest.mock("../../../utils/validateProduct");
 
 // Mock API service
 jest.mock("../../../services/productService", () => ({
@@ -75,7 +75,8 @@ describe("Validation Product", () => {
   test("validatePrice với boundary test", () => {
     validatePrice.mockImplementation((price) => {
       if (price <= 0) return "Giá sản phẩm phải lớn hơn 0";
-      if (price > 999_999_999) return "Giá sản phẩm không được vượt quá 999,999,999";
+      if (price > 999_999_999)
+        return "Giá sản phẩm không được vượt quá 999,999,999";
       return null;
     });
 
@@ -95,7 +96,9 @@ describe("Validation Product", () => {
     });
 
     expect(validateQuantity(-1)).toBe("Số lượng không được âm");
-    expect(validateQuantity(100_000)).toBe("Số lượng không được vượt quá 99,999");
+    expect(validateQuantity(100_000)).toBe(
+      "Số lượng không được vượt quá 99,999"
+    );
     expect(validateQuantity(50)).toBe(null);
   });
 
@@ -148,7 +151,9 @@ describe("AddProductPopup Component", () => {
     await waitFor(() => renderPopup());
 
     expect(screen.getByText("Thêm sản phẩm mới")).toBeInTheDocument();
-    expect(await screen.findByPlaceholderText("Nhập tên sản phẩm...")).toBeInTheDocument();
+    expect(
+      await screen.findByPlaceholderText("Nhập tên sản phẩm...")
+    ).toBeInTheDocument();
   });
 
   test("Load categories (mock API)", async () => {
@@ -168,7 +173,6 @@ describe("AddProductPopup Component", () => {
 
     await waitFor(() => renderPopup());
 
-
     fireEvent.click(screen.getByRole("button", { name: "Thêm sản phẩm" }));
 
     expect(await screen.findByText("Tên lỗi")).toBeInTheDocument();
@@ -183,23 +187,23 @@ describe("AddProductPopup Component", () => {
 
     // Nhập tên
     fireEvent.change(screen.getByPlaceholderText("Nhập tên sản phẩm..."), {
-        target: { value: "iPhone 15" },
+      target: { value: "iPhone 15" },
     });
 
     // Nhập giá & số lượng
     const [priceInput, quantityInput] = screen.getAllByPlaceholderText("0");
 
     fireEvent.change(priceInput, {
-        target: { value: "50000000" },
+      target: { value: "50000000" },
     });
 
     fireEvent.change(quantityInput, {
-        target: { value: "10" },
+      target: { value: "10" },
     });
 
     // Mô tả
     fireEvent.change(screen.getByPlaceholderText("Nhập mô tả sản phẩm..."), {
-        target: { value: "Mô tả OK" },
+      target: { value: "Mô tả OK" },
     });
 
     // Chọn danh mục
@@ -210,11 +214,10 @@ describe("AddProductPopup Component", () => {
     fireEvent.click(screen.getByRole("button", { name: "Thêm sản phẩm" }));
 
     await waitFor(() => {
-        expect(mockSubmit).toHaveBeenCalled();
-        expect(mockClose).toHaveBeenCalled();
+      expect(mockSubmit).toHaveBeenCalled();
+      expect(mockClose).toHaveBeenCalled();
     });
-    });
-
+  });
 
   test("Mode = view: disable all inputs", async () => {
     renderPopup({
