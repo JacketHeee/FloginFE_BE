@@ -2,9 +2,9 @@ name: Frontend Product Tests CI
 
 on:
   push:
-    branches: [ "main", "feat/setup-test" ]
+    branches: ["main", "feat/setup-test"]
   pull_request:
-    branches: [ "main", "feat/setup-test" ]
+    branches: ["main", "feat/setup-test"]
 
 jobs:
   run-product-tests:
@@ -38,14 +38,3 @@ jobs:
       - name: Run Mock Tests (Products)
         working-directory: ./frontend
         run: npm run test:mock:product
-
-      - name: Generate Coverage Report
-        working-directory: ./frontend
-        run: npm run test:coverage
-
-      - name: Upload Coverage Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-coverage-products
-          path: frontend/coverage/
-
