@@ -1,0 +1,14 @@
+==============================================
+Performance Test: load-10
+----------------------------------------------
+Total Samples : 30
+Errors        : 0
+Test Duration : 1301 ms
+Throughput    : 23.06 req/s
+
+Min Response  : 294 ms
+Max Response  : 582 ms
+Avg Response  : 432.00 ms
+P99 Response  : 582 ms
+==============================================
+
