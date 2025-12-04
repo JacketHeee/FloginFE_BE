@@ -2,13 +2,13 @@
 Performance Test: load-100
 ----------------------------------------------
 Total Samples : 300
-Errors        : 0
-Test Duration : 11278 ms
-Throughput    : 26.60 req/s
+Errors        : 94
+Test Duration : 114877 ms
+Throughput    : 1.79 req/s
 
-Min Response  : 808 ms
-Max Response  : 3969 ms
-Avg Response  : 3101.00 ms
-P99 Response  : 3948 ms
+Min Response  : 1781 ms
+Max Response  : 52077 ms
+Avg Response  : 30030.00 ms
+P99 Response  : 50756 ms
 ==============================================
 

@@ -10,16 +10,13 @@ import LoginForm from "../../components/LoginForm/LoginForm";
 import { login as loginApi } from "../../services/authService";
 import { AuthProvider } from "../../contexts/AuthContext";
 import { BrowserRouter } from "react-router-dom";
-import {
-  validateUsername,
-  validatePassword,
-} from "../../utils/validate";
+import { validateUsername, validatePassword } from "../../utils/validateLogin";
 
 // Mock API login
 jest.mock("../../services/authService");
 
 // Mock validations (để không chặn API)
-jest.mock("../../utils/validate", () => ({
+jest.mock("../../utils/validateLogin", () => ({
   validateUsername: jest.fn(),
   validatePassword: jest.fn(),
 }));
@@ -55,7 +52,9 @@ describe("Login Integration Test", () => {
     renderLogin();
 
     expect(screen.getByPlaceholderText("Tên đăng nhập")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Nhập mật khẩu của bạn")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("Nhập mật khẩu của bạn")
+    ).toBeInTheDocument();
 
     fireEvent.change(screen.getByPlaceholderText("Tên đăng nhập"), {
       target: { value: "manh123" },
@@ -66,7 +65,9 @@ describe("Login Integration Test", () => {
     });
 
     expect(screen.getByPlaceholderText("Tên đăng nhập").value).toBe("manh123");
-    expect(screen.getByPlaceholderText("Nhập mật khẩu của bạn").value).toBe("abc12345");
+    expect(screen.getByPlaceholderText("Nhập mật khẩu của bạn").value).toBe(
+      "abc12345"
+    );
   });
 
   // ==============================

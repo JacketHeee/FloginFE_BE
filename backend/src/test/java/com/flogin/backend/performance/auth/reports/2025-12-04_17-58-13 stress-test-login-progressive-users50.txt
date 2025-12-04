@@ -1,0 +1,39 @@
+================================================================================
+Performance Test              : stress-test-login-progressive
+--------------------------------------------------------------------------------
+Concurrent Users              : 50 users
+Iterations                    : 3 iterations per user
+Target URL                    : https://floqin-backend.onrender.com/api/auth/login
+
+OVERALL STATISTICS
+--------------------------------------------------------------------------------
+Total Requests                : 50
+Total Errors                  : 0 (0.00%)
+Successful Requests           : 50 (100.00%)
+Test Duration                 : 29419 ms (29.42 seconds)
+Throughput                    : 1.70 requests/second
+
+RESPONSE TIME STATISTICS
+--------------------------------------------------------------------------------
+Minimum Response Time         : 5074 ms
+Average Response Time         : 18000.00 ms
+90th Percentile               : 28172 ms
+95th Percentile               : 28467 ms
+99th Percentile               : 28748 ms
+Maximum Response Time         : 29400 ms
+
+BREAKING POINT ANALYSIS
+--------------------------------------------------------------------------------
+✅ STATUS: SYSTEM STABLE
+    Test Level: 50 concurrent users
+    Error Rate: 0.00% (No errors detected)
+    System Performance: Acceptable
+
+PERFORMANCE INDICATORS
+--------------------------------------------------------------------------------
+Response Time (P99)           : ❌ POOR (> 5s)
+Throughput                    : ❌ POOR (< 10 req/s)
+Error Rate                    : ✅ EXCELLENT (0%)
+================================================================================
+Generated at: 2025-12-04 17:58:13
+================================================================================
