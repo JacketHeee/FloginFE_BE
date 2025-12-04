@@ -14,11 +14,11 @@ CHECKLIST TEST (TIẾNG VIỆT)
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import RegisterForm from "../RegisterForm";
 import { register } from "../../../services/authService";
-import { validateUsername, validatePassword } from "../../../utils/validate";
+import { validateUsername, validatePassword } from "../../../utils/validateLogin";
 import { BrowserRouter } from "react-router-dom";
 
 jest.mock("../../../services/authService");
-jest.mock("../../../utils/validate");
+jest.mock("../../../utils/validateLogin");
 
 // Mock useNavigate
 const mockNavigate = jest.fn();
@@ -48,14 +48,20 @@ describe("RegisterForm", () => {
     expect(screen.getByPlaceholderText("Tên")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Tên đăng nhập")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Mật khẩu của bạn")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Nhập lại mật khẩu")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("Nhập lại mật khẩu")
+    ).toBeInTheDocument();
   });
 
   test("Hiển thị lỗi khi các trường bắt buộc bị bỏ trống", async () => {
     renderForm();
 
-    fireEvent.change(screen.getByPlaceholderText("Họ và"), { target: { value: "" } });
-    fireEvent.change(screen.getByPlaceholderText("Tên"), { target: { value: "" } });
+    fireEvent.change(screen.getByPlaceholderText("Họ và"), {
+      target: { value: "" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("Tên"), {
+      target: { value: "" },
+    });
 
     validateUsername.mockReturnValue("Username không hợp lệ");
     validatePassword.mockReturnValue("Password không hợp lệ");
@@ -77,7 +83,9 @@ describe("RegisterForm", () => {
 
     fireEvent.submit(screen.getByRole("button", { name: "Đăng ký" }));
 
-    expect(await screen.findByText("Vui lòng nhập lại mật khẩu")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Vui lòng nhập lại mật khẩu")
+    ).toBeInTheDocument();
   });
 
   test("Hiển thị lỗi khi mật khẩu nhập lại không khớp", async () => {
@@ -89,7 +97,9 @@ describe("RegisterForm", () => {
 
     fireEvent.submit(screen.getByRole("button", { name: "Đăng ký" }));
 
-    expect(await screen.findByText("Mật khẩu nhập lại không khớp")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Mật khẩu nhập lại không khớp")
+    ).toBeInTheDocument();
   });
 
   test("Hiển thị lỗi khi chưa đồng ý điều khoản", async () => {
@@ -99,7 +109,9 @@ describe("RegisterForm", () => {
 
     fireEvent.submit(screen.getByRole("button", { name: "Đăng ký" }));
 
-    expect(await screen.findByText("Vui lòng đồng ý với điều khoản")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Vui lòng đồng ý với điều khoản")
+    ).toBeInTheDocument();
   });
 
   test("Đăng ký thành công → điều hướng sang trang Login", async () => {
@@ -122,7 +134,9 @@ describe("RegisterForm", () => {
 
     fireEvent.submit(screen.getByRole("button", { name: "Đăng ký" }));
 
-    expect(await screen.findByText("Tên đăng nhập đã tồn tại")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Tên đăng nhập đã tồn tại")
+    ).toBeInTheDocument();
   });
 
   test("Bật/tắt hiển thị mật khẩu", () => {

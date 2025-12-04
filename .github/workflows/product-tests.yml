@@ -1,4 +1,4 @@
-name: Frontend Login Tests CI
+name: Frontend Product Tests CI
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: ["main", "feat/setup-test"]
 
 jobs:
-  run-login-tests:
+  run-product-tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,14 +23,18 @@ jobs:
         working-directory: ./frontend
         run: npm install
 
-      - name: Run Unit Tests (Login Validation)
+      - name: Run Unit Tests (Product Validation)
         working-directory: ./frontend
-        run: npm run test:unit:login
+        run: npm run test:unit:product
 
-      - name: Run Integration Tests (Login)
+      - name: Run Unit Tests (Product Popup)
         working-directory: ./frontend
-        run: npm run test:inte:login
+        run: npm run test:unit:prf
 
-      - name: Run Mock Tests (LoginForm)
+      - name: Run Integration Tests (Products)
         working-directory: ./frontend
-        run: npm run test:mock:login
+        run: npm run test:inte:product
+
+      - name: Run Mock Tests (Products)
+        working-directory: ./frontend
+        run: npm run test:mock:product

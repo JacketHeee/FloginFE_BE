@@ -9,8 +9,7 @@ import {
   validateQuantity,
   validateDescription,
   validateCategory,
-} from "../../utils/validate";
-
+} from "../../utils/validateProduct";
 
 const CustomSelect = ({ options, value, onChange, disabled, placeholder }) => {
   const [open, setOpen] = useState(false);
@@ -22,13 +21,21 @@ const CustomSelect = ({ options, value, onChange, disabled, placeholder }) => {
 
   return (
     <div
-      className={`custom-select ${open ? "open" : ""} ${disabled ? "disabled" : ""}`}
+      className={`custom-select ${open ? "open" : ""} ${
+        disabled ? "disabled" : ""
+      }`}
       data-cy="popup-category-select"
       onClick={() => !disabled && setOpen(!open)}
     >
       <div className="selected" data-cy="popup-category-selected">
         <span>{value || placeholder}</span>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="2"
+          stroke="currentColor"
+        >
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
         </svg>
       </div>
@@ -36,7 +43,11 @@ const CustomSelect = ({ options, value, onChange, disabled, placeholder }) => {
       {open && (
         <ul className="dropdown" data-cy="popup-category-options">
           {options.map((opt, index) => (
-            <li key={index} data-cy="popup-category-option" onClick={() => handleSelect(opt)}>
+            <li
+              key={index}
+              data-cy="popup-category-option"
+              onClick={() => handleSelect(opt)}
+            >
               {opt}
             </li>
           ))}
@@ -46,7 +57,13 @@ const CustomSelect = ({ options, value, onChange, disabled, placeholder }) => {
   );
 };
 
-const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData = null }) => {
+const AddProductPopup = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  mode = "add",
+  productData = null,
+}) => {
   const [formData, setFormData] = useState({
     name: "",
     price: "",
@@ -116,7 +133,10 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
     const priceErr = validatePrice(formData.price);
     const quantityErr = validateQuantity(formData.quantity);
     const descErr = validateDescription(formData.description);
-    const categoryErr = validateCategory(formData.categoryName, categories.map(c => c.name));
+    const categoryErr = validateCategory(
+      formData.categoryName,
+      categories.map((c) => c.name)
+    );
 
     if (nameErr) newErrors.name = nameErr;
     if (priceErr) newErrors.price = priceErr;
@@ -127,7 +147,6 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -160,20 +179,42 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
   };
 
   return (
-    <div className="popup-overlay" data-cy="product-form-popup" onClick={onClose}>
-      <div className="popup-container" data-cy="product-form-container" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="popup-overlay"
+      data-cy="product-form-popup"
+      onClick={onClose}
+    >
+      <div
+        className="popup-container"
+        data-cy="product-form-container"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="popup-header">
           <h2>{getTitle()}</h2>
           <button className="close-button" onClick={onClose}>
             <Icon>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="2"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </Icon>
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="popup-form" data-cy="product-form">
+        <form
+          onSubmit={handleSubmit}
+          className="popup-form"
+          data-cy="product-form"
+        >
           <div className="form-group">
             <label htmlFor="name">
               Tên sản phẩm {!isViewMode && <span className="required">*</span>}
@@ -189,12 +230,16 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
               disabled={isViewMode}
               data-cy="product-name-input"
             />
-            {errors.name && <span className="error-message">{errors.name}</span>}
+            {errors.name && (
+              <span className="error-message">{errors.name}</span>
+            )}
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label>Giá (VNĐ) {!isViewMode && <span className="required">*</span>}</label>
+              <label>
+                Giá (VNĐ) {!isViewMode && <span className="required">*</span>}
+              </label>
               <input
                 type="number"
                 name="price"
@@ -207,11 +252,15 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
                 disabled={isViewMode}
                 data-cy="product-price-input"
               />
-              {errors.price && <span className="error-message">{errors.price}</span>}
+              {errors.price && (
+                <span className="error-message">{errors.price}</span>
+              )}
             </div>
 
             <div className="form-group">
-              <label>Số lượng {!isViewMode && <span className="required">*</span>}</label>
+              <label>
+                Số lượng {!isViewMode && <span className="required">*</span>}
+              </label>
               <input
                 type="number"
                 name="quantity"
@@ -224,7 +273,9 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
                 disabled={isViewMode}
                 data-cy="product-quantity-input"
               />
-              {errors.quantity && <span className="error-message">{errors.quantity}</span>}
+              {errors.quantity && (
+                <span className="error-message">{errors.quantity}</span>
+              )}
             </div>
           </div>
 
@@ -235,15 +286,21 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
             <CustomSelect
               options={categories.map((cat) => cat.name)}
               value={formData.categoryName}
-              onChange={(value) => setFormData((prev) => ({ ...prev, categoryName: value }))}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, categoryName: value }))
+              }
               disabled={isViewMode}
               placeholder="-- Chọn danh mục --"
             />
-            {errors.categoryName && <span className="error-message">{errors.categoryName}</span>}
+            {errors.categoryName && (
+              <span className="error-message">{errors.categoryName}</span>
+            )}
           </div>
 
           <div className="form-group">
-            <label>Mô tả {!isViewMode && <span className="required">*</span>}</label>
+            <label>
+              Mô tả {!isViewMode && <span className="required">*</span>}
+            </label>
             <textarea
               name="description"
               value={formData.description}
@@ -254,15 +311,26 @@ const AddProductPopup = ({ isOpen, onClose, onSubmit, mode = "add", productData 
               disabled={isViewMode}
               data-cy="product-description-input"
             />
-            {errors.description && <span className="error-message">{errors.description}</span>}
+            {errors.description && (
+              <span className="error-message">{errors.description}</span>
+            )}
           </div>
 
           <div className="form-actions">
-            <button type="button" className="cancel-button" onClick={onClose} data-cy="product-cancel-btn">
+            <button
+              type="button"
+              className="cancel-button"
+              onClick={onClose}
+              data-cy="product-cancel-btn"
+            >
               {isViewMode ? "Đóng" : "Hủy"}
             </button>
             {!isViewMode && (
-              <button type="submit" className="submit-button" data-cy="product-submit-btn">
+              <button
+                type="submit"
+                className="submit-button"
+                data-cy="product-submit-btn"
+              >
                 {isEditMode ? "Cập nhật" : "Thêm sản phẩm"}
               </button>
             )}
