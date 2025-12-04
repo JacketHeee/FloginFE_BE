@@ -76,13 +76,25 @@ class ProductsPage {
 
   // FILL FORM
   fillForm({ name, price, quantity, description, category }) {
-    if (name) this.nameInput().clear().type(name, { force: true });
-    if (price) this.priceInput().clear().type(price, { force: true });
-    if (quantity) this.quantityInput().clear().type(quantity, { force: true });
+    const typingDelay = 50; // Độ trễ giữa các lần gõ phím (ms)
+
+    if (name)
+      this.nameInput().clear().type(name, { force: true, delay: typingDelay });
+    if (price)
+      this.priceInput()
+        .clear()
+        .type(price, { force: true, delay: typingDelay });
+    if (quantity)
+      this.quantityInput()
+        .clear()
+        .type(quantity, { force: true, delay: typingDelay });
     if (description)
-      this.descriptionInput().clear().type(description, { force: true });
+      this.descriptionInput()
+        .clear()
+        .type(description, { force: true, delay: typingDelay });
     if (category) this.selectCategory(category);
   }
+  
   verifyDetailForm({ name, price, quantity, description, category }) {
     if (name) {
       this.nameInput().should("have.value", name);

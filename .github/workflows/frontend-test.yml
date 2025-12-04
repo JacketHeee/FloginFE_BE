@@ -1,4 +1,4 @@
-name: Frontend Login Tests CI
+name: Frontend Tests CI
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: ["main", "feat/setup-test"]
 
 jobs:
-  run-login-tests:
+  run-frontend-tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,14 +23,24 @@ jobs:
         working-directory: ./frontend
         run: npm install
 
-      - name: Run Unit Tests (Login Validation)
+      - name: Run Unit Tests
         working-directory: ./frontend
-        run: npm run test:unit:login
+        run: npm run test:unit
 
-      - name: Run Integration Tests (Login)
+      - name: Run Integration Tests
         working-directory: ./frontend
-        run: npm run test:inte:login
+        run: npm run test:integration
 
-      - name: Run Mock Tests (LoginForm)
+      - name: Run Mock Tests
         working-directory: ./frontend
-        run: npm run test:mock:login
+        run: npm run test:mock
+
+      - name: Generate Coverage Report
+        working-directory: ./frontend
+        run: npm run test:coverage
+
+      - name: Upload Coverage Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage-report
+          path: frontend/coverage/

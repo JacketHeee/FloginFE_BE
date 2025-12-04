@@ -20,8 +20,11 @@ class LoginPage {
     return cy.get(".error-alert");
   }
   login(username, password) {
-    this.username().clear().type(username);
-    this.password().clear().type(password);
+    const typingDelay = 120; // Tăng delay để mô phỏng người gõ thật
+    this.username().clear().type(username, { delay: typingDelay });
+    cy.wait(500); // Delay giữa các field
+    this.password().clear().type(password, { delay: typingDelay });
+    cy.wait(500); // Delay trước khi click submit
     this.submit().click();
   }
 }
