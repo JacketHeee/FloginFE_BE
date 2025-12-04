@@ -84,7 +84,8 @@ P99 Response  : %d ms
         );
     }
 
-    protected String buildReportBreakPoint(int users, String testName, TestPlanStats stats) {
+    protected String buildReportBreakPoint(int users, String testName, TestPlanStats stats, 
+                                          int lastStableUsers, double lastStableErrorRate, long lastStableP99) {
         long total = stats.overall().samplesCount();
         long errors = stats.overall().errorsCount();
         double errorRate = (errors * 100.0) / total;
@@ -109,6 +110,13 @@ P99 Response  : %d ms
         report.append(String.format("%-30s: %d users\n", "Concurrent Users", users));
         report.append(String.format("%-30s: %d iterations per user\n", "Iterations", 3));
         report.append(String.format("%-30s: %s\n", "Target URL", BASE_URL));
+        report.append("\n");
+        
+        // Test Thresholds
+        report.append("TEST THRESHOLDS\n");
+        report.append("-".repeat(80)).append("\n");
+        report.append(String.format("%-30s: 5000 ms\n", "Response Time Threshold (P99)"));
+        report.append(String.format("%-30s: 5.0%%\n", "Error Rate Threshold"));
         report.append("\n");
         
         // Overall Statistics
@@ -149,6 +157,21 @@ P99 Response  : %d ms
                 report.append("    Severity: MODERATE - System is starting to degrade\n");
             } else {
                 report.append("    Severity: LOW - Minor degradation detected\n");
+            }
+            
+            // Comparison with Last Stable Level
+            if (lastStableUsers > 0) {
+                report.append("\n");
+                report.append("COMPARISON WITH LAST STABLE LEVEL\n");
+                report.append("-".repeat(80)).append("\n");
+                report.append(String.format("%-30s: %d users\n", "Last Stable Level", lastStableUsers));
+                report.append(String.format("%-30s: %d users\n", "Breaking Point", users));
+                report.append(String.format("%-30s: %d users\n", "Difference", (users - lastStableUsers)));
+                report.append("\n");
+                report.append(String.format("%-30s: %.2f%% → %.2f%% (+%.2f%%)\n", 
+                    "Error Rate Change", lastStableErrorRate, errorRate, (errorRate - lastStableErrorRate)));
+                report.append(String.format("%-30s: %d ms → %d ms (+%d ms)\n", 
+                    "P99 Response Time Change", lastStableP99, p99, (p99 - lastStableP99)));
             }
         } else {
             report.append(String.format("✅ STATUS: SYSTEM STABLE\n"));
