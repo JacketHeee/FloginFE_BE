@@ -1,12 +1,12 @@
 @echo off
 echo ==========================================
-echo Running Integration Tests
+echo Running Load Tests Only
 echo ==========================================
 cd /d "%~dp0.."
-call mvnw.cmd clean test -Dtest="**/*IntegrationTest"
+call mvnw.cmd clean test -Dtest="**/*LoadTest"
 if %ERRORLEVEL% NEQ 0 (
-    echo Integration tests failed!
+    echo Load tests failed!
     exit /b %ERRORLEVEL%
 )
 echo.
-echo Integration tests completed successfully!
+echo Load tests completed successfully!

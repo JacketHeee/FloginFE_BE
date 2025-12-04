@@ -16,4 +16,3 @@ echo ==========================================
 echo.
 echo Opening coverage report...
 start "" "target\site\jacoco\index.html"
-pause

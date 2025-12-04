@@ -1,12 +1,12 @@
 @echo off
 echo ==========================================
-echo Running Integration Tests
+echo Running Mock Tests
 echo ==========================================
 cd /d "%~dp0.."
-call mvnw.cmd clean test -Dtest="**/*IntegrationTest"
+call npm run test:mock
 if %ERRORLEVEL% NEQ 0 (
-    echo Integration tests failed!
+    echo Mock tests failed!
     exit /b %ERRORLEVEL%
 )
 echo.
-echo Integration tests completed successfully!
+echo Mock tests completed successfully!

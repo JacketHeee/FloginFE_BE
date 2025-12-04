@@ -10,4 +10,3 @@ if %ERRORLEVEL% NEQ 0 (
 )
 echo.
 echo Mock tests completed successfully!
-pause

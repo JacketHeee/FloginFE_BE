@@ -1,0 +1,50 @@
+================================================================================
+Performance Test              : stress-test-login-progressive
+--------------------------------------------------------------------------------
+Concurrent Users              : 50 users
+Iterations                    : 3 iterations per user
+Target URL                    : https://floqin-backend.onrender.com/api/auth/login
+
+TEST THRESHOLDS
+--------------------------------------------------------------------------------
+Response Time Threshold (P99) : 5000 ms
+Error Rate Threshold          : 5.0%
+
+OVERALL STATISTICS
+--------------------------------------------------------------------------------
+Total Requests                : 150
+Total Errors                  : 10 (6.67%)
+Successful Requests           : 140 (93.33%)
+Test Duration                 : 74427 ms (74.43 seconds)
+Throughput                    : 1.88 requests/second
+
+RESPONSE TIME STATISTICS
+--------------------------------------------------------------------------------
+Minimum Response Time         : 2886 ms
+Average Response Time         : 20749.00 ms
+90th Percentile               : 29945 ms
+95th Percentile               : 30747 ms
+99th Percentile               : 32344 ms
+Maximum Response Time         : 38124 ms
+
+BREAKING POINT ANALYSIS
+--------------------------------------------------------------------------------
+⚠️  STATUS: BREAKING POINT DETECTED
+    Breaking Point At: 50 concurrent users
+    Error Rate: 6.67% (10/150 requests failed)
+    Severity: MODERATE - System is starting to degrade
+
+PERFORMANCE INDICATORS
+--------------------------------------------------------------------------------
+Response Time (P99)           : ❌ POOR (> 5s)
+Throughput                    : ❌ POOR (< 10 req/s)
+Error Rate                    : ❌ POOR (> 5%)
+
+RECOMMENDATIONS
+--------------------------------------------------------------------------------
+• Optimize database connection pool.
+• Add caching layer for user authentication.
+• Reduce BCrypt rounds if needed.
+================================================================================
+Generated at: 2025-12-04 20:01:17
+================================================================================

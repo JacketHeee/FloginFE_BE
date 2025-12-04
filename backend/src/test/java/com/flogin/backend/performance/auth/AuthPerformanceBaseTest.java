@@ -217,6 +217,20 @@ P99 Response  : %d ms
         } else {
             report.append(String.format("%-30s: ❌ POOR (> 5%%)\n", "Error Rate"));
         }
+
+        // Performance Indicators
+        report.append("\n");
+        report.append("RECOMMENDATIONS\n");
+        report.append("-".repeat(80)).append("\n");
+
+        if (errorRate >= 5 || p99 > 5000) {
+            report.append("• Optimize database connection pool.\n");
+            report.append("• Add caching layer for user authentication.\n");
+            report.append("• Reduce BCrypt rounds if needed.\n");
+        } else {
+            report.append("• System is performing well under current load.\n");
+            report.append("• Continue monitoring performance metrics regularly.\n");
+        }
         
         report.append("=".repeat(80)).append("\n");
         report.append(String.format("Generated at: %s\n", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));

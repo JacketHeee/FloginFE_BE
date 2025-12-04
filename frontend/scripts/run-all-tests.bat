@@ -1,13 +1,13 @@
 @echo off
 echo ==========================================
-echo Running ALL Tests Sequentially
+echo Running ALL Frontend Tests Sequentially
 echo ==========================================
 cd /d "%~dp0.."
 
 echo.
 echo [1/4] Running Unit Tests...
 echo ==========================================
-call mvnw.cmd clean test -Dtest="**/*UnitTest"
+call npm run test:unit
 if %ERRORLEVEL% NEQ 0 (
     echo Unit tests failed!
     pause
@@ -18,7 +18,7 @@ echo Unit tests PASSED!
 echo.
 echo [2/4] Running Integration Tests...
 echo ==========================================
-call mvnw.cmd test -Dtest="**/*IntegrationTest"
+call npm run test:integration
 if %ERRORLEVEL% NEQ 0 (
     echo Integration tests failed!
     pause
@@ -29,7 +29,7 @@ echo Integration tests PASSED!
 echo.
 echo [3/4] Running Mock Tests...
 echo ==========================================
-call mvnw.cmd test -Dtest="**/*MockTest"
+call npm run test:mock
 if %ERRORLEVEL% NEQ 0 (
     echo Mock tests failed!
     pause
@@ -38,26 +38,21 @@ if %ERRORLEVEL% NEQ 0 (
 echo Mock tests PASSED!
 
 echo.
-echo [4/4] Running Security Vulnerability Tests...
+echo [4/4] Running Coverage Tests...
 echo ==========================================
-call mvnw.cmd test -Dtest="SecurityVulnerabilityTest"
+call npm run test:coverage
 if %ERRORLEVEL% NEQ 0 (
-    echo Security vulnerability tests failed!
+    echo Coverage tests failed!
     pause
     exit /b %ERRORLEVEL%
 )
-echo Security vulnerability tests PASSED!
-
-
+echo Coverage tests PASSED!
 
 echo.
 echo ==========================================
 echo ALL TESTS COMPLETED SUCCESSFULLY!
 echo ==========================================
 echo.
-echo Summary:
-echo   - Unit Tests: PASSED
-echo   - Integration Tests: PASSED
-echo   - Mock Tests: PASSED
-echo   - Security Tests: PASSED
+echo Note: E2E tests (Cypress) must be run separately
+echo Run 'npm run test:e2eb' to open Cypress
 echo.

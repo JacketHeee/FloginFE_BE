@@ -10,10 +10,11 @@
     "preview": "vite preview",
     "test": "jest",
     "test:once": "jest --watchAll=false",
-    "test:coverage": "jest --coverage --watchAll=false",
     "test:unit": "jest --testMatch \"<rootDir>/src/**/*.unit.test.js?(x)\" --watchAll=false",
     "test:integration": "jest --testMatch \"<rootDir>/src/**/*.integration.test.jsx\" --watchAll=false",
     "test:mock": "jest --testMatch \"<rootDir>/src/**/*.mock.test.jsx\" --watchAll=false",
+    "test:coverage": "jest --coverage --watchAll=false",
+    "test:e2eb": "npx cypress open",
     "test:unit:login": "npm run test validateLogin.unit.test.js",
     "test:inte:login": "jest --testPathPatterns=integration/Login.integration.test.jsx",
     "test:mock:login": "npx jest LoginForm.mock.test.jsx",
@@ -23,8 +24,7 @@
     "test:mock:product": "npx jest Products.mock.test.jsx",
     "test:unit:cv:pr": "npm run test:coverage -- validateProduct.unit.test.js AddProductPopup.test.jsx",
     "test:verbose": "jest --verbose --watchAll=false",
-    "test:e2e": "cypress run",
-    "test:e2eb": "npx cypress open"
+    "test:e2e": "cypress run"
   },
   "dependencies": {
     "axios": "^1.12.2",

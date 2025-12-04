@@ -1,12 +1,12 @@
 @echo off
 echo ==========================================
-echo Running Integration Tests
+echo Running Tests with Coverage
 echo ==========================================
 cd /d "%~dp0.."
-call mvnw.cmd clean test -Dtest="**/*IntegrationTest"
+call npm run test:coverage
 if %ERRORLEVEL% NEQ 0 (
-    echo Integration tests failed!
+    echo Coverage tests failed!
     exit /b %ERRORLEVEL%
 )
 echo.
-echo Integration tests completed successfully!
+echo Coverage tests completed successfully!
