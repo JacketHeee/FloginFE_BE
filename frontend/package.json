@@ -12,7 +12,7 @@
     "test:once": "jest --watchAll=false",
     "test:coverage": "jest --coverage --watchAll=false",
     "test:unit": "jest --testMatch \"<rootDir>/src/**/*.unit.test.js?(x)\" --watchAll=false",
-    "test:integration": "jest --testMatch \"<rootDir>/src/**/*.integration.test.js\" --watchAll=false",
+    "test:integration": "jest --testMatch \"<rootDir>/src/**/*.integration.test.jsx\" --watchAll=false",
     "test:mock": "jest --testMatch \"<rootDir>/src/**/*.mock.test.jsx\" --watchAll=false",
     "test:unit:login": "npm run test validateLogin.unit.test.js",
     "test:inte:login": "jest --testPathPatterns=integration/Login.integration.test.jsx",
