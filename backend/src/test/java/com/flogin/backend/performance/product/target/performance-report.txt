@@ -1,0 +1,38 @@
+================================================================================
+           PRODUCT API PERFORMANCE TEST REPORT
+================================================================================
+Test Date: 2025-12-04 18:34:29
+Base URL: https://floqin-backend.onrender.com
+Target Users: 10
+Iterations per user: 5
+Total Requests: 350 (7 operations per iteration)
+================================================================================
+
+=== OVERALL TEST RESULTS ===
+Total Samples: 350
+Success Count: 300
+Error Count: 50
+Success Rate: 85.71%
+Error Rate: 14.29%
+
+=== PERFORMANCE METRICS ===
+Total Duration: 51672 ms (51.67 seconds)
+Throughput: 6.77 requests/second
+Average Time per Request: 147.63 ms
+Average Time per User: 5167.20 ms
+
+=== DETAILED STATS BY ENDPOINT ===
+
+1. HTTP Request
+   Total Samples: 350
+   Successes: 300
+   Errors: 50
+   Success Rate: 85.71%
+   Error Rate: 14.29%
+
+=== SUMMARY & RECOMMENDATIONS ===
+✗ NEEDS ATTENTION: High error rate at 14.29%
+  → Check server logs, database connections, and API validations
+  → Verify test data (category exists, valid product IDs)
+⚠ LOW THROUGHPUT: 6.77 req/s (consider optimization)
+
