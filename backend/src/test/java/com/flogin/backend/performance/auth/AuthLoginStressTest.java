@@ -42,16 +42,16 @@ public class AuthLoginStressTest extends AuthPerformanceBaseTest {
             double errorRate = (errorCount * 100.0) / totalRequests;
             long responseTime99th = stats.overall().sampleTimePercentile99().toMillis();
             
-            // Kiểm tra breaking point
-            boolean hasErrors = errorCount > 0;
-            boolean highErrorRate = errorRate > ERROR_RATE_THRESHOLD;
-            boolean slowResponse = responseTime99th > RESPONSE_TIME_THRESHOLD_MS;
-            
-            // Build report with last stable level info (truyền lastStableLevel hiện tại trước khi kiểm tra)
+            // Build report with last stable level info
             String report = buildReportBreakPoint(users, testName, stats, 
                                                  lastStableLevel, lastStableErrorRate, lastStableResponseTime);
             System.out.println(report);
             writeReport(testName + "-users" + users, report);
+            
+            // Kiểm tra breaking point
+            boolean hasErrors = errorCount > 0;
+            boolean highErrorRate = errorRate > ERROR_RATE_THRESHOLD;
+            boolean slowResponse = responseTime99th > RESPONSE_TIME_THRESHOLD_MS;
             
             if (hasErrors || highErrorRate || slowResponse) {
                 breakingPoint = users;
