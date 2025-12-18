@@ -11,7 +11,7 @@ services:
       - key: SPRING_DATASOURCE_PASSWORD
         value: znQPA8GIm6sh25m3OtYWs887mqqQscNq
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://dpg-d51joaggjchc73elqj20-a.oregon-postgres.render.com:5432/backend_db_01n2?sslmode=require
+        value: postgresql://dpg-d51joaggjchc73elqj20-a/backend_db_01n2?sslmode=require
       - key: JWT_SECRET_KEY_BASE64
         value: =============NguyenHungManh-HoHoangLong-BuiNguyenTrongNghia-LuuPhungKhaiNguyen-NguyenHoangAnh============
       - key: JWT_EXPIRATION_MINUTES
