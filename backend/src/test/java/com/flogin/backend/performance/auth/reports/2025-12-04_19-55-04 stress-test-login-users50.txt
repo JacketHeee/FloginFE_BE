@@ -1,0 +1,44 @@
+================================================================================
+Performance Test              : stress-test-login
+--------------------------------------------------------------------------------
+Concurrent Users              : 50 users
+Iterations                    : 3 iterations per user
+Target URL                    : https://floqin-backend.onrender.com/api/auth/login
+
+TEST THRESHOLDS
+--------------------------------------------------------------------------------
+Response Time Threshold (P99) : 5000 ms
+Error Rate Threshold          : 5.0%
+
+OVERALL STATISTICS
+--------------------------------------------------------------------------------
+Total Requests                : 150
+Total Errors                  : 19 (12.67%)
+Successful Requests           : 131 (87.33%)
+Test Duration                 : 73200 ms (73.20 seconds)
+Throughput                    : 1.79 requests/second
+
+RESPONSE TIME STATISTICS
+--------------------------------------------------------------------------------
+Minimum Response Time         : 2793 ms
+Average Response Time         : 20202.00 ms
+90th Percentile               : 30369 ms
+95th Percentile               : 32067 ms
+99th Percentile               : 33051 ms
+Maximum Response Time         : 34789 ms
+
+BREAKING POINT ANALYSIS
+--------------------------------------------------------------------------------
+⚠️  STATUS: BREAKING POINT DETECTED
+    Breaking Point At: 50 concurrent users
+    Error Rate: 12.67% (19/150 requests failed)
+    Severity: HIGH - System is experiencing significant issues
+
+PERFORMANCE INDICATORS
+--------------------------------------------------------------------------------
+Response Time (P99)           : ❌ POOR (> 5s)
+Throughput                    : ❌ POOR (< 10 req/s)
+Error Rate                    : ❌ POOR (> 5%)
+================================================================================
+Generated at: 2025-12-04 19:55:04
+================================================================================
