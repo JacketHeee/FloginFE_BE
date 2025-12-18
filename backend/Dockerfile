@@ -11,5 +11,6 @@ FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 RUN apk add --no-cache ca-certificates
 COPY --from=build /app/target/backend-0.0.1-SNAPSHOT.jar app.jar
-ENV PORT=8080
+# Set default port (Render will override with PORT=10000)
+ENV PORT=8081
 ENTRYPOINT ["java", "-jar", "app.jar"]
